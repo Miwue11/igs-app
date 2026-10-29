@@ -1,0 +1,31 @@
+/* Paleta, tipografía y medidas de IGS */
+:root {
+  --azul: #13233A;
+  --azul-claro: #23395A;
+  --rojo: #B3261E;
+  --rojo-oscuro: #9A1F18;
+  --dorado: #D9A441;
+  --dorado-oscuro: #C8922F;
+  --fondo: #F6F7F9;
+  --blanco: #FFFFFF;
+  --gris-texto: #4A5668;
+  --gris-claro: #C9D2DE;
+  --gris-borde: #DCE1E8;
+  --gris-input: #8793A3;
+  --gris-hueco: #DCE1E8;
+  --enlace: #1D4E89;
+  --verde: #1B5E36;
+  --verde-fondo: #E6F2EA;
+  --verde-borde: #9CCBAE;
+  --error: #8A1C15;
+  --error-fondo: #FBE9E7;
+  --error-borde: #E8A39D;
+
+  --fuente: 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --fuente-mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
+
+  --radio: 10px;
+  --radio-sm: 6px;
+  --ancho-max: 1200px;
+  --toque: 44px;
+}

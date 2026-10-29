@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.env
+.env.local
+servidor/fotos/
+servidor/copias/
+*.log
+.DS_Store

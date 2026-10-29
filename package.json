@@ -1,0 +1,27 @@
+{
+  "name": "igs-app",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "IGS · Iberian Grading Services — sistema de gestión de gradeo de coleccionables",
+  "workspaces": [
+    "compartido",
+    "servidor",
+    "cliente"
+  ],
+  "scripts": {
+    "dev:servidor": "npm run dev -w servidor",
+    "dev:cliente": "npm run dev -w cliente",
+    "demo": "npm run demo -w cliente",
+    "datos": "npm run datos -w servidor",
+    "comprobar": "npm run comprobar -w servidor",
+    "copia": "npm run copia -w servidor",
+    "restaurar": "npm run restaurar -w servidor --",
+    "build": "npm run build -w cliente",
+    "start": "npm run build -w cliente && npm start -w servidor",
+    "test": "node --test compartido/pruebas/*.prueba.js servidor/pruebas/*.prueba.js"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

@@ -1,0 +1,45 @@
+/* Cabecera, pie y estructura general */
+.contenedor { max-width: var(--ancho-max); margin: 0 auto; padding: 0 24px; }
+
+.cabecera { background: var(--azul); color: var(--blanco); }
+.cabecera .contenedor {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 16px; padding-top: 14px; padding-bottom: 14px;
+}
+.marca { display: flex; align-items: center; gap: 12px; color: var(--blanco); text-decoration: none; }
+.marca:hover { color: var(--blanco); }
+.marca-texto { display: flex; flex-direction: column; line-height: 1.15; }
+.marca-texto strong { font-size: 18px; }
+.marca-texto span { font-size: 12px; color: var(--gris-claro); }
+.menu { display: flex; flex-wrap: wrap; gap: 4px 28px; font-size: 15px; font-weight: 500; }
+.menu a { color: var(--gris-claro); text-decoration: none; padding: 10px 0; border-bottom: 2px solid transparent; }
+.menu a:hover { color: var(--blanco); }
+.menu a.activo { color: var(--blanco); border-bottom-color: var(--dorado); }
+.sesion { display: flex; align-items: center; gap: 16px; }
+.cabecera .boton-enlace { color: var(--gris-claro); }
+.cabecera .boton-enlace:hover { color: var(--blanco); }
+
+.pie { background: var(--azul); color: var(--gris-claro); padding: 32px 0; font-size: 14px; }
+.pie .contenedor { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; }
+.pie nav { display: flex; flex-wrap: wrap; gap: 20px; }
+.pie a { color: var(--gris-claro); }
+.pie a:hover { color: var(--blanco); }
+
+.pagina { padding: 48px 0 72px; }
+.pagina > .contenedor { display: flex; flex-direction: column; gap: 28px; }
+.pagina-estrecha { max-width: 1000px; }
+.pagina-cabecera { display: flex; flex-direction: column; gap: 10px; }
+.pagina-cabecera h1 { font-size: 44px; font-weight: 800; line-height: 1.1; }
+.pagina-cabecera p { font-size: 17px; color: var(--gris-texto); max-width: 680px; line-height: 1.55; }
+.miga { font-size: 14px; color: var(--gris-texto); }
+.seccion { padding: 72px 0; }
+.seccion-ajustada { padding: 0 0 72px; }
+.seccion .contenedor, .seccion-ajustada .contenedor { display: flex; flex-direction: column; gap: 32px; }
+.seccion-titulo { font-size: 32px; font-weight: 800; }
+.seccion-cabecera { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 16px; }
+.fila { display: flex; flex-wrap: wrap; gap: 24px; }
+.fila-arriba { align-items: flex-start; }
+.columna { flex: 1 1 380px; min-width: 0; }
+.columna-ancha { flex: 2 1 520px; }
+.pila { display: flex; flex-direction: column; gap: 16px; }
+.acciones { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; }

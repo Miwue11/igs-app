@@ -1,0 +1,14 @@
+# MongoDB local para desarrollo:  docker compose up -d
+# (Alternativa sin Docker: instalar MongoDB Community Server o usar un clúster gratuito de Atlas.)
+services:
+  mongo:
+    image: mongo:8
+    container_name: igs-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - igs-mongo-datos:/data/db
+    restart: unless-stopped
+
+volumes:
+  igs-mongo-datos:

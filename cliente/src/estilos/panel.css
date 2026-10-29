@@ -1,0 +1,42 @@
+/* Panel interno de trabajadores y administradores */
+.aplicacion { min-height: 100vh; display: flex; flex-wrap: wrap; }
+.barra-lateral {
+  flex: 1 1 220px; max-width: 100%; background: var(--azul); color: var(--blanco);
+  padding: 24px 16px; display: flex; flex-direction: column; gap: 24px;
+}
+.menu-lateral { display: flex; flex-direction: column; gap: 4px; }
+.menu-lateral a {
+  display: flex; align-items: center; min-height: var(--toque); padding: 0 12px; border-radius: var(--radio-sm);
+  color: var(--gris-claro); text-decoration: none;
+}
+.menu-lateral a:hover, .menu-lateral a.activo { background: var(--azul-claro); color: var(--blanco); }
+.menu-lateral a.activo { font-weight: 600; }
+.etiqueta-admin { margin-left: 8px; font-size: 11px; border: 1px solid var(--gris-claro); border-radius: 10px; padding: 1px 6px; }
+.barra-lateral-pie { margin-top: auto; display: flex; flex-direction: column; gap: 8px; align-items: flex-start; font-size: 14px; }
+.barra-lateral-pie a, .barra-lateral .boton-enlace { color: var(--gris-claro); }
+
+.aplicacion-principal {
+  flex: 999 1 560px; min-width: 0; max-width: 100%; position: relative;
+  padding: 32px; display: flex; flex-direction: column; gap: 32px;
+}
+.aplicacion-principal section { display: flex; flex-direction: column; gap: 16px; }
+.aplicacion-principal h1 { font-size: 32px; font-weight: 800; }
+.barra-herramientas { display: flex; flex-wrap: wrap; gap: 8px; }
+.barra-herramientas .selector { min-height: var(--toque); width: auto; }
+
+.subida { flex-direction: row; flex-wrap: wrap; gap: 24px; padding: 24px; border-radius: 12px; }
+.subida-fotos { flex: 1 1 240px; display: flex; flex-direction: column; gap: 12px; }
+.zona-foto {
+  min-height: 120px; border: 2px dashed var(--gris-input); border-radius: var(--radio); color: var(--gris-texto);
+  display: flex; flex-direction: column; gap: 8px; align-items: center; justify-content: center; text-align: center;
+  padding: 12px; cursor: pointer; font-size: 14px; overflow-wrap: anywhere;
+}
+.zona-foto:hover { border-color: var(--azul); color: var(--azul); }
+.zona-foto img { max-height: 140px; width: auto; border-radius: var(--radio-sm); }
+.selector-foto input:focus-visible + .zona-foto, .selector-foto:focus-within .zona-foto { outline: 3px solid var(--dorado); outline-offset: 2px; }
+.formulario-producto { flex: 2 1 420px; align-content: start; }
+.grupo-subnotas {
+  border: 1px solid var(--gris-borde); border-radius: var(--radio); padding: 14px;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px;
+}
+.grupo-subnotas legend { padding: 0 6px; }

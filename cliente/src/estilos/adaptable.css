@@ -1,0 +1,73 @@
+/* Adaptación a tablet y móvil */
+
+/* Tablet (hasta 900px) */
+@media (max-width: 900px) {
+  .portada .contenedor { gap: 32px; }
+  .servicios { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+  .barra-lateral { flex-basis: 100%; gap: 14px; }
+  .menu-lateral { flex-direction: row; flex-wrap: wrap; }
+  .barra-lateral-pie { margin-top: 0; flex-direction: row; gap: 16px; }
+}
+
+/* Móvil (hasta 600px) */
+@media (max-width: 600px) {
+  body { font-size: 15px; }
+  .contenedor { padding: 0 16px; }
+
+  /* Cabecera: logo y acceso arriba, menú en una fila debajo */
+  .cabecera .contenedor { gap: 10px; padding-top: 12px; padding-bottom: 12px; }
+  .marca img { width: 38px; height: 45px; }
+  .cabecera .boton { min-height: 40px; padding: 0 16px; }
+  .sesion { order: 2; gap: 12px; }
+  .cabecera .contenedor > .boton { order: 2; }
+  .menu { order: 3; width: 100%; justify-content: space-between; gap: 4px 12px; font-size: 14px; }
+
+  .pagina { padding: 32px 0 48px; }
+  .pagina-cabecera h1 { font-size: 32px; }
+  .pagina-cabecera p { font-size: 16px; }
+  .seccion { padding: 48px 0; }
+  .seccion-ajustada { padding-bottom: 48px; }
+  .seccion-titulo { font-size: 26px; }
+  .tarjeta { padding: 22px; }
+
+  .portada { padding: 36px 0 48px; }
+  .portada-texto { font-size: 16px; }
+  .en-linea .boton { width: 100%; }
+  .losa { width: 100%; max-width: 280px; }
+  .losa .hueco { height: 220px; }
+  .pasos, .precios, .servicios { grid-template-columns: 1fr; }
+  .llamada { padding: 24px; gap: 20px; }
+  .llamada h2 { font-size: 22px; }
+  .llamada .boton { width: 100%; }
+
+  .filtros { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; }
+  .filtro { flex: 0 0 auto; }
+  .servicio-pie { flex-direction: column; align-items: stretch; }
+  .servicio-datos { grid-template-columns: 1fr 1fr; }
+
+  .producto { gap: 24px; }
+  .producto-titulo { gap: 14px; }
+  .producto-titulo h1 { font-size: 24px; }
+  .insignia-nota { width: 96px; height: 96px; }
+  .insignia-nota strong { font-size: 36px; }
+  .lista-datos { grid-template-columns: 1fr; }
+  .subnota > span { width: 84px; font-size: 14px; }
+  .acciones .boton { width: 100%; }
+
+  .tarjeta-formulario { padding: 22px; }
+  .rejilla-formulario { grid-template-columns: 1fr; }
+  .tarjeta-formulario .boton { width: 100%; }
+  .datos-contacto { grid-template-columns: 1fr 1fr; padding: 18px; }
+  .mapa { height: 200px; }
+
+  .barra-lateral { padding: 16px; }
+  .menu-lateral a { min-height: 40px; padding: 0 10px; font-size: 14px; }
+  .aplicacion-principal { padding: 20px 16px; gap: 24px; }
+  .aplicacion-principal h1 { font-size: 26px; }
+  .barra-herramientas { width: 100%; }
+  .barra-herramientas > * { flex: 1 1 auto; }
+  .subida { padding: 16px; }
+  .grupo-subnotas { grid-template-columns: 1fr 1fr; }
+
+  .pie .contenedor { flex-direction: column; }
+}

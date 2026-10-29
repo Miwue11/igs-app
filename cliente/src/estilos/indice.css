@@ -1,0 +1,8 @@
+/* Punto de entrada de estilos: el orden importa (variables → base → componentes → páginas → responsive) */
+@import './variables.css';
+@import './base.css';
+@import './componentes.css';
+@import './estructura.css';
+@import './paginas.css';
+@import './panel.css';
+@import './adaptable.css';

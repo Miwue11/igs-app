@@ -1,0 +1,21 @@
+{
+  "name": "igs-cliente",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Interfaz web de IGS (React + Vite)",
+  "scripts": {
+    "dev": "vite",
+    "demo": "vite --mode demo",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^6.0.0"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "igs-servidor",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "API REST de IGS (Node + Express + MongoDB)",
+  "main": "src/principal.js",
+  "scripts": {
+    "dev": "node --watch src/principal.js",
+    "start": "node src/principal.js",
+    "datos": "node scripts/cargarDatos.js",
+    "copia": "node scripts/copiaSeguridad.js",
+    "restaurar": "node scripts/restaurarCopia.js",
+    "comprobar": "node scripts/comprobar.js",
+    "test": "node --test pruebas/*.prueba.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.9.0",
+    "multer": "^1.4.5-lts.1"
+  }
+}

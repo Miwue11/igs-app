@@ -1,0 +1,36 @@
+/* Estilos base y utilidades */
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--fondo);
+  color: var(--azul);
+  font-family: var(--fuente);
+  font-size: 16px;
+  line-height: 1.5;
+}
+h1, h2, h3, p, dl, dd, ol, ul, fieldset { margin: 0; }
+a { color: var(--enlace); }
+a:hover { color: var(--azul); }
+img { max-width: 100%; display: block; }
+[hidden] { display: none !important; }
+:focus-visible { outline: 3px solid var(--dorado); outline-offset: 2px; }
+
+.mono { font-family: var(--fuente-mono); }
+.apagado { color: var(--gris-texto); }
+.pequeno { font-size: 13px; color: var(--gris-texto); }
+.aclaracion { font-size: 14px; color: var(--gris-texto); }
+.alinear-inicio { align-self: flex-start; }
+.solo-lectores {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+.saltar-contenido {
+  position: absolute; left: 8px; top: -60px; z-index: 10;
+  background: var(--dorado); color: var(--azul); padding: 10px 14px; border-radius: var(--radio-sm); font-weight: 600;
+}
+.saltar-contenido:focus { top: 8px; }
+.cargando { color: var(--gris-texto); padding: 24px 0; }
+.barra-demo {
+  background: var(--dorado); color: var(--azul); text-align: center;
+  font-size: 13px; font-weight: 600; padding: 6px 12px;
+}
