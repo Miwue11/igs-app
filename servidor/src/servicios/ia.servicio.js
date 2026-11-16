@@ -5,10 +5,10 @@ import { elegir } from '../utilidades/elegir.js';
 
 const URL_API = 'https://api.anthropic.com/v1/messages';
 const VERSION_API = '2023-06-01';
-const CAMPOS = ['nombre', 'nota', 'marca', 'clase', 'numeroTarjeta', 'categoria', 'variedad', 'idioma'];
+const CAMPOS = ['nombre', 'nota', 'marca', 'anio', 'expansion', 'clase', 'numeroTarjeta', 'categoria', 'variedad', 'idioma'];
 
 const INSTRUCCIONES = `Lee la etiqueta de gradeo de la imagen. Responde SOLO con un objeto JSON con estas claves:
-nombre, nota (número de 1 a 10), marca, clase, numeroTarjeta, categoria ("tcg", "deportivas" o "comics"), variedad, idioma.
+nombre, nota (número de 1 a 10), marca, anio (año de 4 cifras), expansion, clase, numeroTarjeta, categoria ("tcg", "deportivas" o "comics"), variedad, idioma.
 Usa null en lo que no se lea con claridad. No inventes datos.`;
 
 const peticion = (imagenBase64, tipo) => ({

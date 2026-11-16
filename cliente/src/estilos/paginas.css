@@ -13,20 +13,6 @@
 .en-linea .entrada { flex: 1 1 260px; width: auto; min-height: 52px; }
 .portada-buscador .entrada { border: 2px solid var(--dorado); }
 .portada-visual { flex: 1 1 280px; display: flex; justify-content: center; }
-.losa {
-  width: 280px; background: #E9EDF2; border-radius: 14px; padding: 14px;
-  display: flex; flex-direction: column; gap: 12px; box-shadow: 0 20px 40px rgba(0, 0, 0, .35);
-}
-.losa-etiqueta {
-  background: var(--blanco); color: var(--azul); border: 2px solid var(--rojo); border-radius: var(--radio-sm);
-  padding: 10px 12px; display: flex; justify-content: space-between; align-items: center;
-}
-.losa-etiqueta .datos { display: flex; flex-direction: column; gap: 2px; font-size: 11px; }
-.losa-etiqueta .datos strong { font-size: 13px; }
-.losa-etiqueta .losa-nota { display: flex; flex-direction: column; align-items: center; }
-.losa-etiqueta .losa-nota strong { font-size: 30px; line-height: 1; }
-.losa-etiqueta .losa-nota span { font-size: 10px; font-weight: 600; }
-.losa .hueco { height: 300px; background: #CBD3DD; border-radius: var(--radio-sm); font-size: 13px; }
 
 .pasos { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 20px; }
 .pasos .tarjeta { padding: 24px; gap: 10px; }
@@ -85,6 +71,9 @@
   display: flex; flex-direction: column; align-items: center; justify-content: center; flex: none;
 }
 .insignia-nota strong { font-size: 46px; line-height: 1; }
+.insignia-pristine { background: linear-gradient(135deg, #7E1016, #B3202A 45%, #8E141C); color: #FBF3E4; }
+.insignia-oro { background: linear-gradient(135deg, #B8862C, #F2D27A 45%, #C8922F); }
+.insignia-plata { background: linear-gradient(135deg, #9EA6B1, #E9ECF0 45%, #A3ABB6); }
 .insignia-nota span { font-size: 12px; font-weight: 800; letter-spacing: 1px; text-align: center; }
 .lista-datos {
   display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));

@@ -19,7 +19,9 @@ export function FormularioProducto({ formulario, pedidos, extra }) {
       <CampoSelect id="p-pedido" etiqueta="Pedido" vacio="Elige un pedido en gradeo" opciones={opcionesPedido} {...campo('pedido')} />
       <CampoTexto id="p-nombre" etiqueta="Nombre del producto" {...campo('nombre')} />
       <CampoSelect id="p-nota" etiqueta="Grado (nota final)" vacio="Elige la nota" opciones={OPCIONES_NOTA} {...campo('nota')} />
-      <CampoTexto id="p-marca" etiqueta="Marca" {...campo('marca')} />
+      <CampoTexto id="p-marca" etiqueta="Marca / juego" {...campo('marca')} />
+      <CampoTexto id="p-anio" etiqueta="Año" inputMode="numeric" {...campo('anio')} />
+      <CampoTexto id="p-expansion" etiqueta="Expansión / colección" {...campo('expansion')} />
       <CampoTexto id="p-clase" etiqueta="Clase" {...campo('clase')} />
       <CampoTexto id="p-num" etiqueta="Nº de tarjeta" {...campo('numeroTarjeta')} />
       <CampoSelect id="p-cat" etiqueta="Categoría" opciones={OPCIONES_CATEGORIA} {...campo('categoria')} />

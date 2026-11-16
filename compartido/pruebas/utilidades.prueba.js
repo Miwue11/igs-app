@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   formatearIdCertificado, formatearPedido, normalizarIdCertificado, esIdCertificado,
-  etiquetaGrado, esNotaValida, ordenarCola, siguienteEstado, ESTADOS_PEDIDO,
+  etiquetaGrado, nivelGrado, esNotaValida, ordenarCola, siguienteEstado, ESTADOS_PEDIDO,
 } from '../index.js';
 
 test('formatos de códigos', () => {
@@ -14,13 +14,25 @@ test('formatos de códigos', () => {
 });
 
 test('nombre del grado según la nota', () => {
-  assert.equal(etiquetaGrado(10), 'PRISTINE');
+  const perfectas = { centrado: 10, esquinas: 10, bordes: 10, superficie: 10 };
+  assert.equal(etiquetaGrado(10, perfectas), 'PRISTINE');
+  assert.equal(etiquetaGrado(10, { ...perfectas, bordes: 9.5 }), 'GEM MINT');
+  assert.equal(etiquetaGrado(10), 'GEM MINT');
+  assert.equal(etiquetaGrado(9), 'MINT');
   assert.equal(etiquetaGrado(9.5), 'GEM MINT');
   assert.equal(etiquetaGrado(8.5), 'NM-MT');
   assert.equal(etiquetaGrado(1), 'POOR');
   assert.ok(esNotaValida('7.5'));
   assert.ok(!esNotaValida(7.3));
   assert.ok(!esNotaValida(0));
+});
+
+test('color del distintivo de la etiqueta', () => {
+  assert.equal(nivelGrado(10, 'PRISTINE'), 'pristine');
+  assert.equal(nivelGrado(10, 'GEM MINT'), 'oro');
+  assert.equal(nivelGrado(9.5, 'GEM MINT'), 'oro');
+  assert.equal(nivelGrado(9, 'MINT'), 'plata');
+  assert.equal(nivelGrado(4, 'VG-EX'), 'plata');
 });
 
 test('la cola respeta el orden de llegada (FIFO)', () => {

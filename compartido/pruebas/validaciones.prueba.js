@@ -48,3 +48,11 @@ test('consulta por ID de certificado', () => {
   assert.ok(sinErrores(validarCon('consulta', { id: ' igs-2026-000001 ' })));
   assert.equal(validarCon('consulta', { id: 'IGS-26-1' }).id, MENSAJES.ID_CERTIFICADO);
 });
+
+test('producto: año y expansión de la etiqueta', () => {
+  const base = { pedido: 'PED-0006', nombre: 'Charizard', nota: 9.5, marca: 'Pokémon', categoria: 'tcg' };
+  assert.ok(sinErrores(validarCon('producto', { ...base, anio: 1999, expansion: 'Base Set' })));
+  assert.ok(sinErrores(validarCon('producto', { ...base, anio: null, expansion: '' })));
+  assert.equal(validarCon('producto', { ...base, anio: 1800 }).anio, MENSAJES.ANIO);
+  assert.equal(validarCon('producto', { ...base, anio: 'dos mil' }).anio, MENSAJES.ANIO);
+});

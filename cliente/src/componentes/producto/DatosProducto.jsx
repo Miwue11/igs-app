@@ -5,7 +5,9 @@ import { formatoNota } from '../../utilidades/formato.js';
 const CAMPOS = [
   ['ID', (p) => p.idCertificado],
   ['Grado', (p) => `${formatoNota(p.nota)} · ${p.etiquetaGrado}`],
-  ['Marca', (p) => p.marca],
+  ['Marca / juego', (p) => p.marca],
+  ['Año', (p) => p.anio],
+  ['Expansión', (p) => p.expansion],
   ['Clase', (p) => p.clase],
   ['Nº de tarjeta', (p) => p.numeroTarjeta],
   ['Categoría', (p) => nombreCategoria(p.categoria)],

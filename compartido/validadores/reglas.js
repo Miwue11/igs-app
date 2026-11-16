@@ -1,5 +1,5 @@
 import { MENSAJES } from '../constantes/mensajes.js';
-import { REGEX } from '../constantes/formatos.js';
+import { LIMITES, REGEX } from '../constantes/formatos.js';
 import { esNotaValida } from '../utilidades/grados.js';
 import { esIdCertificado } from '../utilidades/ids.js';
 
@@ -28,6 +28,9 @@ export const entero = (min, max, mensaje) => (v) => {
   const n = Number(v);
   return Number.isInteger(n) && n >= min && n <= max ? null : mensaje;
 };
+
+/** Año de publicación: entre 1900 y el año actual + 1 (preventas). */
+export const anio = (v) => entero(LIMITES.ANIO_MIN, new Date().getFullYear() + 1, MENSAJES.ANIO)(v);
 
 export const nota = (v) => (vacio(v) || esNotaValida(v) ? null : MENSAJES.NOTA);
 

@@ -38,7 +38,7 @@ export const DEMO_PEDIDOS = [
   { codigo: 'PED-0003', cliente: 'tienda@igs.demo', servicio: 'BLQ', unidades: 150, estado: 'recibido', creado: 9, llegada: 2, publicado: null },
   { codigo: 'PED-0004', cliente: 'cliente@igs.demo', servicio: 'PRE', unidades: 1, estado: 'pendiente_envio', creado: 1, llegada: null, publicado: null },
   { codigo: 'PED-0005', cliente: 'tienda@igs.demo', servicio: 'STD', unidades: 6, estado: 'pendiente_envio', creado: 1, llegada: null, publicado: null },
-  { codigo: 'PED-0006', cliente: 'cliente@igs.demo', servicio: 'STD', unidades: 2, estado: 'completado', creado: 45, llegada: 40, publicado: 32 },
+  { codigo: 'PED-0006', cliente: 'cliente@igs.demo', servicio: 'STD', unidades: 3, estado: 'completado', creado: 45, llegada: 40, publicado: 32 },
 ];
 
 /** Campos comunes de un pedido de demo (los usan el script de carga y el modo demo). */
@@ -56,18 +56,25 @@ export const construirPedidoDemo = (p, servicio) => ({
 
 export const DEMO_PRODUCTOS = [
   {
-    idCertificado: 'IGS-2026-000001', pedido: 'PED-0006', nombre: 'Dragón Escarlata', nota: 9.5,
-    subnotas: { centrado: 9.5, esquinas: 9, bordes: 9.5, superficie: 10 },
-    marca: 'Marca de ejemplo', clase: 'Rara holográfica', numeroTarjeta: '004/102', categoria: 'tcg',
-    variedad: 'Holo · 1ª edición', idioma: 'Español', gradeado: 32,
-    comentario: 'Leve desgaste en la esquina inferior izquierda. Centrado correcto y superficie sin arañazos.',
+    idCertificado: 'IGS-2026-000001', pedido: 'PED-0006', nombre: 'Marshadow & Machamp GX', nota: 10,
+    subnotas: { centrado: 10, esquinas: 10, bordes: 10, superficie: 10 },
+    marca: 'Pokémon', anio: 2019, expansion: 'Double Blaze', clase: 'Tag Team GX', numeroTarjeta: '101/095',
+    categoria: 'tcg', variedad: 'Secret Rare (SR)', idioma: 'Japonés', gradeado: 32,
+    comentario: 'Centrado perfecto, esquinas y bordes sin desgaste y superficie sin marcas. Gradeo PRISTINE.',
   },
   {
     idCertificado: 'IGS-2026-000002', pedido: 'PED-0006', nombre: 'Delantero centro', nota: 8,
     subnotas: { centrado: 8, esquinas: 7.5, bordes: 8, superficie: 8.5 },
-    marca: 'Marca de ejemplo', clase: 'Base', numeroTarjeta: '23/200', categoria: 'deportivas',
+    marca: 'Marca de ejemplo', anio: 2021, expansion: 'Liga 2021-22', clase: 'Base', numeroTarjeta: '23/200', categoria: 'deportivas',
     variedad: 'Rookie', idioma: 'Inglés', gradeado: 32,
     comentario: 'Esquinas con desgaste visible y bordes con pequeñas marcas de manipulación.',
+  },
+  {
+    idCertificado: 'IGS-2026-000003', pedido: 'PED-0006', nombre: 'Charizard', nota: 9.5,
+    subnotas: { centrado: 9.5, esquinas: 9.5, bordes: 9.5, superficie: 10 },
+    marca: 'Pokémon', anio: 1999, expansion: 'Base Set', clase: 'Rara holográfica', numeroTarjeta: '4/102',
+    categoria: 'tcg', variedad: 'Holo · Unlimited', idioma: 'Inglés', gradeado: 33,
+    comentario: 'Holo limpio y superficie excelente. Centrado 55/45, dentro del margen de GEM MINT.',
   },
 ];
 

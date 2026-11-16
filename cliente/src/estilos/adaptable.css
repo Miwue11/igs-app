@@ -33,8 +33,10 @@
   .portada { padding: 36px 0 48px; }
   .portada-texto { font-size: 16px; }
   .en-linea .boton { width: 100%; }
-  .losa { width: 100%; max-width: 280px; }
-  .losa .hueco { height: 220px; }
+  .losa { width: 100%; max-width: 320px; }
+  .recomendacion { grid-template-columns: 44px minmax(0, 1fr); }
+  .recomendacion img, .recomendacion-sin-foto { width: 44px; height: 61px; }
+  .recomendacion .boton { grid-column: 1 / -1; width: 100%; }
   .pasos, .precios, .servicios { grid-template-columns: 1fr; }
   .llamada { padding: 24px; gap: 20px; }
   .llamada h2 { font-size: 22px; }

@@ -3,6 +3,7 @@ import { Enlace } from '../../enrutador/Enlace.jsx';
 import { formatoFecha } from '../../utilidades/formato.js';
 import { Tarjeta } from '../ui/Tarjeta.jsx';
 import { FotosProducto } from './FotosProducto.jsx';
+import { EtiquetaIGS } from './EtiquetaIGS.jsx';
 import { InsigniaNota } from './InsigniaNota.jsx';
 import { DatosProducto } from './DatosProducto.jsx';
 import { Subnotas } from './Subnotas.jsx';
@@ -12,7 +13,10 @@ import { BotonCopiarEnlace } from './BotonCopiarEnlace.jsx';
 export function FichaProducto({ producto }) {
   return (
     <div className="producto">
-      <FotosProducto imagenes={producto.imagenes} />
+      <div className="producto-visual">
+        <EtiquetaIGS producto={producto} />
+        <FotosProducto imagenes={producto.imagenes} />
+      </div>
 
       <section className="producto-datos" aria-label="Datos del producto">
         <div className="producto-titulo">

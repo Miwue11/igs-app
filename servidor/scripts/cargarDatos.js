@@ -41,7 +41,7 @@ const crearProductos = (pedidos, gradeador) =>
     ...p,
     pedido: pedidos.get(pedido)._id,
     pedidoCodigo: pedido,
-    etiquetaGrado: etiquetaGrado(p.nota),
+    etiquetaGrado: etiquetaGrado(p.nota, p.subnotas),
     gradeadoPor: gradeador._id,
     fechaGradeo: haceDias(gradeado),
   })));

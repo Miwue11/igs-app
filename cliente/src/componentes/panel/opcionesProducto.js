@@ -4,7 +4,8 @@ import { CATEGORIAS, IDIOMAS, LIMITES, SUBNOTAS, etiquetaGrado } from '@comparti
 const pasos = (LIMITES.NOTA_MAX - LIMITES.NOTA_MIN) / LIMITES.NOTA_PASO + 1;
 const NOTAS = Array.from({ length: pasos }, (_, i) => LIMITES.NOTA_MAX - i * LIMITES.NOTA_PASO);
 
-export const OPCIONES_NOTA = NOTAS.map((n) => ({ valor: String(n), texto: `${String(n).replace('.', ',')} · ${etiquetaGrado(n)}` }));
+const textoNota = (n) => (n === LIMITES.NOTA_MAX ? 'GEM MINT / PRISTINE' : etiquetaGrado(n));
+export const OPCIONES_NOTA = NOTAS.map((n) => ({ valor: String(n), texto: `${String(n).replace('.', ',')} · ${textoNota(n)}` }));
 export const OPCIONES_SUBNOTA = NOTAS.map((n) => ({ valor: String(n), texto: String(n).replace('.', ',') }));
 export const OPCIONES_CATEGORIA = CATEGORIAS.filter((c) => c.id !== 'empresas').map((c) => ({ valor: c.id, texto: c.nombre }));
 export const OPCIONES_IDIOMA = IDIOMAS.map((i) => ({ valor: i, texto: i }));
@@ -12,7 +13,7 @@ export const OPCIONES_IDIOMA = IDIOMAS.map((i) => ({ valor: i, texto: i }));
 export const CAMPO_SUBNOTA = (id) => `subnotas.${id}`;
 
 export const PRODUCTO_VACIO = Object.freeze({
-  pedido: '', nombre: '', nota: '', marca: '', clase: '', numeroTarjeta: '', categoria: 'tcg',
+  pedido: '', nombre: '', nota: '', marca: '', anio: '', expansion: '', clase: '', numeroTarjeta: '', categoria: 'tcg',
   variedad: '', idioma: 'Español', comentario: '',
   ...Object.fromEntries(SUBNOTAS.map((s) => [CAMPO_SUBNOTA(s.id), ''])),
 });
@@ -25,6 +26,8 @@ export const prepararProducto = (valores) => ({
   nombre: valores.nombre.trim(),
   nota: numeroONull(valores.nota),
   marca: valores.marca.trim(),
+  anio: numeroONull(valores.anio),
+  expansion: valores.expansion.trim(),
   clase: valores.clase.trim(),
   numeroTarjeta: valores.numeroTarjeta.trim(),
   categoria: valores.categoria,

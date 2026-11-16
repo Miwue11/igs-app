@@ -4,17 +4,22 @@ import cors from 'cors';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import { ENTORNO, ES_PRODUCCION } from './configuracion/entorno.js';
+import { ORIGENES_API_CARTAS, ORIGENES_IMAGENES_CARTAS } from '../../compartido/index.js';
 import { rutasApi } from './rutas/index.js';
 import { servirWeb } from './middlewares/web.js';
 import { rutaNoEncontrada, manejarErrores } from './middlewares/errores.js';
 
-/** Cabeceras de seguridad. Se permiten las fuentes de Google y las vistas previas de fotos (blob:). */
+/**
+ * Cabeceras de seguridad. Se permiten las fuentes de Google, las vistas previas de fotos (blob:)
+ * y las APIs gratuitas de cartas oficiales (datos y miniaturas) que consulta el panel.
+ */
 const seguridad = helmet({
   contentSecurityPolicy: {
     directives: {
       styleSrc: ["'self'", 'https://fonts.googleapis.com', "'unsafe-inline'"],
       fontSrc: ["'self'", 'https://fonts.gstatic.com', 'data:'],
-      imgSrc: ["'self'", 'data:', 'blob:'],
+      imgSrc: ["'self'", 'data:', 'blob:', ...ORIGENES_IMAGENES_CARTAS],
+      connectSrc: ["'self'", ...ORIGENES_API_CARTAS],
       // Sin esto el navegador intentaría pasar a https las peticiones de http://localhost
       upgradeInsecureRequests: null,
     },

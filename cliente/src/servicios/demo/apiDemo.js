@@ -94,7 +94,7 @@ const productos = {
       db.contadores.cert += 1;
       const producto = {
         ...datos, id: nuevoId(), idCertificado: formatearIdCertificado(new Date().getFullYear(), db.contadores.cert),
-        pedidoCodigo: datos.pedido, etiquetaGrado: etiquetaGrado(datos.nota), imagenes, fechaGradeo: ahora(),
+        pedidoCodigo: datos.pedido, etiquetaGrado: etiquetaGrado(datos.nota, datos.subnotas), imagenes, fechaGradeo: ahora(),
       };
       delete producto.pedido;
       db.productos.push(producto);
@@ -190,8 +190,8 @@ const ia = {
   leerEtiqueta: responder((foto) => {
     exigir(ROLES_INTERNOS);
     if (!foto) throw new ErrorApi(400, 'Sube primero la foto de la etiqueta.');
-    const { nombre, nota, marca, clase, numeroTarjeta, categoria, variedad, idioma } = DEMO_PRODUCTOS[0];
-    return { nombre, nota, marca, clase, numeroTarjeta, categoria, variedad, idioma };
+    const { nombre, nota, marca, anio, expansion, clase, numeroTarjeta, categoria, variedad, idioma } = DEMO_PRODUCTOS[0];
+    return { nombre, nota, marca, anio, expansion, clase, numeroTarjeta, categoria, variedad, idioma };
   }),
 };
 

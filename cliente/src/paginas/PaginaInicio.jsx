@@ -6,6 +6,7 @@ import { rutaConsulta } from '../constantes/rutas.js';
 import { SERVICIOS_PORTADA } from '../constantes/contenido.js';
 import { Portada } from '../componentes/inicio/Portada.jsx';
 import { PasosProceso } from '../componentes/inicio/PasosProceso.jsx';
+import { EscalaEtiquetas } from '../componentes/inicio/EscalaEtiquetas.jsx';
 import { ResumenServicios } from '../componentes/inicio/ResumenServicios.jsx';
 import { AvisoVerificar } from '../componentes/inicio/AvisoVerificar.jsx';
 
@@ -21,6 +22,7 @@ export function PaginaInicio() {
     <>
       <Portada alBuscar={(id) => navegar(rutaConsulta(id))} />
       <PasosProceso />
+      <EscalaEtiquetas />
       {servicios && <ResumenServicios servicios={deLaPortada(servicios)} />}
       <AvisoVerificar />
     </>

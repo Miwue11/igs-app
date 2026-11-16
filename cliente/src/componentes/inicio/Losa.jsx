@@ -1,19 +1,15 @@
-import { DEMO_EJEMPLO_ID } from '@compartido/demo/datos.js';
+import { DEMO_PRODUCTOS } from '@compartido/demo/datos.js';
+import { EtiquetaIGS } from '../producto/EtiquetaIGS.jsx';
 
-/** Ilustración de una carta encapsulada con su etiqueta de gradeo (decorativa). */
-export function Losa() {
+/** Slab de IGS: la etiqueta arriba y el producto encapsulado debajo. Sin producto muestra el ejemplo de la demo. */
+export function Losa({ producto = DEMO_PRODUCTOS[0], foto = null, decorativa = true }) {
   return (
-    <div className="portada-visual" aria-hidden="true">
+    <div className="portada-visual" aria-hidden={decorativa || undefined}>
       <div className="losa">
-        <div className="losa-etiqueta">
-          <div className="datos">
-            <strong>IGS · TCG</strong>
-            <span>Holo · 1ª edición</span>
-            <span className="mono">{DEMO_EJEMPLO_ID}</span>
-          </div>
-          <div className="losa-nota"><strong>9,5</strong><span>GEM MINT</span></div>
+        <EtiquetaIGS producto={producto} />
+        <div className="losa-hueco">
+          {foto ? <img src={foto} alt={`Anverso de ${producto.nombre}`} /> : <span>[Imagen del producto]</span>}
         </div>
-        <div className="hueco">[Imagen del producto]</div>
       </div>
     </div>
   );

@@ -22,6 +22,8 @@ const esquemaProducto = new mongoose.Schema(
       superficie: notaOpcional,
     },
     marca: { type: String, required: true, trim: true },
+    anio: { type: Number, min: LIMITES.ANIO_MIN, default: null },
+    expansion: { type: String, default: '', trim: true },
     clase: { type: String, default: '' },
     numeroTarjeta: { type: String, default: '' },
     categoria: { type: String, enum: IDS_CATEGORIA, required: true },

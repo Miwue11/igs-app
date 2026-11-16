@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ESTADOS_PEDIDO } from '@compartido';
+import { ESTADOS_PEDIDO, SUBNOTAS } from '@compartido';
 import { api } from '../../servicios/index.js';
 import { useCarga } from '../../hooks/useCarga.js';
 import { useFormulario } from '../../hooks/useFormulario.js';
@@ -9,7 +9,9 @@ import { Enlace } from '../../enrutador/Enlace.jsx';
 import { rutaConsulta } from '../../constantes/rutas.js';
 import { SelectorFoto } from '../../componentes/panel/SelectorFoto.jsx';
 import { FormularioProducto } from '../../componentes/panel/FormularioProducto.jsx';
-import { PRODUCTO_VACIO, prepararProducto, valoresDesdeIA } from '../../componentes/panel/opcionesProducto.js';
+import { RecomendacionesCartas } from '../../componentes/panel/RecomendacionesCartas.jsx';
+import { PRODUCTO_VACIO, CAMPO_SUBNOTA, prepararProducto, valoresDesdeIA } from '../../componentes/panel/opcionesProducto.js';
+import { EtiquetaIGS } from '../../componentes/producto/EtiquetaIGS.jsx';
 import { Boton } from '../../componentes/ui/Boton.jsx';
 import { Icono } from '../../componentes/ui/Icono.jsx';
 import { Mensaje } from '../../componentes/ui/Mensaje.jsx';
@@ -22,7 +24,19 @@ const FOTOS = [
 ];
 const SIN_FOTOS = { etiqueta: null, anverso: null, reverso: null };
 
-/** Subida de un producto gradeado: fotos, lectura automática de la etiqueta y ficha. */
+/** Lo que se ve en la vista previa de la etiqueta mientras se rellena el formulario. */
+const vistaPrevia = (valores) => ({
+  nombre: valores.nombre,
+  anio: valores.anio,
+  expansion: valores.expansion,
+  nota: valores.nota,
+  subnotas: Object.fromEntries(SUBNOTAS.map((s) => [s.id, valores[CAMPO_SUBNOTA(s.id)]])),
+});
+
+/**
+ * Subida de un producto gradeado: fotos, lectura automática de la etiqueta, recomendaciones de cartas
+ * oficiales (API gratuita), vista previa de la etiqueta IGS y ficha.
+ */
 export function SeccionSubir() {
   useTituloPagina('Subir producto');
   const { query } = useRutas();
@@ -69,11 +83,25 @@ export function SeccionSubir() {
           </Boton>
           <p className="pequeno">{fotos.etiqueta ? 'Se leen los datos de la etiqueta y se rellena el formulario.' : 'Sube la foto de la etiqueta para leerla automáticamente.'}</p>
           <Mensaje mensaje={estadoIA} />
+          <RecomendacionesCartas valores={formulario.valores} alElegir={formulario.rellenar} />
         </div>
-        <FormularioProducto formulario={formulario} pedidos={pedidos ?? []} />
+        <div className="subida-ficha">
+          <div className="vista-etiqueta">
+            <h2>Vista previa de la etiqueta</h2>
+            <EtiquetaIGS producto={vistaPrevia(formulario.valores)} />
+          </div>
+          <FormularioProducto formulario={formulario} pedidos={pedidos ?? []} />
+        </div>
       </Tarjeta>
       {guardado && (
-        <p className="aclaracion">Último guardado: <Enlace href={rutaConsulta(guardado.idCertificado)}>ver la ficha pública de {guardado.idCertificado}</Enlace></p>
+        <Tarjeta como="div" className="etiqueta-guardada zona-impresion">
+          <h2 className="no-imprimir">Etiqueta de {guardado.idCertificado}</h2>
+          <EtiquetaIGS producto={guardado} />
+          <div className="acciones no-imprimir">
+            <Boton variante="oscuro" onClick={() => window.print()}>Imprimir etiqueta</Boton>
+            <Enlace href={rutaConsulta(guardado.idCertificado)}>Ver la ficha pública</Enlace>
+          </div>
+        </Tarjeta>
       )}
     </section>
   );

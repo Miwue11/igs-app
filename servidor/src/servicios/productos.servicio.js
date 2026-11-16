@@ -10,7 +10,7 @@ import { elegir } from '../utilidades/elegir.js';
 
 /** Campos que un trabajador puede enviar desde el formulario (evita asignaciones masivas). */
 const CAMPOS_EDITABLES = [
-  'nombre', 'nota', 'subnotas', 'marca', 'clase', 'numeroTarjeta',
+  'nombre', 'nota', 'subnotas', 'marca', 'anio', 'expansion', 'clase', 'numeroTarjeta',
   'categoria', 'variedad', 'idioma', 'comentario',
 ];
 
@@ -48,7 +48,7 @@ export const crearProducto = async (datos, archivos, usuarioId) => {
     idCertificado: await nuevoIdCertificado(),
     pedido: pedido._id,
     pedidoCodigo: pedido.codigo,
-    etiquetaGrado: etiquetaGrado(campos.nota),
+    etiquetaGrado: etiquetaGrado(campos.nota, campos.subnotas),
     imagenes: rutasDeFotos(archivos),
     gradeadoPor: usuarioId,
   });

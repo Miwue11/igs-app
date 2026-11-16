@@ -1,0 +1,139 @@
+/* Etiqueta del slab de IGS (misma composición que la etiqueta impresa).
+   Todas las medidas van en cqw para que la etiqueta escale igual a cualquier ancho. */
+.etiqueta-igs {
+  --etiqueta-crema: #F4F1EA;
+  --etiqueta-amarillo: #E3B43A;
+  container-type: inline-size;
+  width: 100%;
+  aspect-ratio: 650 / 194;
+  display: grid;
+  grid-template-columns: 22.2% 1fr 23%;
+  overflow: hidden;
+  color: var(--azul);
+  background: var(--etiqueta-crema);
+  border-radius: 4px;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, .06);
+  font-family: var(--fuente);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.etiqueta-igs small { display: block; text-transform: uppercase; }
+
+/* Logo */
+.etiqueta-marca {
+  background: var(--azul); color: var(--blanco);
+  display: flex; flex-direction: column; justify-content: center; gap: 2.2cqw; padding: 0 3cqw;
+}
+.etiqueta-marca strong { font-size: 8.4cqw; font-weight: 800; line-height: .9; letter-spacing: -.1cqw; }
+.etiqueta-rayas { display: flex; gap: .9cqw; }
+.etiqueta-rayas i { display: block; width: 3.6cqw; height: .5cqw; background: var(--etiqueta-amarillo); }
+.etiqueta-rayas i + i { background: var(--rojo); }
+.etiqueta-marca small { font-size: 1.35cqw; font-weight: 600; letter-spacing: .25cqw; line-height: 1.45; }
+
+/* Datos del producto */
+.etiqueta-datos {
+  min-width: 0; padding: 2.6cqw 3.4cqw 2.6cqw 3.6cqw;
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.etiqueta-fila { display: flex; gap: 4.2cqw; min-width: 0; }
+.etiqueta-fila > div { min-width: 0; }
+.etiqueta-fila > div:last-child { flex: 1; }
+.etiqueta-fila small { font-size: 1.2cqw; font-weight: 600; letter-spacing: .3cqw; color: var(--gris-texto); }
+.etiqueta-fila span {
+  display: block; font-family: var(--fuente-mono); font-size: 2.5cqw; font-weight: 600; text-transform: uppercase;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.etiqueta-nombre {
+  font-size: 4.3cqw; font-weight: 800; line-height: 1.12; text-transform: uppercase; overflow-wrap: anywhere;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.etiqueta-nombre.largo { font-size: 3.3cqw; }
+.etiqueta-cert {
+  font-family: var(--fuente-mono); font-size: 1.35cqw; font-weight: 500; letter-spacing: .2cqw; color: var(--gris-texto);
+}
+
+/* Distintivo del grado */
+.etiqueta-grado { padding: 1.1cqw; display: flex; }
+.etiqueta-grado > div {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .6cqw;
+  border: .18cqw solid currentColor; text-align: center;
+}
+.etiqueta-grado small { font-size: 1.2cqw; font-weight: 700; letter-spacing: .3cqw; }
+.etiqueta-grado strong { font-size: 12.5cqw; font-weight: 800; line-height: .85; letter-spacing: -.6cqw; }
+.etiqueta-grado strong.decimal { font-size: 9cqw; letter-spacing: -.4cqw; }
+.etiqueta-grado span { font-size: 1.6cqw; font-weight: 800; letter-spacing: .25cqw; min-height: 1.6cqw; }
+
+.etiqueta-pristine .etiqueta-grado {
+  color: #FBF3E4;
+  background: linear-gradient(135deg, #7E1016 0%, #B3202A 35%, #8E141C 55%, #C33A3F 75%, #85121A 100%);
+}
+.etiqueta-pristine .etiqueta-grado > div { border-color: rgba(227, 180, 58, .75); }
+.etiqueta-oro .etiqueta-grado {
+  color: var(--azul);
+  background: linear-gradient(135deg, #B8862C 0%, #F2D27A 30%, #D4A646 52%, #F6DD8C 72%, #B98A2E 100%);
+}
+.etiqueta-oro .etiqueta-grado > div { border-color: rgba(19, 35, 58, .55); }
+.etiqueta-plata .etiqueta-grado {
+  color: var(--azul);
+  background: linear-gradient(135deg, #9EA6B1 0%, #E9ECF0 30%, #BCC3CC 52%, #F3F5F7 72%, #A3ABB6 100%);
+}
+.etiqueta-plata .etiqueta-grado > div { border-color: rgba(19, 35, 58, .5); }
+.etiqueta-vacio .etiqueta-grado { color: var(--gris-texto); background: var(--gris-hueco); }
+
+/* Slab (funda) con la etiqueta arriba y el producto debajo */
+.losa {
+  width: 340px; max-width: 100%; padding: 12px; border-radius: 14px;
+  background: linear-gradient(160deg, #EEF1F5, #CFD6DF); border: 1px solid rgba(255, 255, 255, .7);
+  display: flex; flex-direction: column; gap: 12px; box-shadow: 0 20px 40px rgba(0, 0, 0, .35);
+}
+.losa-hueco {
+  aspect-ratio: 63 / 88; border-radius: 6px; background: #BFC8D3; overflow: hidden;
+  display: flex; align-items: center; justify-content: center; color: var(--gris-texto); font-size: 13px;
+  box-shadow: inset 0 0 0 6px rgba(255, 255, 255, .35);
+}
+.losa-hueco img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Escala de etiquetas (portada) */
+.escala-intro { display: flex; flex-direction: column; gap: 10px; max-width: 760px; }
+.escala-intro .aclaracion { font-size: 16px; line-height: 1.55; }
+.escala-etiquetas { display: grid; gap: 28px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.escala-etiquetas figure { display: flex; flex-direction: column; gap: 12px; }
+.escala-etiquetas figcaption { display: flex; flex-direction: column; gap: 4px; }
+.escala-etiquetas figcaption strong { font-size: 17px; }
+.escala-etiquetas figcaption span { font-size: 14px; color: var(--gris-texto); line-height: 1.5; }
+
+/* Ficha pública */
+.producto-visual { flex: 1 1 440px; min-width: 0; display: flex; flex-direction: column; gap: 16px; }
+.producto-visual .fotos { flex: none; }
+
+/* Panel: vista previa, recomendaciones e impresión */
+.vista-etiqueta { display: flex; flex-direction: column; gap: 8px; }
+.vista-etiqueta h2, .recomendaciones h2 { font-size: 16px; font-weight: 800; }
+.recomendaciones { display: flex; flex-direction: column; gap: 10px; }
+.recomendaciones-cabecera { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.recomendaciones-juego .entrada { min-height: 38px; width: auto; padding-block: 4px; font-size: 14px; }
+.lista-recomendaciones {
+  list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px; max-height: 420px; overflow-y: auto;
+}
+.recomendacion {
+  display: grid; grid-template-columns: 54px minmax(0, 1fr) auto; gap: 10px; align-items: center;
+  padding: 8px; border: 1px solid var(--gris-borde); border-radius: var(--radio-sm); background: var(--blanco);
+}
+.recomendacion.elegida { border-color: var(--dorado); box-shadow: 0 0 0 2px var(--dorado) inset; }
+.recomendacion img, .recomendacion-sin-foto {
+  width: 54px; height: 75px; border-radius: 4px; object-fit: cover; background: var(--gris-hueco);
+}
+.recomendacion-sin-foto { display: flex; align-items: center; justify-content: center; font-weight: 800; color: var(--gris-texto); }
+.recomendacion-datos { display: flex; flex-direction: column; gap: 2px; min-width: 0; font-size: 13px; }
+.recomendacion-datos strong { font-size: 14px; }
+.recomendacion-datos span { color: var(--gris-texto); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.recomendacion .boton { min-height: 38px; padding: 0 14px; }
+.fuente-datos { font-size: 12px; color: var(--gris-texto); }
+.etiqueta-guardada { display: flex; flex-direction: column; gap: 12px; max-width: 520px; }
+
+@media print {
+  body * { visibility: hidden; }
+  .zona-impresion, .zona-impresion * { visibility: visible; }
+  .zona-impresion { position: absolute; inset: 0 auto auto 0; width: 95mm; }
+  .zona-impresion .no-imprimir { display: none; }
+}

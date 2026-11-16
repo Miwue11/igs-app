@@ -18,4 +18,6 @@ export const LIMITES = Object.freeze({
   NOTA_MIN: 1,
   NOTA_MAX: 10,
   NOTA_PASO: 0.5,
+  ANIO_MIN: 1900,
+  EXPANSION_MAX: 80,
 });

@@ -4,7 +4,7 @@ import { IDS_CATEGORIA, IDS_TIPO_TICKET } from '../constantes/catalogo.js';
 import { ROLES } from '../constantes/roles.js';
 import { ESTADOS_PEDIDO, ESTADOS_TICKET } from '../constantes/estados.js';
 import {
-  requerido, email, minimo, maximo, igualA, aceptado, enLista, entero, nota, idCertificado, validar,
+  requerido, email, minimo, maximo, igualA, aceptado, enLista, entero, nota, anio, idCertificado, validar,
 } from './reglas.js';
 
 /** Esquemas de validación: los usan el formulario (cliente) y la API (servidor). */
@@ -36,6 +36,8 @@ export const ESQUEMAS = Object.freeze({
     nombre: [requerido, maximo(120)],
     nota: [requerido, nota],
     marca: [requerido],
+    anio: [anio],
+    expansion: [maximo(LIMITES.EXPANSION_MAX)],
     categoria: [requerido, enLista(IDS_CATEGORIA)],
     'subnotas.centrado': [nota],
     'subnotas.esquinas': [nota],

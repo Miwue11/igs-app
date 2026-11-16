@@ -24,6 +24,37 @@ TFG (proyecto intermodular de DAW): Miguel López Rodríguez.
 - El panel muestra para cada pedido «Quedan N días», «Vence pronto» o «Fuera de plazo». El cliente ve la fecha máxima de publicación al hacer el pedido y en «Mi cuenta».
 - Los días y prioridades se cambian en `compartido/demo/datos.js` (catálogo de ejemplo) y en `compartido/constantes/plazos.js`.
 
+## Etiqueta IGS
+
+Cada producto gradeado lleva la etiqueta del slab con **año, expansión, nombre, nº de certificado y grado**
+(componente `cliente/src/componentes/producto/EtiquetaIGS.jsx`). Se ve en la portada, en la ficha pública,
+como vista previa al subir un producto y se puede imprimir desde el panel tras guardarlo.
+
+| Nota | Nombre | Distintivo |
+|---|---|---|
+| 10 con las cuatro subnotas a 10 | PRISTINE | Rojo metálico |
+| 10 (resto) y 9,5 | GEM MINT | Dorado |
+| 9 hacia abajo | MINT, NM-MT… POOR | Plateado |
+
+La regla está en `compartido/utilidades/grados.js` (`etiquetaGrado` y `nivelGrado`), así que cliente, servidor y demo dan siempre el mismo resultado.
+
+## Recomendaciones de cartas oficiales (APIs gratuitas)
+
+Al subir un producto TCG, en cuanto se escribe el nombre (o lo rellena la lectura de la etiqueta) el panel
+recomienda las versiones oficiales de la carta. Al pulsar **Usar** se rellenan año, expansión, nº de tarjeta, rareza y marca.
+
+| Juego | API | Clave |
+|---|---|---|
+| Pokémon | [TCGdex](https://tcgdex.dev) (español, inglés, japonés…) | No |
+| Magic: The Gathering | [Scryfall](https://scryfall.com/docs/api) | No |
+| Yu-Gi-Oh! | [YGOPRODeck](https://ygoprodeck.com/api-guide/) | No |
+
+Las consulta el navegador directamente (`cliente/src/servicios/cartasOficiales.js`), por eso funcionan también en el modo demo
+y en una web estática. El servidor las permite en su política de seguridad (CSP) en `servidor/src/aplicacion.js`.
+
+La **lectura automática de la etiqueta con IA** (`POST /api/ia/etiqueta`) es opcional: necesita `ANTHROPIC_API_KEY`, que es de pago.
+Sin ella el botón avisa y los datos se rellenan a mano o con las recomendaciones gratuitas.
+
 ## Estructura
 
 ```
