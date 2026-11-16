@@ -1,0 +1,49 @@
+# Publica la versión demo de la web (sin servidor ni MongoDB) en GitHub Pages.
+# Se ejecuta en cada push a master o a mano desde la pestaña Actions.
+name: Publicar demo en GitHub Pages
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Pruebas
+        run: npm test
+
+      - name: Compilar la web en modo demo
+        run: npm run build -w cliente -- --mode demo
+        env:
+          VITE_BASE: /${{ github.event.repository.name }}/
+
+      - name: Preparar rutas de la SPA
+        # GitHub Pages sirve 404.html en las rutas que no existen (/consulta, /panel…) y React decide qué pintar.
+        run: |
+          cp cliente/dist/index.html cliente/dist/404.html
+          touch cliente/dist/.nojekyll
+
+      - name: Publicar en la rama gh-pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: cliente/dist
+          branch: gh-pages

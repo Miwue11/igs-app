@@ -24,6 +24,12 @@ TFG (proyecto intermodular de DAW): Miguel López Rodríguez.
 - El panel muestra para cada pedido «Quedan N días», «Vence pronto» o «Fuera de plazo». El cliente ve la fecha máxima de publicación al hacer el pedido y en «Mi cuenta».
 - Los días y prioridades se cambian en `compartido/demo/datos.js` (catálogo de ejemplo) y en `compartido/constantes/plazos.js`.
 
+## Demo publicada en GitHub Pages
+
+**https://miwue11.github.io/igs-app/** — versión demo (datos en memoria, sin servidor ni MongoDB).
+Se publica sola con cada push a `master` (`.github/workflows/pages.yml`): pasa las pruebas, compila con
+`--mode demo` y sube `cliente/dist` a la rama `gh-pages`.
+
 ## Etiqueta IGS
 
 Cada producto gradeado lleva la etiqueta del slab con **año, expansión, nombre, nº de certificado y grado**

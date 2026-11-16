@@ -1,4 +1,5 @@
 import { createContext, useCallback, useMemo, useSyncExternalStore } from 'react';
+import { conBase, sinBase } from './base.js';
 
 /**
  * Enrutador ligero basado en la History API (sin dependencias).
@@ -17,14 +18,14 @@ const suscribir = (aviso) => {
   };
 };
 
-const urlActual = () => window.location.pathname + window.location.search;
+const urlActual = () => sinBase(window.location.pathname) + window.location.search;
 
 export function ProveedorRutas({ children }) {
   const url = useSyncExternalStore(suscribir, urlActual);
 
   const navegar = useCallback((destino, { reemplazar = false } = {}) => {
     if (destino === urlActual()) return;
-    window.history[reemplazar ? 'replaceState' : 'pushState'](null, '', destino);
+    window.history[reemplazar ? 'replaceState' : 'pushState'](null, '', conBase(destino));
     window.dispatchEvent(new Event(EVENTO_NAVEGAR));
     window.scrollTo(0, 0);
   }, []);

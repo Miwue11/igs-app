@@ -1,4 +1,5 @@
 import { useRutas } from './useRutas.js';
+import { conBase } from './base.js';
 
 const esClicNormal = (e) => e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey;
 const esInterno = (href) => href.startsWith('/');
@@ -15,7 +16,7 @@ export function Enlace({ href, onClick, children, ...props }) {
   };
 
   return (
-    <a href={href} onClick={alPulsar} {...props}>
+    <a href={esInterno(href) ? conBase(href) : href} onClick={alPulsar} {...props}>
       {children}
     </a>
   );
