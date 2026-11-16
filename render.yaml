@@ -1,0 +1,26 @@
+# Despliegue en Render (plan gratuito): Express sirve la API y la web compilada en la misma URL.
+# La base de datos es un clúster gratuito M0 de MongoDB Atlas (URI_MONGODB se pide al crear el servicio).
+services:
+  - type: web
+    name: igs-app
+    runtime: node
+    plan: free
+    region: frankfurt
+    # --include=dev: Vite está en devDependencies y hace falta para compilar la web.
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: npm start -w servidor
+    healthCheckPath: /api/servicios
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: NODE_ENV
+        value: production
+      - key: URI_MONGODB
+        sync: false
+      - key: SECRETO_JWT
+        generateValue: true
+      - key: FOTOS_EN_MONGO
+        value: "true"
+      - key: SEMBRAR_DEMO_SI_VACIA
+        value: "true"

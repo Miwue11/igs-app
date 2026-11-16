@@ -1,4 +1,5 @@
 import { Producto } from '../modelos/index.js';
+import { guardarFoto } from './fotos.servicio.js';
 import {
   MENSAJES, contadorCertificado, esIdCertificado, etiquetaGrado, formatearIdCertificado, normalizarIdCertificado,
 } from '../../../compartido/index.js';
@@ -17,12 +18,12 @@ const CAMPOS_EDITABLES = [
 /** Lo que no debe verse en la ficha pública. */
 const OCULTO_EN_PUBLICO = '-gradeadoPor -pedido';
 
-const rutasDeFotos = (archivos = {}) =>
+const rutasDeFotos = async (archivos = {}) =>
   Object.fromEntries(
-    CAMPOS_FOTO.map((campo) => {
+    await Promise.all(CAMPOS_FOTO.map(async (campo) => {
       const archivo = archivos[campo]?.[0];
-      return [campo, archivo ? `/fotos/${archivo.filename}` : null];
-    }),
+      return [campo, archivo ? await guardarFoto(archivo) : null];
+    })),
   );
 
 const nuevoIdCertificado = async () => {
@@ -49,7 +50,7 @@ export const crearProducto = async (datos, archivos, usuarioId) => {
     pedido: pedido._id,
     pedidoCodigo: pedido.codigo,
     etiquetaGrado: etiquetaGrado(campos.nota, campos.subnotas),
-    imagenes: rutasDeFotos(archivos),
+    imagenes: await rutasDeFotos(archivos),
     gradeadoPor: usuarioId,
   });
 };

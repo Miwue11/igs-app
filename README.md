@@ -30,6 +30,20 @@ TFG (proyecto intermodular de DAW): Miguel López Rodríguez.
 Se publica sola con cada push a `master` (`.github/workflows/pages.yml`): pasa las pruebas, compila con
 `--mode demo` y sube `cliente/dist` a la rama `gh-pages`.
 
+## Versión completa en Render + MongoDB Atlas (gratis)
+
+`render.yaml` deja preparado el despliegue: Express sirve la API y la web en la misma URL.
+
+1. **MongoDB Atlas** → crea un clúster **M0 (Free)**, un usuario de base de datos y, en *Network Access*, permite `0.0.0.0/0`
+   (Render no tiene IP fija). Copia la cadena de conexión y añade el nombre de la base de datos `igs`:
+   `mongodb+srv://USUARIO:CONTRASEÑA@cluster0.xxxxx.mongodb.net/igs?retryWrites=true&w=majority`
+2. **Render** → *New → Blueprint*, conecta GitHub y elige este repositorio. Pega la cadena en `URI_MONGODB` y crea el servicio.
+3. En el primer arranque, como la base de datos está vacía, se cargan solos los datos de demo
+   (contraseña de las cuentas `Igs-demo-2026`). Después ya no se vuelve a tocar.
+
+En Render las fotos se guardan en MongoDB (`FOTOS_EN_MONGO=true`, colección `fotos`) porque su disco se borra en cada reinicio.
+El plan gratuito se duerme tras 15 minutos sin visitas y tarda alrededor de un minuto en despertar.
+
 ## Etiqueta IGS
 
 Cada producto gradeado lleva la etiqueta del slab con **año, expansión, nombre, nº de certificado y grado**
@@ -97,7 +111,7 @@ igs-app/
 └── docker-compose.yml      (opcional) MongoDB con Docker en vez de instalarlo
 ```
 
-Colecciones de MongoDB: `usuarios`, `servicios`, `pedidos`, `productos`, `tickets` y `contadores`.
+Colecciones de MongoDB: `usuarios`, `servicios`, `pedidos`, `productos`, `tickets`, `contadores` y `fotos` (solo con `FOTOS_EN_MONGO=true`).
 
 Los nombres en inglés que quedan son obligatorios: los de las librerías (`useState`, `Router`, `mongoose.Schema`…), el prefijo `use` de los hooks de React y los archivos que buscan las herramientas (`package.json`, `vite.config.js`, `index.html`, `index.js`).
 

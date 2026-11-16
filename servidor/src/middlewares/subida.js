@@ -7,7 +7,7 @@ import { CAMPOS_FOTO, LIMITE_FOTO_MB } from '../constantes/http.js';
 import { peticionIncorrecta } from '../utilidades/errorHttp.js';
 
 const CARPETA = resolve(ENTORNO.CARPETA_FOTOS);
-mkdirSync(CARPETA, { recursive: true });
+if (!ENTORNO.FOTOS_EN_MONGO) mkdirSync(CARPETA, { recursive: true });
 
 const soloImagenes = (_req, archivo, listo) =>
   archivo.mimetype.startsWith('image/') ? listo(null, true) : listo(peticionIncorrecta('Solo se admiten imágenes.'));
@@ -19,8 +19,9 @@ const enDisco = multer.diskStorage({
   filename: (_req, archivo, listo) => listo(null, `${randomUUID()}${extname(archivo.originalname).toLowerCase()}`),
 });
 
-/** Fotos de un producto gradeado: anverso, reverso y etiqueta. */
-export const subirFotosProducto = multer({ storage: enDisco, fileFilter: soloImagenes, limits })
+/** Fotos de un producto gradeado: anverso, reverso y etiqueta. En disco o en memoria (para guardarlas en MongoDB). */
+const almacen = ENTORNO.FOTOS_EN_MONGO ? multer.memoryStorage() : enDisco;
+export const subirFotosProducto = multer({ storage: almacen, fileFilter: soloImagenes, limits })
   .fields(CAMPOS_FOTO.map((name) => ({ name, maxCount: 1 })));
 
 /** Foto de la etiqueta para la IA: se queda en memoria, no se guarda. */

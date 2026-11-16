@@ -1,0 +1,66 @@
+# Arranca la versión completa (Express + MongoDB) igual que en Render y prueba lo básico de la API.
+name: Comprobar servidor completo
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  servidor:
+    runs-on: ubuntu-latest
+    services:
+      mongo:
+        image: mongo:7
+        ports: ['27017:27017']
+    env:
+      NODE_ENV: production
+      URI_MONGODB: mongodb://localhost:27017/igs
+      SECRETO_JWT: clave-solo-para-la-prueba-de-ci
+      FOTOS_EN_MONGO: 'true'
+      SEMBRAR_DEMO_SI_VACIA: 'true'
+      PORT: '4000'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar y compilar (como en Render)
+        run: npm ci --include=dev && npm run build
+
+      - name: Arrancar el servidor
+        run: |
+          npm start -w servidor > servidor.log 2>&1 &
+          for i in $(seq 1 30); do curl -fs http://localhost:4000/api/servicios > /dev/null && break; sleep 1; done
+          cat servidor.log
+
+      - name: Probar la API
+        run: |
+          set -e
+          B=http://localhost:4000
+          echo "→ Web compilada servida por Express"
+          curl -fs $B/ | grep -q '<div id="root">'
+          curl -fs $B/consulta | grep -q '<div id="root">'
+          echo "→ Servicios y certificado de demo"
+          curl -fs $B/api/servicios | grep -q '"codigo"'
+          curl -fs $B/api/productos/IGS-2026-000001 | grep -q 'PRISTINE'
+          echo "→ Inicio de sesión del trabajador"
+          curl -fs -c cookies.txt -H 'Content-Type: application/json' \
+            -d '{"email":"trabajador@igs.demo","contrasena":"Igs-demo-2026"}' $B/api/acceso/entrar > /dev/null
+          echo "→ Subida de un producto con foto (se guarda en MongoDB)"
+          printf '\x89PNG\r\n\x1a\n' > foto.png
+          RESPUESTA=$(curl -fs -b cookies.txt \
+            -F 'datos={"pedido":"PED-0006","nombre":"Charizard","nota":9.5,"marca":"Pokémon","anio":1999,"expansion":"Base Set","categoria":"tcg","subnotas":{}}' \
+            -F 'anverso=@foto.png;type=image/png' $B/api/productos)
+          echo "$RESPUESTA"
+          FOTO=$(echo "$RESPUESTA" | node -e 'let d="";process.stdin.on("data",c=>d+=c).on("end",()=>console.log(JSON.parse(d).imagenes.anverso))')
+          echo "→ La foto $FOTO se sirve desde MongoDB"
+          curl -fs -o /dev/null -w '%{content_type}\n' $B$FOTO | grep -q 'image/png'
+          echo "Todo correcto"
+
+      - name: Registro del servidor
+        if: always()
+        run: cat servidor.log

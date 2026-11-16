@@ -7,6 +7,7 @@ import { ENTORNO, ES_PRODUCCION } from './configuracion/entorno.js';
 import { ORIGENES_API_CARTAS, ORIGENES_IMAGENES_CARTAS } from '../../compartido/index.js';
 import { rutasApi } from './rutas/index.js';
 import { servirWeb } from './middlewares/web.js';
+import { servirFotoDeMongo } from './servicios/fotos.servicio.js';
 import { rutaNoEncontrada, manejarErrores } from './middlewares/errores.js';
 
 /**
@@ -31,11 +32,14 @@ export const crearAplicacion = () => {
   const aplicacion = express();
 
   aplicacion.disable('x-powered-by');
+  // Render pone un proxy delante: así Express sabe que la conexión original es https.
+  if (ES_PRODUCCION) aplicacion.set('trust proxy', 1);
   aplicacion.use(seguridad);
   if (!ES_PRODUCCION) aplicacion.use(cors({ origin: ENTORNO.ORIGEN_CLIENTE, credentials: true }));
   aplicacion.use(express.json({ limit: '100kb' }));
   aplicacion.use(cookieParser());
 
+  aplicacion.get('/fotos/:id', servirFotoDeMongo);
   aplicacion.use('/fotos', express.static(resolve(ENTORNO.CARPETA_FOTOS), { maxAge: '7d' }));
   aplicacion.use('/api', rutasApi);
   servirWeb(aplicacion);
