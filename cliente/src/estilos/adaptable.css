@@ -11,6 +11,10 @@
 
 /* Móvil (hasta 600px) */
 @media (max-width: 600px) {
+  /* Móvil: la trasera del slab va debajo de la frontal */
+  .losa-par { flex-direction: column; align-items: center; }
+  .losa-par .losa-foto { flex: none; width: 75%; max-width: 280px; }
+  .losa-par .losa-foto-trasera { margin-top: 0; }
   .buscador-cartas-filtros { grid-template-columns: 1fr; }
   body { font-size: 15px; }
   .contenedor { padding: 0 16px; }
@@ -35,8 +39,7 @@
   .portada-texto { font-size: 16px; }
   .en-linea .boton { width: 100%; }
   .losa, .losa-foto { width: 100%; max-width: 300px; }
-  .losa-par .losa-foto { flex-basis: 46%; }
-  .losa-par .losa-foto-trasera { margin-top: 20px; }
+
   .recomendacion { grid-template-columns: 44px minmax(0, 1fr); }
   .recomendacion img, .recomendacion-sin-foto { width: 44px; height: 61px; }
   .recomendacion .boton { grid-column: 1 / -1; width: 100%; }

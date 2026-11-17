@@ -4,7 +4,8 @@ import { formatoFecha } from '../../utilidades/formato.js';
 import { Tarjeta } from '../ui/Tarjeta.jsx';
 import { FotosProducto } from './FotosProducto.jsx';
 import { EtiquetaIGS } from './EtiquetaIGS.jsx';
-import { EtiquetaTraseraIGS } from './EtiquetaTraseraIGS.jsx';
+import { VisorEtiquetaTrasera } from './VisorEtiquetaTrasera.jsx';
+import { VerificarUV } from './VerificarUV.jsx';
 import { InsigniaNota } from './InsigniaNota.jsx';
 import { DatosProducto } from './DatosProducto.jsx';
 import { Subnotas } from './Subnotas.jsx';
@@ -17,7 +18,7 @@ export function FichaProducto({ producto }) {
       <div className="producto-visual">
         <div className="etiquetas-par">
           <EtiquetaIGS producto={producto} />
-          <EtiquetaTraseraIGS producto={producto} />
+          <VisorEtiquetaTrasera producto={producto} />
         </div>
         <FotosProducto imagenes={producto.imagenes} imagenReferencia={producto.imagenReferencia} />
       </div>
@@ -41,6 +42,10 @@ export function FichaProducto({ producto }) {
             <p>{producto.comentario}</p>
           </Tarjeta>
         )}
+
+        <Tarjeta como="div" className="tarjeta-uv">
+          <VerificarUV idCertificado={producto.idCertificado} />
+        </Tarjeta>
 
         <div className="acciones">
           <BotonCopiarEnlace />

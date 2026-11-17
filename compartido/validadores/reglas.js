@@ -3,6 +3,7 @@ import { LIMITES, REGEX } from '../constantes/formatos.js';
 import { VALOR_DECLARADO_MAX } from '../constantes/negocio.js';
 import { esNotaValida } from '../utilidades/grados.js';
 import { esIdCertificado } from '../utilidades/ids.js';
+import { esCodigoUVConFormato } from '../utilidades/codigoUV.js';
 
 /**
  * Reglas pequeñas y reutilizables. Cada regla recibe (valor, datos)
@@ -34,6 +35,8 @@ export const entero = (min, max, mensaje) => (v) => {
 export const anio = (v) => entero(LIMITES.ANIO_MIN, new Date().getFullYear() + 1, MENSAJES.ANIO)(v);
 
 export const nota = (v) => (vacio(v) || esNotaValida(v) ? null : MENSAJES.NOTA);
+
+export const codigoUV = (v) => (vacio(v) || esCodigoUVConFormato(v) ? null : MENSAJES.CODIGO_UV);
 
 export const idCertificado = (v) => (vacio(v) || esIdCertificado(v) ? null : MENSAJES.ID_CERTIFICADO);
 

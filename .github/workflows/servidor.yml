@@ -78,8 +78,21 @@ jobs:
           DATOS='{"pedido":"PED-0001","articulo":0,"nombre":"Pikachu","marca":"Pokémon","categoria":"tcg","subnotas":{"centrado":10,"esquinas":10,"bordes":10,"superficie":10}}'
           pedir 201 -b trabajador.txt -F "datos=$DATOS" -F 'anverso=@foto.png;type=image/png' $B/api/productos
           [ "$(campo d.etiquetaGrado)" = "PRISTINE" ] && [ "$(campo d.nota)" = "10" ]
+          CERT=$(campo d.idCertificado)
+          UV=$(campo d.codigoUV)
+          echo "$UV" | grep -Eq '^[0-9A-Z]{4}-[0-9A-Z]{4}$' || { echo "✗ falta el código UV al publicar"; exit 1; }
           FOTO=$(campo d.imagenes.anverso)
           curl -fs -o /dev/null -w '%{content_type}\n' $B$FOTO | grep -q 'image/png'
+
+          echo "→ Código UV: no sale en la ficha pública y solo el correcto es válido"
+          pedir 200 $B/api/productos/$CERT
+          grep -q "$UV" r.json && { echo "✗ la ficha pública revela el código UV"; exit 1; }
+          pedir 200 -H "$JSON" -d "{\"codigo\":\"$UV\"}" $B/api/productos/$CERT/verificar-uv
+          [ "$(campo d.valido)" = "true" ] || { echo "✗ el código UV correcto no se acepta"; exit 1; }
+          pedir 200 -H "$JSON" -d '{"codigo":"0000-0000"}' $B/api/productos/$CERT/verificar-uv
+          [ "$(campo d.valido)" = "false" ] || { echo "✗ se acepta un código UV falso"; exit 1; }
+          pedir 400 -H "$JSON" -d '{"codigo":"abc"}' $B/api/productos/$CERT/verificar-uv
+          pedir 401 $B/api/productos/$CERT/codigo-uv
 
           echo "→ El mismo artículo no se puede gradear dos veces"
           pedir 409 -b trabajador.txt -F "datos=$DATOS" $B/api/productos

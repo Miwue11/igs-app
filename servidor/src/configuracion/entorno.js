@@ -10,6 +10,9 @@ export const ENTORNO = Object.freeze({
   PUERTO: Number(process.env.PORT ?? leer('PUERTO', 4000)),
   URI_MONGODB: leer('URI_MONGODB', 'mongodb://localhost:27017/igs'),
   SECRETO_JWT: leer('SECRETO_JWT', ''),
+  // Clave de los códigos UV de los slabs. Si no se define se deriva de SECRETO_JWT.
+  // En producción fíjala antes de imprimir slabs reales y no la cambies nunca (invalidaría los códigos impresos).
+  CLAVE_UV: leer('CLAVE_UV', ''),
   ORIGEN_CLIENTE: leer('ORIGEN_CLIENTE', 'http://localhost:5173'),
   CARPETA_FOTOS: leer('CARPETA_FOTOS', 'fotos'),
   // true → las fotos se guardan dentro de MongoDB (necesario en Render, cuyo disco no es permanente).

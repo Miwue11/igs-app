@@ -11,7 +11,7 @@ import { SelectorFoto } from '../../componentes/panel/SelectorFoto.jsx';
 import { FormularioProducto } from '../../componentes/panel/FormularioProducto.jsx';
 import { PRODUCTO_VACIO, subnotasDe, prepararProducto, valoresDesdeIA } from '../../componentes/panel/opcionesProducto.js';
 import { EtiquetaIGS } from '../../componentes/producto/EtiquetaIGS.jsx';
-import { EtiquetaTraseraIGS } from '../../componentes/producto/EtiquetaTraseraIGS.jsx';
+import { VisorEtiquetaTrasera } from '../../componentes/producto/VisorEtiquetaTrasera.jsx';
 import { Boton } from '../../componentes/ui/Boton.jsx';
 import { Icono } from '../../componentes/ui/Icono.jsx';
 import { Mensaje } from '../../componentes/ui/Mensaje.jsx';
@@ -76,6 +76,13 @@ export function SeccionSubir() {
   const { query } = useRutas();
   const [fotos, setFotos] = useState(SIN_FOTOS);
   const [guardado, setGuardado] = useState(null);
+  const [capa, setCapa] = useState('etiquetas');
+
+  /** Imprime una capa: primero las etiquetas en color y después, en la misma hoja, el código con el cartucho de tinta UV. */
+  const imprimir = (nueva) => {
+    setCapa(nueva);
+    setTimeout(() => window.print(), 50);
+  };
   const [estadoIA, setEstadoIA] = useState(null);
   const { datos: pedidos, recargar } = useCarga(() => api.pedidos.cola(ESTADOS_PEDIDO.EN_GRADEO));
 
@@ -132,14 +139,19 @@ export function SeccionSubir() {
         </div>
       </Tarjeta>
       {guardado && (
-        <Tarjeta como="div" className="etiqueta-guardada zona-impresion">
+        <Tarjeta como="div" className={`etiqueta-guardada zona-impresion capa-${capa}`}>
           <h2 className="no-imprimir">Etiqueta de {guardado.idCertificado}</h2>
           <div className="etiquetas-par">
             <EtiquetaIGS producto={guardado} />
-            <EtiquetaTraseraIGS producto={guardado} />
+            <VisorEtiquetaTrasera producto={guardado} codigoUV={guardado.codigoUV} />
           </div>
+          <p className="pequeno no-imprimir">
+            Código UV de este slab: <strong className="mono">{guardado.codigoUV}</strong>. Imprime primero las etiquetas y, sin mover la hoja,
+            la capa UV con el cartucho de tinta UV invisible. El código no aparece en la ficha pública.
+          </p>
           <div className="acciones no-imprimir">
-            <Boton variante="oscuro" onClick={() => window.print()}>Imprimir frontal y trasera</Boton>
+            <Boton variante="oscuro" onClick={() => imprimir('etiquetas')}>1. Imprimir etiquetas</Boton>
+            <Boton variante="contorno" onClick={() => imprimir('uv')}>2. Imprimir capa UV</Boton>
             <Enlace href={rutaConsulta(guardado.idCertificado)}>Ver la ficha pública</Enlace>
           </div>
         </Tarjeta>

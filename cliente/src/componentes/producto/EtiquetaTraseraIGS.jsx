@@ -25,8 +25,10 @@ function CodigoBarras({ texto }) {
 /**
  * Parte trasera de la etiqueta del slab: marca IGS, sello central y un QR que abre la ficha pública
  * del certificado para verificarlo. Mismos colores que la frontal (granate en PRISTINE, azul en el resto).
+ * Lleva además el código UV, impreso con tinta invisible: solo se ve con luz ultravioleta (`uv`).
+ * Si no se conoce el código (ficha pública) se muestra su posición sin revelarlo.
  */
-export function EtiquetaTraseraIGS({ producto, origen, className }) {
+export function EtiquetaTraseraIGS({ producto, origen, codigoUV = null, uv = false, className }) {
   const { idCertificado, nota, subnotas } = producto;
   const grado = producto.etiquetaGrado || (nota != null ? nombreGrado(nota, subnotas) : '');
   const nivel = nota != null ? nivelGrado(nota, grado) : 'vacio';
@@ -35,7 +37,7 @@ export function EtiquetaTraseraIGS({ producto, origen, className }) {
   const lado = qr ? qr.tamano + MARGEN_QR * 2 : 0;
 
   return (
-    <div className={clases('etiqueta-igs etiqueta-trasera', `etiqueta-${nivel}`, className)} role="img"
+    <div className={clases('etiqueta-igs etiqueta-trasera', `etiqueta-${nivel}`, uv && 'modo-uv', className)} role="img"
       aria-label={`Parte trasera de la etiqueta IGS${idCertificado ? `, certificado ${idCertificado}, con código QR de verificación` : ''}`}>
       <div className="trasera-cuerpo" aria-hidden="true">
         <div className="trasera-marca">
@@ -52,6 +54,10 @@ export function EtiquetaTraseraIGS({ producto, origen, className }) {
             </svg>
           ) : <span>QR</span>}
         </div>
+      </div>
+      <div className="trasera-uv" aria-hidden="true">
+        <span>{codigoUV ?? '····-····'}</span>
+        <small>IGS · UV</small>
       </div>
       <div className="trasera-pie" aria-hidden="true">
         <CodigoBarras texto={idCertificado || '0000000000'} />

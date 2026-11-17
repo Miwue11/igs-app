@@ -2,7 +2,7 @@ import {
   ROLES, ROLES_INTERNOS, ESTADOS_PEDIDO, ESTADOS_EN_COLA, MENSAJES,
   validarCon, sinErrores, esIdCertificado, normalizarIdCertificado, ordenarCola,
   etiquetaGrado, formatearIdCertificado, formatearPedido, formatearTicket,
-  ESTADOS_ARTICULO, calcularNotaFinal, prepararArticulos, errorArticulosServicio, pedidoNuevo,
+  ESTADOS_ARTICULO, calcularNotaFinal, codigoUVDesdeBytes, mensajeCodigoUV, normalizarCodigoUV, prepararArticulos, errorArticulosServicio, pedidoNuevo,
   errorCambioEstado, aplicarCambioEstado, errorResolverArticulo,
 } from '@compartido';
 import { DEMO_PRODUCTOS } from '@compartido/demo/datos.js';
@@ -79,6 +79,17 @@ const servicios = {
   listar: responder(() => db.servicios.filter((s) => s.activo).sort((a, b) => a.orden - b.orden)),
 };
 
+/**
+ * En la demo no hay servidor que guarde un secreto: el código UV se calcula en el navegador
+ * con una clave de ejemplo. En la versión real la clave solo existe en el servidor.
+ */
+const CLAVE_DEMO_UV = 'clave-de-demostracion-igs';
+const codigoUVDemo = async (idCertificado) => {
+  const codificar = (t) => new TextEncoder().encode(t);
+  const clave = await crypto.subtle.importKey('raw', codificar(CLAVE_DEMO_UV), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+  return codigoUVDesdeBytes(new Uint8Array(await crypto.subtle.sign('HMAC', clave, codificar(mensajeCodigoUV(idCertificado)))));
+};
+
 const productos = {
   consultar: responder((texto) => {
     const idCertificado = normalizarIdCertificado(texto);
@@ -109,7 +120,17 @@ const productos = {
       Object.assign(pedido.articulos[indice], { estado: ESTADOS_ARTICULO.GRADEADO, idCertificado });
       db.productos.push(producto);
       return producto;
-    })();
+    })().then(async (producto) => ({ ...producto, codigoUV: await codigoUVDemo(producto.idCertificado) }));
+  },
+  codigoUV: async (idCertificado) => {
+    const producto = await productos.consultar(idCertificado);
+    exigir(ROLES_INTERNOS);
+    return { idCertificado: producto.idCertificado, codigoUV: await codigoUVDemo(producto.idCertificado) };
+  },
+  verificarUV: async (idCertificado, codigo) => {
+    const producto = await productos.consultar(idCertificado);
+    comprobar('verificarUV', { codigo });
+    return { idCertificado: producto.idCertificado, valido: normalizarCodigoUV(codigo) === await codigoUVDemo(producto.idCertificado) };
   },
 };
 

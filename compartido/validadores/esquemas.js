@@ -5,7 +5,7 @@ import { ROLES } from '../constantes/roles.js';
 import { ESTADOS_PEDIDO, ESTADOS_TICKET } from '../constantes/estados.js';
 import { MOTIVOS_NO_GRADEABLE } from '../constantes/negocio.js';
 import {
-  requerido, email, minimo, maximo, igualA, aceptado, enLista, entero, nota, anio, idCertificado, articulosDeclarados, validar,
+  requerido, email, minimo, maximo, igualA, aceptado, enLista, entero, nota, anio, idCertificado, articulosDeclarados, codigoUV, validar,
 } from './reglas.js';
 
 /** Esquemas de validación: los usan el formulario (cliente) y la API (servidor). */
@@ -48,6 +48,9 @@ export const ESQUEMAS = Object.freeze({
   },
   consulta: {
     id: [requerido, idCertificado],
+  },
+  verificarUV: {
+    codigo: [requerido, codigoUV],
   },
   noGradeable: {
     motivo: [requerido, enLista(MOTIVOS_NO_GRADEABLE)],

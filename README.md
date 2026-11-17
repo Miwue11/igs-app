@@ -83,6 +83,22 @@ En el panel la nota y la vista previa de la etiqueta cambian de color mientras s
 
 La regla está en `compartido/utilidades/grados.js` (`calcularNotaFinal`, `etiquetaGrado` y `nivelGrado`), así que cliente, servidor y demo dan siempre el mismo resultado.
 
+## Anti-réplicas: código UV de cada slab
+
+Cada slab lleva en la etiqueta trasera un **código de 8 caracteres impreso con tinta UV invisible** (solo se ve con una lámpara de 365 nm).
+Se calcula con `HMAC-SHA256(clave secreta, nº de certificado)` en `servidor/src/servicios/codigoUV.servicio.js`:
+
+- Cada certificado tiene un código distinto y **sin la clave nadie puede generar el de un certificado nuevo**.
+- El código **no aparece en la ficha pública ni en la API pública**. El gradeador lo recibe al publicar el certificado.
+- En la ficha pública, el comprador escribe lo que ve con la lámpara en «Comprueba el código UV» (`POST /api/productos/:id/verificar-uv`,
+  con límite de intentos por IP). Si no coincide, es una réplica.
+- Las fotos del certificado completan la protección: quien copie la etiqueta de un slab auténtico en otra carta queda en evidencia al compararlas.
+- Impresión en dos pasadas desde el panel: **1. etiquetas** en color y **2. capa UV** (solo el código, en su sitio) con un cartucho de tinta UV invisible.
+- La web simula la lámpara con el botón **«Ver con luz UV»**.
+
+La clave es `CLAVE_UV` (si no existe se deriva de `SECRETO_JWT`). En producción, fíjala antes de imprimir slabs reales y **no la cambies**:
+cambiarla invalidaría todos los códigos ya impresos. En el modo demo (GitHub Pages) se usa una clave de ejemplo en el navegador.
+
 ## Buscador de cartas oficiales (APIs gratuitas)
 
 Al preparar un envío de cartas, el cliente escribe el nombre y elige la versión exacta que va a mandar.
@@ -194,6 +210,8 @@ npm run restaurar -- copias/igs_2026-10-26-12-20.json.gz   # restaura una (reemp
 | GET | /api/acceso/yo | con sesión |
 | GET | /api/servicios | público |
 | GET | /api/productos/:idCertificado | público |
+| POST | /api/productos/:idCertificado/verificar-uv | público (limitado) |
+| GET | /api/productos/:idCertificado/codigo-uv | trabajador, admin |
 | POST | /api/productos (multipart: datos + fotos; gradea un artículo del pedido) | trabajador, admin |
 | POST · GET | /api/pedidos · /api/pedidos/mios | cliente |
 | GET | /api/pedidos/cola?estado= | trabajador, admin |
