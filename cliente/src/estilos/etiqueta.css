@@ -137,3 +137,37 @@
   .zona-impresion { position: absolute; inset: 0 auto auto 0; width: 95mm; }
   .zona-impresion .no-imprimir { display: none; }
 }
+
+/* Formulario de envío del cliente */
+.formulario-envio { display: flex; flex-direction: column; gap: 18px; }
+.grupo-envio { border: 1px solid var(--gris-borde); border-radius: var(--radio); padding: 16px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.grupo-envio legend { font-weight: 800; padding: 0 6px; }
+.buscador-cartas { display: flex; flex-direction: column; gap: 10px; }
+.buscador-cartas h3 { font-size: 16px; font-weight: 800; }
+.buscador-cartas-filtros { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; }
+.buscador-cartas-filtros .campo span { font-size: 14px; font-weight: 600; }
+.tabla-articulos { min-width: 760px; }
+.tabla-articulos td { padding: 8px 10px; vertical-align: middle; }
+.tabla-articulos .entrada { min-height: 38px; padding: 6px 10px; font-size: 14px; }
+.tabla-articulos .entrada-corta { max-width: 120px; }
+.tabla-articulos .boton { min-height: 38px; padding: 0 12px; }
+.resumen-pedido { background: var(--fondo); border-radius: var(--radio); padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.resumen-pedido dl { display: grid; gap: 6px; }
+.resumen-pedido dl div { display: flex; justify-content: space-between; gap: 12px; }
+.resumen-pedido dt { color: var(--gris-texto); }
+.resumen-pedido dd { font-weight: 600; }
+.resumen-total { border-top: 1px solid var(--gris-borde); padding-top: 8px; font-size: 18px; }
+.resumen-total dt { color: var(--azul); font-weight: 800; }
+.fila-detalle td { border-top: 0; padding-top: 0; }
+.detalle-articulos summary { cursor: pointer; color: var(--enlace); font-weight: 600; font-size: 14px; }
+.detalle-articulos ol { margin: 10px 0 4px; padding-left: 22px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; }
+.detalle-articulos li span + * { margin-left: 8px; }
+
+/* Panel: nota calculada */
+.nota-calculada { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: var(--radio-sm); background: var(--fondo); }
+.nota-calculada strong { font-size: 26px; line-height: 1; }
+.nota-calculada.etiqueta-pristine { background: linear-gradient(135deg, #7E1016, #B3202A 45%, #8E141C); color: #FBF3E4; }
+.nota-calculada.etiqueta-oro { background: linear-gradient(135deg, #B8862C, #F2D27A 45%, #C8922F); color: var(--azul); }
+.nota-calculada.etiqueta-plata { background: linear-gradient(135deg, #9EA6B1, #E9ECF0 45%, #A3ABB6); color: var(--azul); }
+.no-gradeable { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px; border-top: 1px dashed var(--gris-borde); padding-top: 14px; }
+.no-gradeable .campo { flex: 1 1 220px; }

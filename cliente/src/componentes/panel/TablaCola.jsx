@@ -1,4 +1,4 @@
-import { ACCION_ESTADO, ESTADOS_PEDIDO } from '@compartido';
+import { ACCION_ESTADO, ESTADOS_PEDIDO, resumenArticulos } from '@compartido';
 import { RUTAS } from '../../constantes/rutas.js';
 import { Enlace } from '../../enrutador/Enlace.jsx';
 import { formatoFecha } from '../../utilidades/formato.js';
@@ -11,7 +11,7 @@ const rutaSubir = (codigo) => `${RUTAS.PANEL}?seccion=subir&pedido=${codigo}`;
 function AccionesPedido({ pedido, alAvanzar, ocupado }) {
   return (
     <div className="acciones-fila">
-      {pedido.estado === ESTADOS_PEDIDO.EN_GRADEO && <Enlace href={rutaSubir(pedido.codigo)}>Subir productos</Enlace>}
+      {pedido.estado === ESTADOS_PEDIDO.EN_GRADEO && <Enlace href={rutaSubir(pedido.codigo)}>Gradear artículos</Enlace>}
       <button type="button" className="boton-enlace" disabled={ocupado} onClick={() => alAvanzar(pedido)}>
         {ACCION_ESTADO[pedido.estado]}
       </button>
@@ -28,7 +28,7 @@ export function TablaCola({ pedidos, alAvanzar, ocupado }) {
         <caption className="solo-lectores">Cola de pedidos por plazo, prioridad y orden de llegada</caption>
         <thead>
           <tr>
-            <th>#</th><th>Pedido</th><th>Cliente</th><th>Servicio</th><th>Prioridad</th><th>Llegada</th><th>Publicar antes de</th><th>Uds.</th><th>Estado</th>
+            <th>#</th><th>Pedido</th><th>Cliente</th><th>Servicio</th><th>Prioridad</th><th>Llegada</th><th>Publicar antes de</th><th>Artículos</th><th>Estado</th>
             <th><span className="solo-lectores">Acciones</span></th>
           </tr>
         </thead>
@@ -42,7 +42,7 @@ export function TablaCola({ pedidos, alAvanzar, ocupado }) {
               <td><Prioridad valor={p.servicio.prioridad} /></td>
               <td>{formatoFecha(p.fechaLlegada)}</td>
               <td><Plazo pedido={p} /></td>
-              <td>{p.unidades}</td>
+              <td>{p.estado === ESTADOS_PEDIDO.EN_GRADEO ? `${resumenArticulos(p).resueltos}/${p.unidades}` : p.unidades}</td>
               <td><Estado valor={p.estado} /></td>
               <td><AccionesPedido pedido={p} alAvanzar={alAvanzar} ocupado={ocupado === p.codigo} /></td>
             </tr>

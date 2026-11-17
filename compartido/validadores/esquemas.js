@@ -3,8 +3,9 @@ import { MENSAJES } from '../constantes/mensajes.js';
 import { IDS_CATEGORIA, IDS_TIPO_TICKET } from '../constantes/catalogo.js';
 import { ROLES } from '../constantes/roles.js';
 import { ESTADOS_PEDIDO, ESTADOS_TICKET } from '../constantes/estados.js';
+import { MOTIVOS_NO_GRADEABLE } from '../constantes/negocio.js';
 import {
-  requerido, email, minimo, maximo, igualA, aceptado, enLista, entero, nota, anio, idCertificado, validar,
+  requerido, email, minimo, maximo, igualA, aceptado, enLista, entero, nota, anio, idCertificado, articulosDeclarados, validar,
 } from './reglas.js';
 
 /** Esquemas de validación: los usan el formulario (cliente) y la API (servidor). */
@@ -28,25 +29,28 @@ export const ESQUEMAS = Object.freeze({
   },
   pedido: {
     servicio: [requerido],
-    unidades: [requerido, entero(LIMITES.UNIDADES_MIN, LIMITES.UNIDADES_MAX, MENSAJES.UNIDADES)],
+    articulos: [articulosDeclarados],
     notas: [maximo(LIMITES.MENSAJE_MAX)],
   },
   producto: {
     pedido: [requerido],
+    articulo: [requerido, entero(0, LIMITES.UNIDADES_MAX, MENSAJES.OPCION)],
     nombre: [requerido, maximo(120)],
-    nota: [requerido, nota],
     marca: [requerido],
     anio: [anio],
     expansion: [maximo(LIMITES.EXPANSION_MAX)],
     categoria: [requerido, enLista(IDS_CATEGORIA)],
-    'subnotas.centrado': [nota],
-    'subnotas.esquinas': [nota],
-    'subnotas.bordes': [nota],
-    'subnotas.superficie': [nota],
+    'subnotas.centrado': [requerido, nota],
+    'subnotas.esquinas': [requerido, nota],
+    'subnotas.bordes': [requerido, nota],
+    'subnotas.superficie': [requerido, nota],
     comentario: [maximo(LIMITES.MENSAJE_MAX)],
   },
   consulta: {
     id: [requerido, idCertificado],
+  },
+  noGradeable: {
+    motivo: [requerido, enLista(MOTIVOS_NO_GRADEABLE)],
   },
   estadoPedido: {
     estado: [requerido, enLista(Object.values(ESTADOS_PEDIDO))],

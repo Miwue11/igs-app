@@ -1,5 +1,6 @@
 import { MENSAJES } from '../constantes/mensajes.js';
 import { LIMITES, REGEX } from '../constantes/formatos.js';
+import { VALOR_DECLARADO_MAX } from '../constantes/negocio.js';
 import { esNotaValida } from '../utilidades/grados.js';
 import { esIdCertificado } from '../utilidades/ids.js';
 
@@ -35,6 +36,19 @@ export const anio = (v) => entero(LIMITES.ANIO_MIN, new Date().getFullYear() + 1
 export const nota = (v) => (vacio(v) || esNotaValida(v) ? null : MENSAJES.NOTA);
 
 export const idCertificado = (v) => (vacio(v) || esIdCertificado(v) ? null : MENSAJES.ID_CERTIFICADO);
+
+/** Lista de artículos declarados: al menos uno, cada uno con nombre y un valor declarado válido. */
+export const articulosDeclarados = (lista) => {
+  if (!Array.isArray(lista) || lista.length === 0) return MENSAJES.SIN_ARTICULOS;
+  if (lista.length > LIMITES.UNIDADES_MAX) return MENSAJES.UNIDADES;
+  const posicion = lista.findIndex((a) => {
+    const valor = Number(a?.valorDeclarado);
+    return vacio(a?.nombre) || String(a.nombre).length > 120
+      || vacio(a?.valorDeclarado) || !Number.isFinite(valor) || valor <= 0 || valor > VALOR_DECLARADO_MAX
+      || (!vacio(a?.anio) && anio(a.anio));
+  });
+  return posicion === -1 ? null : `${MENSAJES.ARTICULO_INCOMPLETO} (artículo ${posicion + 1})`;
+};
 
 const leer = (datos, ruta) => ruta.split('.').reduce((obj, clave) => obj?.[clave], datos);
 

@@ -25,12 +25,15 @@ test('campos vacíos son obligatorios', () => {
   assert.equal(errores.contrasena, MENSAJES.OBLIGATORIO);
 });
 
-test('producto: nota y subnotas en la escala de 0,5', () => {
-  const base = { pedido: 'PED-0001', nombre: 'Carta', marca: 'X', categoria: 'tcg' };
-  assert.ok(sinErrores(validarCon('producto', { ...base, nota: 9.5, subnotas: { centrado: 9 } })));
-  const errores = validarCon('producto', { ...base, nota: 9.3, subnotas: { bordes: 11 } });
-  assert.equal(errores.nota, MENSAJES.NOTA);
+const SUBNOTAS_OK = { centrado: 9.5, esquinas: 9, bordes: 9.5, superficie: 10 };
+
+test('producto: las cuatro subnotas son obligatorias y en la escala de 0,5', () => {
+  const base = { pedido: 'PED-0001', articulo: 0, nombre: 'Carta', marca: 'X', categoria: 'tcg' };
+  assert.ok(sinErrores(validarCon('producto', { ...base, subnotas: SUBNOTAS_OK })));
+  const errores = validarCon('producto', { ...base, subnotas: { ...SUBNOTAS_OK, bordes: 11, centrado: null } });
   assert.equal(errores['subnotas.bordes'], MENSAJES.NOTA);
+  assert.equal(errores['subnotas.centrado'], MENSAJES.OBLIGATORIO);
+  assert.equal(validarCon('producto', { ...base, articulo: '' }).articulo, MENSAJES.OBLIGATORIO);
 });
 
 test('producto: categoría fuera de la lista', () => {
@@ -38,10 +41,11 @@ test('producto: categoría fuera de la lista', () => {
   assert.equal(errores.categoria, MENSAJES.OPCION);
 });
 
-test('pedido: unidades enteras entre 1 y 1000', () => {
-  assert.equal(validarCon('pedido', { servicio: 'STD', unidades: 0 }).unidades, MENSAJES.UNIDADES);
-  assert.equal(validarCon('pedido', { servicio: 'STD', unidades: 2.5 }).unidades, MENSAJES.UNIDADES);
-  assert.ok(sinErrores(validarCon('pedido', { servicio: 'STD', unidades: '12' })));
+test('pedido: cada artículo declarado necesita nombre y valor', () => {
+  assert.equal(validarCon('pedido', { servicio: 'STD', articulos: [] }).articulos, MENSAJES.SIN_ARTICULOS);
+  assert.match(validarCon('pedido', { servicio: 'STD', articulos: [{ nombre: 'Pikachu', valorDeclarado: 0 }] }).articulos, /artículo 1/);
+  assert.match(validarCon('pedido', { servicio: 'STD', articulos: [{ nombre: 'A', valorDeclarado: 5 }, { nombre: '', valorDeclarado: 5 }] }).articulos, /artículo 2/);
+  assert.ok(sinErrores(validarCon('pedido', { servicio: 'STD', articulos: [{ nombre: 'Pikachu', valorDeclarado: '40', anio: 1999 }] })));
 });
 
 test('consulta por ID de certificado', () => {
@@ -50,7 +54,7 @@ test('consulta por ID de certificado', () => {
 });
 
 test('producto: año y expansión de la etiqueta', () => {
-  const base = { pedido: 'PED-0006', nombre: 'Charizard', nota: 9.5, marca: 'Pokémon', categoria: 'tcg' };
+  const base = { pedido: 'PED-0006', articulo: 2, nombre: 'Charizard', marca: 'Pokémon', categoria: 'tcg', subnotas: SUBNOTAS_OK };
   assert.ok(sinErrores(validarCon('producto', { ...base, anio: 1999, expansion: 'Base Set' })));
   assert.ok(sinErrores(validarCon('producto', { ...base, anio: null, expansion: '' })));
   assert.equal(validarCon('producto', { ...base, anio: 1800 }).anio, MENSAJES.ANIO);

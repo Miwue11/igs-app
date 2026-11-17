@@ -18,7 +18,7 @@ export const ENLACES_LEGALES = Object.freeze([
 /** Secciones del panel interno y qué roles las ven. */
 export const SECCIONES_PANEL = Object.freeze([
   { id: 'cola', texto: 'Cola de pedidos', roles: ROLES_INTERNOS },
-  { id: 'subir', texto: 'Subir producto', roles: ROLES_INTERNOS },
+  { id: 'subir', texto: 'Gradear artículos', roles: ROLES_INTERNOS },
   { id: 'tickets', texto: 'Tickets de ayuda', roles: ROLES_INTERNOS },
   { id: 'usuarios', texto: 'Usuarios', roles: [ROLES.ADMIN], soloAdmin: true },
 ]);

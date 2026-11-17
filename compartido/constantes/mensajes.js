@@ -11,5 +11,8 @@ export const MENSAJES = Object.freeze({
   UNIDADES: 'Indica entre 1 y 1000 unidades.',
   CATEGORIA: 'Elige una categoría válida.',
   OPCION: 'Elige una opción válida.',
+  SIN_ARTICULOS: 'Añade al menos un artículo al pedido.',
+  ARTICULO_INCOMPLETO: 'Cada artículo necesita nombre y un valor declarado mayor que 0 €',
+  SUBNOTAS: 'Pon las cuatro subnotas para calcular la nota final.',
   DEMASIADO_LARGO: 'El texto es demasiado largo.',
 });

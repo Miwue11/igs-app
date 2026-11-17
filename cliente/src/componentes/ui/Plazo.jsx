@@ -15,6 +15,14 @@ const detalle = (pedido, estado) => {
 /** Fecha límite de publicación del pedido con su estado (en plazo, vence pronto, fuera de plazo…). */
 export function Plazo({ pedido }) {
   const estado = estadoPlazo(pedido);
+  if (estado === ESTADOS_PLAZO.SIN_INICIAR) {
+    return (
+      <div className="plazo">
+        <span>{pedido.servicio.plazoDias} días</span>
+        <span className={`pastilla pastilla--${estado}`}>{ETIQUETAS_ESTADO_PLAZO[estado]}</span>
+      </div>
+    );
+  }
   return (
     <div className="plazo">
       <span>{formatoFecha(pedido.fechaLimite)}</span>

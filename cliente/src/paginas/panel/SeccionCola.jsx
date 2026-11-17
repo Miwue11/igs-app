@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import {
-  ETIQUETAS_ESTADO_PEDIDO, ETIQUETAS_ESTADO_PLAZO, ETIQUETAS_PRIORIDAD, estadoPlazo, siguienteEstado,
+  ETIQUETAS_ESTADO_PEDIDO, ETIQUETAS_ESTADO_PLAZO, ETIQUETAS_PRIORIDAD, estadoPlazo, siguienteEstado, resumenArticulos,
 } from '@compartido';
 import { api } from '../../servicios/index.js';
 import { useCarga } from '../../hooks/useCarga.js';
@@ -18,6 +18,8 @@ const COLUMNAS_CSV = [
   { titulo: 'Cliente', valor: (p) => p.cliente?.nombre },
   { titulo: 'Llegada', valor: (p) => formatoFecha(p.fechaLlegada) },
   { titulo: 'Unidades', valor: (p) => p.unidades },
+  { titulo: 'Resueltos', valor: (p) => resumenArticulos(p).resueltos },
+  { titulo: 'Total (€)', valor: (p) => p.importe?.total ?? '' },
   { titulo: 'Servicio', valor: (p) => p.servicio.nombre },
   { titulo: 'Prioridad', valor: (p) => ETIQUETAS_PRIORIDAD[p.servicio.prioridad ?? 0] },
   { titulo: 'Publicar antes de', valor: (p) => formatoFecha(p.fechaLimite) },
@@ -56,7 +58,7 @@ export function SeccionCola() {
       <div className="seccion-cabecera">
         <div>
           <h1 id="t-cola">Cola de pedidos</h1>
-          <p className="apagado">Orden: primero los que vencen en 3 días o menos, después por prioridad del servicio y por orden de llegada. El gradeo básico debe publicarse en 14 días.</p>
+          <p className="apagado">Orden: primero los que vencen en 3 días o menos, después por prioridad del servicio y por orden de llegada. El plazo empieza al recibir el paquete (14 días en el gradeo básico) y el pedido solo se publica cuando todos sus artículos están gradeados o marcados como no gradeables.</p>
         </div>
         <BarraCola filtro={filtro} alFiltrar={setFiltro} alExportar={exportar} />
       </div>

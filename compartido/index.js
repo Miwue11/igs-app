@@ -9,6 +9,7 @@ export * from './constantes/formatos.js';
 export * from './constantes/mensajes.js';
 export * from './constantes/plazos.js';
 export * from './constantes/apisCartas.js';
+export * from './constantes/negocio.js';
 export * from './utilidades/ids.js';
 export * from './utilidades/grados.js';
 export * from './utilidades/plazos.js';

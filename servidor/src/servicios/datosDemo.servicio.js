@@ -61,6 +61,14 @@ const ajustarContadores = () => {
   ]);
 };
 
+/**
+ * Versión del formato de los datos de demo. Súbela cuando cambie su estructura:
+ * al arrancar con SEMBRAR_DEMO_SI_VACIA, una base de datos de demo con una versión anterior se recarga.
+ *   2 → pedidos con artículos declarados, importe y plazo desde la llegada.
+ */
+export const VERSION_DATOS_DEMO = 2;
+const CONTADOR_VERSION = 'version-datos-demo';
+
 /** Borra la base de datos y carga los datos de demo. Necesita la conexión ya abierta. */
 export const cargarDatosDemo = async () => {
   await vaciar();
@@ -70,13 +78,22 @@ export const cargarDatosDemo = async () => {
   await crearProductos(pedidos, usuarios.get('trabajador@igs.demo'));
   await crearTickets(usuarios);
   await ajustarContadores();
+  await Contador.create({ _id: CONTADOR_VERSION, secuencia: VERSION_DATOS_DEMO });
   return CONTRASENA_DEMO;
 };
 
-/** Solo carga la demo si no hay ningún usuario (primer arranque con una base de datos nueva). */
+/**
+ * Carga la demo si la base de datos está vacía (primer arranque) o si es una demo con un formato antiguo.
+ * Una base de datos con datos reales (sin marca de versión de demo y con usuarios) no se toca.
+ */
 export const cargarDatosDemoSiVacia = async () => {
-  if ((await Usuario.estimatedDocumentCount()) > 0) return false;
+  const vacia = (await Usuario.estimatedDocumentCount()) === 0;
+  const version = (await Contador.findById(CONTADOR_VERSION).lean())?.secuencia ?? 0;
+  const demoAntigua = !vacia && version < VERSION_DATOS_DEMO && (await Usuario.exists({ email: 'admin@igs.demo' }));
+  if (!vacia && !demoAntigua) return false;
+
   const contrasena = await cargarDatosDemo();
-  console.log(`[igs] Base de datos vacía: cargados los datos de demo. Contraseña de las cuentas: ${contrasena}`);
+  const motivo = vacia ? 'Base de datos vacía' : `Datos de demo antiguos (versión ${version})`;
+  console.log(`[igs] ${motivo}: cargados los datos de demo v${VERSION_DATOS_DEMO}. Contraseña de las cuentas: ${contrasena}`);
   return true;
 };

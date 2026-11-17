@@ -11,6 +11,7 @@
 
 /* Móvil (hasta 600px) */
 @media (max-width: 600px) {
+  .buscador-cartas-filtros { grid-template-columns: 1fr; }
   body { font-size: 15px; }
   .contenedor { padding: 0 16px; }
 

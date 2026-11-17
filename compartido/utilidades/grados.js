@@ -47,3 +47,18 @@ export const esNotaValida = (nota) => {
   const valor = Number(nota);
   return Number.isFinite(valor) && valor >= 1 && valor <= 10 && (valor * 2) % 1 === 0;
 };
+
+const redondearMedio = (valor) => Math.floor((valor + 0.25) * 2) / 2;
+
+/**
+ * Nota final a partir de las cuatro subnotas, como en BGS:
+ *   - media de centrado, esquinas, bordes y superficie, redondeada al 0,5 más cercano;
+ *   - nunca más de 1 punto por encima de la subnota más baja (un defecto grave limita la nota).
+ * Devuelve null si falta alguna subnota.
+ */
+export const calcularNotaFinal = (subnotas = {}) => {
+  const valores = SUBNOTAS_PRISTINE.map((id) => Number(subnotas?.[id]));
+  if (valores.some((v) => !esNotaValida(v))) return null;
+  const media = valores.reduce((total, v) => total + v, 0) / valores.length;
+  return Math.min(redondearMedio(media), Math.min(...valores) + 1, 10);
+};

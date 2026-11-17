@@ -3,7 +3,6 @@ name: Comprobar servidor completo
 
 on:
   push:
-    branches: [master]
   pull_request:
   workflow_dispatch:
 
@@ -37,28 +36,57 @@ jobs:
           for i in $(seq 1 30); do curl -fs http://localhost:4000/api/servicios > /dev/null && break; sleep 1; done
           cat servidor.log
 
-      - name: Probar la API
+      - name: Probar la API (flujo cliente → IGS)
         run: |
           set -e
           B=http://localhost:4000
-          echo "→ Web compilada servida por Express"
+          # Hace una petición y comprueba el código HTTP esperado. Deja la respuesta en r.json.
+          pedir() { esperado=$1; shift; codigo=$(curl -s -o r.json -w '%{http_code}' "$@"); cat r.json; echo; \
+            if [ "$codigo" != "$esperado" ]; then echo "✗ esperaba $esperado y llegó $codigo"; exit 1; fi; }
+          campo() { node -e "const d=require('./r.json');console.log($1)"; }
+          JSON='Content-Type: application/json'
+
+          echo "→ Web y certificado de demo"
           curl -fs $B/ | grep -q '<div id="root">'
-          curl -fs $B/consulta | grep -q '<div id="root">'
-          echo "→ Servicios y certificado de demo"
-          curl -fs $B/api/servicios | grep -q '"codigo"'
           curl -fs $B/api/productos/IGS-2026-000001 | grep -q 'PRISTINE'
-          echo "→ Inicio de sesión del trabajador"
-          curl -fs -c cookies.txt -H 'Content-Type: application/json' \
-            -d '{"email":"trabajador@igs.demo","contrasena":"Igs-demo-2026"}' $B/api/acceso/entrar > /dev/null
-          echo "→ Subida de un producto con foto (se guarda en MongoDB)"
+
+          echo "→ El cliente crea un envío declarando sus cartas"
+          pedir 200 -c cliente.txt -H "$JSON" -d '{"email":"cliente@igs.demo","contrasena":"Igs-demo-2026"}' $B/api/acceso/entrar
+          pedir 400 -b cliente.txt -H "$JSON" -d '{"servicio":"STD","articulos":[{"nombre":"Lugia","valorDeclarado":900}]}' $B/api/pedidos
+          pedir 400 -b cliente.txt -H "$JSON" -d '{"servicio":"BLQ","articulos":[{"nombre":"Pikachu","valorDeclarado":20}]}' $B/api/pedidos
+          pedir 201 -b cliente.txt -H "$JSON" \
+            -d '{"servicio":"STD","articulos":[{"nombre":"Pikachu","expansion":"Base Set","anio":1999,"numero":"58/102","valorDeclarado":40},{"nombre":"Mew","valorDeclarado":25}]}' $B/api/pedidos
+          NUEVO=$(campo d.codigo)
+          [ "$(campo d.fechaLimite)" = "null" ] || { echo "✗ el plazo no debería empezar todavía"; exit 1; }
+          [ "$(campo d.importe.total)" = "45" ] || { echo "✗ importe incorrecto"; exit 1; }
+
+          echo "→ IGS no puede saltarse estados"
+          pedir 200 -c trabajador.txt -H "$JSON" -d '{"email":"trabajador@igs.demo","contrasena":"Igs-demo-2026"}' $B/api/acceso/entrar
+          pedir 409 -b trabajador.txt -X PATCH -H "$JSON" -d '{"estado":"completado"}' $B/api/pedidos/$NUEVO/estado
+          pedir 200 -b trabajador.txt -X PATCH -H "$JSON" -d '{"estado":"recibido"}' $B/api/pedidos/$NUEVO/estado
+          [ "$(campo d.fechaLimite)" != "null" ] || { echo "✗ al recibirlo debería empezar el plazo"; exit 1; }
+
+          echo "→ No se publica PED-0001 con artículos pendientes"
+          pedir 409 -b trabajador.txt -X PATCH -H "$JSON" -d '{"estado":"completado"}' $B/api/pedidos/PED-0001/estado
+
+          echo "→ Gradear el artículo 0 con foto: nota calculada PRISTINE y foto en MongoDB"
           printf '\x89PNG\r\n\x1a\n' > foto.png
-          RESPUESTA=$(curl -fs -b cookies.txt \
-            -F 'datos={"pedido":"PED-0006","nombre":"Charizard","nota":9.5,"marca":"Pokémon","anio":1999,"expansion":"Base Set","categoria":"tcg","subnotas":{}}' \
-            -F 'anverso=@foto.png;type=image/png' $B/api/productos)
-          echo "$RESPUESTA"
-          FOTO=$(echo "$RESPUESTA" | node -e 'let d="";process.stdin.on("data",c=>d+=c).on("end",()=>console.log(JSON.parse(d).imagenes.anverso))')
-          echo "→ La foto $FOTO se sirve desde MongoDB"
+          DATOS='{"pedido":"PED-0001","articulo":0,"nombre":"Pikachu","marca":"Pokémon","categoria":"tcg","subnotas":{"centrado":10,"esquinas":10,"bordes":10,"superficie":10}}'
+          pedir 201 -b trabajador.txt -F "datos=$DATOS" -F 'anverso=@foto.png;type=image/png' $B/api/productos
+          [ "$(campo d.etiquetaGrado)" = "PRISTINE" ] && [ "$(campo d.nota)" = "10" ]
+          FOTO=$(campo d.imagenes.anverso)
           curl -fs -o /dev/null -w '%{content_type}\n' $B$FOTO | grep -q 'image/png'
+
+          echo "→ El mismo artículo no se puede gradear dos veces"
+          pedir 409 -b trabajador.txt -F "datos=$DATOS" $B/api/productos
+
+          echo "→ Subnotas 10/10/10/9,5 → 10 GEM MINT (dorada)"
+          DATOS2='{"pedido":"PED-0001","articulo":1,"nombre":"Blastoise","marca":"Pokémon","categoria":"tcg","subnotas":{"centrado":10,"esquinas":10,"bordes":10,"superficie":9.5}}'
+          pedir 201 -b trabajador.txt -F "datos=$DATOS2" $B/api/productos
+          [ "$(campo d.etiquetaGrado)" = "GEM MINT" ] && [ "$(campo d.nota)" = "10" ]
+
+          echo "→ Artículo no gradeable"
+          pedir 200 -b trabajador.txt -H "$JSON" -d '{"motivo":"Posible falsificación"}' $B/api/pedidos/PED-0001/articulos/2/no-gradeable
           echo "Todo correcto"
 
       - name: Registro del servidor

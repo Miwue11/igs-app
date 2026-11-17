@@ -63,6 +63,7 @@
 .pastilla--en_gradeo, .pastilla--en_proceso { background: #FCEFD4; color: #6B4A00; }
 .pastilla--completado, .pastilla--enviado { background: var(--verde-fondo); color: var(--verde); }
 /* Plazo de publicación */
+.pastilla--sin_iniciar { background: #F3F0E8; color: #5A4A1E; white-space: normal; }
 .pastilla--en_plazo { background: #EEF1F5; color: #3A4555; }
 .pastilla--proximo { background: #FCEFD4; color: #6B4A00; }
 .pastilla--vencido, .pastilla--cumplido_tarde { background: var(--error-fondo); color: var(--error); }

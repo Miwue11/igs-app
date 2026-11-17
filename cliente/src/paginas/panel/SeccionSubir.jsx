@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ESTADOS_PEDIDO, SUBNOTAS } from '@compartido';
+import { ESTADOS_PEDIDO, MOTIVOS_NO_GRADEABLE, calcularNotaFinal } from '@compartido';
 import { api } from '../../servicios/index.js';
 import { useCarga } from '../../hooks/useCarga.js';
 import { useFormulario } from '../../hooks/useFormulario.js';
@@ -9,8 +9,7 @@ import { Enlace } from '../../enrutador/Enlace.jsx';
 import { rutaConsulta } from '../../constantes/rutas.js';
 import { SelectorFoto } from '../../componentes/panel/SelectorFoto.jsx';
 import { FormularioProducto } from '../../componentes/panel/FormularioProducto.jsx';
-import { RecomendacionesCartas } from '../../componentes/panel/RecomendacionesCartas.jsx';
-import { PRODUCTO_VACIO, CAMPO_SUBNOTA, prepararProducto, valoresDesdeIA } from '../../componentes/panel/opcionesProducto.js';
+import { PRODUCTO_VACIO, subnotasDe, prepararProducto, valoresDesdeIA } from '../../componentes/panel/opcionesProducto.js';
 import { EtiquetaIGS } from '../../componentes/producto/EtiquetaIGS.jsx';
 import { Boton } from '../../componentes/ui/Boton.jsx';
 import { Icono } from '../../componentes/ui/Icono.jsx';
@@ -25,25 +24,59 @@ const FOTOS = [
 const SIN_FOTOS = { etiqueta: null, anverso: null, reverso: null };
 
 /** Lo que se ve en la vista previa de la etiqueta mientras se rellena el formulario. */
-const vistaPrevia = (valores) => ({
-  nombre: valores.nombre,
-  anio: valores.anio,
-  expansion: valores.expansion,
-  nota: valores.nota,
-  subnotas: Object.fromEntries(SUBNOTAS.map((s) => [s.id, valores[CAMPO_SUBNOTA(s.id)]])),
-});
+const vistaPrevia = (valores) => {
+  const subnotas = subnotasDe(valores);
+  return {
+    nombre: valores.nombre,
+    anio: valores.anio,
+    expansion: valores.expansion,
+    nota: calcularNotaFinal(subnotas) ?? '',
+    subnotas,
+  };
+};
+
+/** Devolver el artículo sin encapsular (alterado, falso…), como los códigos «N» de PSA. */
+function NoGradeable({ pedido, articulo, alMarcar }) {
+  const [motivo, setMotivo] = useState(MOTIVOS_NO_GRADEABLE[0]);
+  const [estado, setEstado] = useState(null);
+  const listo = pedido && articulo !== '';
+
+  const marcar = async () => {
+    setEstado(null);
+    try {
+      await api.pedidos.noGradeable(pedido, Number(articulo), motivo);
+      setEstado({ tipo: 'ok', texto: 'Artículo marcado como no gradeable. Se devolverá sin encapsular.' });
+      alMarcar();
+    } catch (e) {
+      setEstado({ tipo: 'error', texto: e.message });
+    }
+  };
+
+  return (
+    <div className="no-gradeable">
+      <label className="campo" htmlFor="p-motivo">
+        <span>¿No se puede gradear?</span>
+        <select id="p-motivo" className="selector" value={motivo} onChange={(e) => setMotivo(e.target.value)} disabled={!listo}>
+          {MOTIVOS_NO_GRADEABLE.map((m) => <option key={m} value={m}>{m}</option>)}
+        </select>
+      </label>
+      <Boton variante="contorno" onClick={marcar} disabled={!listo}>Marcar no gradeable</Boton>
+      <div className="completo"><Mensaje mensaje={estado} /></div>
+    </div>
+  );
+}
 
 /**
- * Subida de un producto gradeado: fotos, lectura automática de la etiqueta, recomendaciones de cartas
- * oficiales (API gratuita), vista previa de la etiqueta IGS y ficha.
+ * Gradeo de un artículo declarado por el cliente: fotos, lectura automática de la etiqueta,
+ * subnotas con la nota final calculada, vista previa de la etiqueta IGS y publicación del certificado.
  */
 export function SeccionSubir() {
-  useTituloPagina('Subir producto');
+  useTituloPagina('Gradear artículos');
   const { query } = useRutas();
   const [fotos, setFotos] = useState(SIN_FOTOS);
   const [guardado, setGuardado] = useState(null);
   const [estadoIA, setEstadoIA] = useState(null);
-  const { datos: pedidos } = useCarga(() => api.pedidos.cola(ESTADOS_PEDIDO.EN_GRADEO));
+  const { datos: pedidos, recargar } = useCarga(() => api.pedidos.cola(ESTADOS_PEDIDO.EN_GRADEO));
 
   const inicial = { ...PRODUCTO_VACIO, pedido: query.get('pedido') ?? '' };
   const formulario = useFormulario({
@@ -55,7 +88,8 @@ export function SeccionSubir() {
       setGuardado(producto);
       setFotos(SIN_FOTOS);
       formulario.reiniciar({ ...PRODUCTO_VACIO, pedido: datos.pedido });
-      return `Producto guardado con el ID ${producto.idCertificado}.`;
+      await recargar();
+      return `Certificado ${producto.idCertificado} publicado.`;
     },
   });
 
@@ -74,7 +108,7 @@ export function SeccionSubir() {
 
   return (
     <section aria-labelledby="t-subir">
-      <h1 id="t-subir">Subir producto gradeado</h1>
+      <h1 id="t-subir">Gradear artículos</h1>
       <Tarjeta como="div" className="subida">
         <div className="subida-fotos">
           {FOTOS.map((f) => <SelectorFoto key={f.campo} campo={f.campo} etiqueta={f.texto} archivo={fotos[f.campo]} alCambiar={cambiarFoto} />)}
@@ -83,7 +117,6 @@ export function SeccionSubir() {
           </Boton>
           <p className="pequeno">{fotos.etiqueta ? 'Se leen los datos de la etiqueta y se rellena el formulario.' : 'Sube la foto de la etiqueta para leerla automáticamente.'}</p>
           <Mensaje mensaje={estadoIA} />
-          <RecomendacionesCartas valores={formulario.valores} alElegir={formulario.rellenar} />
         </div>
         <div className="subida-ficha">
           <div className="vista-etiqueta">
@@ -91,6 +124,8 @@ export function SeccionSubir() {
             <EtiquetaIGS producto={vistaPrevia(formulario.valores)} />
           </div>
           <FormularioProducto formulario={formulario} pedidos={pedidos ?? []} />
+          <NoGradeable pedido={formulario.valores.pedido} articulo={formulario.valores.articulo}
+            alMarcar={() => { formulario.rellenar({ articulo: '' }); recargar(); }} />
         </div>
       </Tarjeta>
       {guardado && (

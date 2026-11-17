@@ -27,20 +27,18 @@ export function PaginaMiCuenta() {
       <div className="contenedor">
         <div className="pagina-cabecera">
           <h1>Hola, {usuario.nombre}</h1>
-          <p>Aquí puedes ver el estado de tus pedidos y solicitar un gradeo nuevo.</p>
+          <p>Aquí puedes ver el estado de tus pedidos, el resultado de cada artículo y preparar un envío nuevo.</p>
         </div>
-        <div className="fila fila-arriba">
-          <section className="columna columna-ancha pila" aria-labelledby="t-mis-pedidos">
+        <div className="pila">
+          <section className="pila" aria-labelledby="t-mis-pedidos">
             <h2 className="seccion-titulo" id="t-mis-pedidos">Mis pedidos</h2>
             {pedidos.cargando && <Cargando />}
             {pedidos.error && <Aviso tipo="error">{pedidos.error.message}</Aviso>}
             {pedidos.datos && <ListaPedidos pedidos={pedidos.datos} />}
           </section>
-          <div className="columna">
-            {servicios.datos && (
-              <FormularioPedido servicios={servicios.datos} servicioInicial={query.get('servicio') ?? ''} alCrear={crear} />
-            )}
-          </div>
+          {servicios.datos && (
+            <FormularioPedido servicios={servicios.datos} servicioInicial={query.get('servicio') ?? ''} alCrear={crear} />
+          )}
         </div>
       </div>
     </div>

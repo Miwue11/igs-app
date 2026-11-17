@@ -44,7 +44,7 @@ test('la cola da prioridad a los servicios superiores sin incumplir el plazo bá
 });
 
 test('ventajas de cada servicio', () => {
-  assert.deepEqual(ventajasServicio({ plazoDias: 14, prioridad: 0 }), ['Publicado en 14 días como máximo']);
+  assert.deepEqual(ventajasServicio({ plazoDias: 14, prioridad: 0 }), ['Publicado en 14 días como máximo desde que recibimos el paquete']);
   assert.deepEqual(ventajasServicio({ plazoDias: 3, prioridad: 2, extras: ['Doble revisión'] }),
-    ['Publicado en 3 días como máximo', 'Prioridad máxima en la cola', 'Doble revisión']);
+    ['Publicado en 3 días como máximo desde que recibimos el paquete', 'Prioridad máxima en la cola', 'Doble revisión']);
 });

@@ -1,7 +1,7 @@
 import { APIS_CARTAS } from '@compartido';
 
 /**
- * Recomendaciones de cartas oficiales a partir del nombre del producto.
+ * Búsqueda de cartas oficiales para que el cliente declare lo que envía en su pedido.
  * Usa APIs públicas y gratuitas, sin clave ni registro:
  *   - Pokémon: TCGdex (https://tcgdex.dev), multilingüe (español, inglés, japonés…)
  *   - Magic: The Gathering: Scryfall (https://scryfall.com/docs/api)
@@ -151,18 +151,18 @@ export const buscarCartasOficiales = async ({ nombre, juego = 'pokemon', idioma,
   return buscar(nombre.trim(), idioma, senal);
 };
 
-/** Pasa una recomendación a los campos del formulario de producto. */
-export const valoresDesdeCarta = (carta) => {
+/** Pasa una carta encontrada a un artículo del pedido (el cliente solo tiene que poner el valor declarado). */
+export const articuloDesdeCarta = (carta, idioma = '') => {
   const juego = JUEGOS.find((j) => j.id === carta.juego);
-  const valores = {
+  return {
     nombre: carta.nombre,
     marca: juego?.marca ?? '',
     expansion: carta.expansion,
     anio: carta.anio ? String(carta.anio) : '',
-    numeroTarjeta: carta.numero,
-    clase: carta.rareza,
-    categoria: 'tcg',
+    numero: carta.numero,
+    idioma,
+    rareza: [carta.rareza, carta.variedad].filter(Boolean).join(' · '),
+    imagen: carta.imagen,
+    valorDeclarado: '',
   };
-  if (carta.variedad) valores.variedad = carta.variedad;
-  return valores;
 };

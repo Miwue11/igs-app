@@ -5,7 +5,7 @@ import {
 const DIA_MS = 24 * 60 * 60 * 1000;
 const fecha = (valor) => new Date(valor ?? Date.now());
 
-/** Fecha límite de publicación: fecha de creación + días del servicio. */
+/** Fecha límite de publicación: fecha de llegada del paquete + días del servicio. */
 export const calcularFechaLimite = (creadoEn, plazoDias) =>
   new Date(fecha(creadoEn).getTime() + plazoDias * DIA_MS).toISOString();
 
@@ -14,7 +14,7 @@ export const diasRestantes = (fechaLimite, ahora) => Math.ceil((fecha(fechaLimit
 
 /** Situación del pedido respecto a su plazo. */
 export const estadoPlazo = ({ fechaLimite, fechaPublicacion }, ahora) => {
-  if (!fechaLimite) return ESTADOS_PLAZO.EN_PLAZO;
+  if (!fechaLimite) return ESTADOS_PLAZO.SIN_INICIAR;
   if (fechaPublicacion) {
     return fecha(fechaPublicacion) <= fecha(fechaLimite) ? ESTADOS_PLAZO.CUMPLIDO : ESTADOS_PLAZO.CUMPLIDO_TARDE;
   }
@@ -28,7 +28,7 @@ export const esUrgente = (pedido, ahora) =>
 
 /** Ventajas que se muestran en la tarjeta de cada servicio. */
 export const ventajasServicio = ({ plazoDias, prioridad = PRIORIDADES.NORMAL, extras = [] }) => [
-  `Publicado en ${plazoDias} días como máximo`,
+  `Publicado en ${plazoDias} días como máximo desde que recibimos el paquete`,
   ...(prioridad > PRIORIDADES.NORMAL ? [`Prioridad ${ETIQUETAS_PRIORIDAD[prioridad].toLowerCase()} en la cola`] : []),
   ...extras,
 ];

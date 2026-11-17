@@ -6,6 +6,24 @@ TFG (proyecto intermodular de DAW): Miguel López Rodríguez.
 **Todo es gratuito:** React + Vite, Node.js + Express, MongoDB Community Server, MongoDB Compass y el reenvío de puertos de VS Code para publicar la web.
 **Todo el código está en español:** carpetas, archivos, colecciones, campos, rutas de la API, clases CSS y variables de entorno.
 
+## Cómo funciona un pedido (cliente ↔ IGS)
+
+El flujo está inspirado en PSA y BGS. Las reglas están en `compartido/utilidades/pedidos.js` y las usan igual el servidor y el modo demo.
+
+1. **El cliente prepara el envío** en «Mi cuenta»: elige el servicio y declara **cada artículo** con su valor.
+   En cartas TCG busca la carta en una API gratuita (ver abajo) y se rellenan expansión, año, número y rareza.
+2. **Valor declarado**: cada servicio tiene un valor máximo por artículo (Estándar 500 €, Express 1.500 €, Premium sin límite).
+   Si una carta lo supera, hay que elegir un servicio superior. El pedido en bloque exige **mínimo 20 artículos** de hasta 200 €.
+3. **Importe** = precio del servicio × artículos + **envío de vuelta asegurado** (15 €).
+4. **IGS recibe el paquete** → empieza a contar el plazo del servicio.
+5. **En gradeo**: cada certificado sale de un artículo declarado. El gradeador pone las cuatro subnotas y la nota final
+   **se calcula sola** (ver «Etiqueta IGS»). Si no se puede encapsular (alterada, posible falsificación, tamaño no estándar…)
+   se marca **no gradeable** y se devuelve sin certificado, como los códigos «N» de PSA.
+6. **Completado** (publicado) solo cuando todos los artículos están resueltos. Después, **Enviado** al cliente.
+   Los estados avanzan de uno en uno; el servidor rechaza saltos.
+
+El cliente ve en «Mi cuenta» el resultado de cada artículo: enlace a su certificado o el motivo por el que no se gradeó.
+
 ## Plazos de gradeo
 
 | Servicio | Publicado como máximo en | Prioridad en la cola |
@@ -14,14 +32,14 @@ TFG (proyecto intermodular de DAW): Miguel López Rodríguez.
 | Express | 7 días | Alta |
 | Premium | 3 días (más doble revisión) | Máxima |
 
-- El plazo cuenta **desde que el cliente crea el pedido hasta que se publica el gradeo**, es decir, cuando el pedido pasa a «Completado». Cada pedido guarda su `fechaLimite` y su `fechaPublicacion`.
+- El plazo cuenta **desde que IGS recibe el paquete hasta que se publica el gradeo** (pedido «Completado»), como en PSA y BGS. Así el tiempo que el cliente tarda en enviarlo no cuenta en contra de IGS. Cada pedido guarda `fechaLlegada`, `fechaLimite` y `fechaPublicacion`.
 - **Orden de la cola** (`compartido/utilidades/cola.js`):
   1. Primero los pedidos cuyo paquete ya ha llegado.
   2. Después los urgentes (vencen en 3 días o menos o están fuera de plazo), por fecha límite.
   3. El resto, por prioridad del servicio y orden de llegada.
 
   Así los servicios caros pasan antes, pero un gradeo básico nunca se queda sin publicar en sus 14 días.
-- El panel muestra para cada pedido «Quedan N días», «Vence pronto» o «Fuera de plazo». El cliente ve la fecha máxima de publicación al hacer el pedido y en «Mi cuenta».
+- El panel muestra para cada pedido «Quedan N días», «Vence pronto» o «Fuera de plazo». Antes de llegar el paquete se muestra «Empieza al recibir el paquete»; después, la fecha máxima en «Mi cuenta».
 - Los días y prioridades se cambian en `compartido/demo/datos.js` (catálogo de ejemplo) y en `compartido/constantes/plazos.js`.
 
 ## Demo publicada en GitHub Pages
@@ -56,12 +74,18 @@ como vista previa al subir un producto y se puede imprimir desde el panel tras g
 | 10 (resto) y 9,5 | GEM MINT | Dorado |
 | 9 hacia abajo | MINT, NM-MT… POOR | Plateado |
 
-La regla está en `compartido/utilidades/grados.js` (`etiquetaGrado` y `nivelGrado`), así que cliente, servidor y demo dan siempre el mismo resultado.
+**La nota final no se elige: se calcula con las subnotas** (centrado, esquinas, bordes y superficie), como en BGS:
+media redondeada al 0,5 más cercano y nunca más de 1 punto por encima de la subnota más baja.
+Ejemplos: 10/10/10/10 → **10 PRISTINE**; 10/10/10/9,5 → **10 GEM MINT**; 9,5/9,5/9,5/10 → **9,5 GEM MINT**; 10/10/10/6 → **7**.
+En el panel la nota y la vista previa de la etiqueta cambian de color mientras se ponen las subnotas.
 
-## Recomendaciones de cartas oficiales (APIs gratuitas)
+La regla está en `compartido/utilidades/grados.js` (`calcularNotaFinal`, `etiquetaGrado` y `nivelGrado`), así que cliente, servidor y demo dan siempre el mismo resultado.
 
-Al subir un producto TCG, en cuanto se escribe el nombre (o lo rellena la lectura de la etiqueta) el panel
-recomienda las versiones oficiales de la carta. Al pulsar **Usar** se rellenan año, expansión, nº de tarjeta, rareza y marca.
+## Buscador de cartas oficiales (APIs gratuitas)
+
+Al preparar un envío de cartas, el cliente escribe el nombre y elige la versión exacta que va a mandar.
+Al pulsar **Añadir** se rellenan año, expansión, número, rareza y juego; solo tiene que poner el valor declarado.
+Después el gradeador parte de esos datos y los comprueba con la carta física.
 
 | Juego | API | Clave |
 |---|---|---|
@@ -73,7 +97,7 @@ Las consulta el navegador directamente (`cliente/src/servicios/cartasOficiales.j
 y en una web estática. El servidor las permite en su política de seguridad (CSP) en `servidor/src/aplicacion.js`.
 
 La **lectura automática de la etiqueta con IA** (`POST /api/ia/etiqueta`) es opcional: necesita `ANTHROPIC_API_KEY`, que es de pago.
-Sin ella el botón avisa y los datos se rellenan a mano o con las recomendaciones gratuitas.
+Sin ella el botón avisa y se usan los datos que declaró el cliente.
 
 ## Estructura
 
@@ -168,10 +192,11 @@ npm run restaurar -- copias/igs_2026-10-26-12-20.json.gz   # restaura una (reemp
 | GET | /api/acceso/yo | con sesión |
 | GET | /api/servicios | público |
 | GET | /api/productos/:idCertificado | público |
-| POST | /api/productos (multipart: datos + fotos) | trabajador, admin |
+| POST | /api/productos (multipart: datos + fotos; gradea un artículo del pedido) | trabajador, admin |
 | POST · GET | /api/pedidos · /api/pedidos/mios | cliente |
 | GET | /api/pedidos/cola?estado= | trabajador, admin |
-| PATCH | /api/pedidos/:codigo/estado | trabajador, admin |
+| PATCH | /api/pedidos/:codigo/estado (solo al siguiente estado) | trabajador, admin |
+| POST | /api/pedidos/:codigo/articulos/:indice/no-gradeable | trabajador, admin |
 | POST | /api/tickets | público |
 | GET · PATCH | /api/tickets · /api/tickets/:codigo/estado | trabajador, admin |
 | GET · PATCH | /api/usuarios · /api/usuarios/:id/rol | admin |

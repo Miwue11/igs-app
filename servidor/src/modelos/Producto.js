@@ -12,6 +12,8 @@ const esquemaProducto = new mongoose.Schema(
     idCertificado: { type: String, required: true, unique: true },
     pedido: { type: ObjectId, ref: 'Pedido', required: true },
     pedidoCodigo: { type: String, required: true },
+    // Posición del artículo declarado en el pedido del que sale este certificado.
+    articulo: { type: Number, default: null },
     nombre: { type: String, required: true, trim: true },
     nota: { type: Number, required: true, min: LIMITES.NOTA_MIN, max: LIMITES.NOTA_MAX },
     etiquetaGrado: { type: String, required: true },

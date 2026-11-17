@@ -14,4 +14,5 @@ export const rutasPedidos = Router()
   .get('/mios', ...cliente, a(pedidos.mios))
   .get('/cola', ...interno, a(pedidos.cola))
   .patch('/:codigo/estado', ...interno, validarCuerpo('estadoPedido'), a(pedidos.cambiarEstado))
+  .post('/:codigo/articulos/:indice/no-gradeable', ...interno, validarCuerpo('noGradeable'), a(pedidos.noGradeable))
   .get('/:codigo/productos', ...interno, a(productos.dePedido));

@@ -1,7 +1,9 @@
 import {
   ROLES, ROLES_INTERNOS, ESTADOS_PEDIDO, ESTADOS_EN_COLA, MENSAJES,
   validarCon, sinErrores, esIdCertificado, normalizarIdCertificado, ordenarCola,
-  etiquetaGrado, formatearIdCertificado, formatearPedido, formatearTicket, copiaServicio, plazoDePedidoNuevo,
+  etiquetaGrado, formatearIdCertificado, formatearPedido, formatearTicket,
+  ESTADOS_ARTICULO, calcularNotaFinal, prepararArticulos, errorArticulosServicio, pedidoNuevo,
+  errorCambioEstado, aplicarCambioEstado, errorResolverArticulo,
 } from '@compartido';
 import { DEMO_PRODUCTOS } from '@compartido/demo/datos.js';
 import { CONFIGURACION } from '../../constantes/configuracion.js';
@@ -90,13 +92,20 @@ const productos = {
     return responder(() => {
       exigir(ROLES_INTERNOS);
       comprobar('producto', datos);
-      buscarPedido(datos.pedido);
+      const nota = calcularNotaFinal(datos.subnotas);
+      if (nota == null) throw new ErrorApi(400, MENSAJES.SUBNOTAS);
+      const pedido = buscarPedido(datos.pedido);
+      const indice = Number(datos.articulo);
+      const error = errorResolverArticulo(pedido, indice);
+      if (error) throw new ErrorApi(409, error);
       db.contadores.cert += 1;
+      const idCertificado = formatearIdCertificado(new Date().getFullYear(), db.contadores.cert);
+      const { pedido: _p, articulo: _a, ...campos } = datos;
       const producto = {
-        ...datos, id: nuevoId(), idCertificado: formatearIdCertificado(new Date().getFullYear(), db.contadores.cert),
-        pedidoCodigo: datos.pedido, etiquetaGrado: etiquetaGrado(datos.nota, datos.subnotas), imagenes, fechaGradeo: ahora(),
+        ...campos, nota, id: nuevoId(), idCertificado, pedidoCodigo: pedido.codigo, articulo: indice,
+        etiquetaGrado: etiquetaGrado(nota, datos.subnotas), imagenes, fechaGradeo: ahora(),
       };
-      delete producto.pedido;
+      Object.assign(pedido.articulos[indice], { estado: ESTADOS_ARTICULO.GRADEADO, idCertificado });
       db.productos.push(producto);
       return producto;
     })();
@@ -109,12 +118,14 @@ const pedidos = {
     comprobar('pedido', datos);
     const servicio = db.servicios.find((s) => s.codigo === datos.servicio);
     if (!servicio) throw new ErrorApi(400, 'El servicio elegido no existe.');
+    const articulos = prepararArticulos(datos.articulos);
+    const error = errorArticulosServicio(servicio, articulos);
+    if (error) throw new ErrorApi(400, error, { articulos: error });
     db.contadores.pedido += 1;
     const pedido = {
+      ...pedidoNuevo(servicio, articulos, ahora()),
       id: nuevoId(), codigo: formatearPedido(db.contadores.pedido), cliente: usuario.id,
-      servicio: copiaServicio(servicio), ...plazoDePedidoNuevo(servicio, ahora()),
-      unidades: Number(datos.unidades), estado: ESTADOS_PEDIDO.PENDIENTE_ENVIO, fechaLlegada: null,
-      notas: datos.notas ?? '',
+      estado: ESTADOS_PEDIDO.PENDIENTE_ENVIO, notas: datos.notas ?? '',
     };
     db.pedidos.push(pedido);
     return pedido;
@@ -132,9 +143,18 @@ const pedidos = {
     exigir(ROLES_INTERNOS);
     comprobar('estadoPedido', { estado });
     const pedido = buscarPedido(codigo);
-    pedido.estado = estado;
-    if (estado === ESTADOS_PEDIDO.RECIBIDO && !pedido.fechaLlegada) pedido.fechaLlegada = ahora();
-    if (estado === ESTADOS_PEDIDO.COMPLETADO && !pedido.fechaPublicacion) pedido.fechaPublicacion = ahora();
+    const error = errorCambioEstado(pedido, estado);
+    if (error) throw new ErrorApi(409, error);
+    aplicarCambioEstado(pedido, estado, ahora());
+    return conCliente(pedido);
+  }),
+  noGradeable: responder((codigo, indice, motivo) => {
+    exigir(ROLES_INTERNOS);
+    comprobar('noGradeable', { motivo });
+    const pedido = buscarPedido(codigo);
+    const error = errorResolverArticulo(pedido, indice);
+    if (error) throw new ErrorApi(409, error);
+    Object.assign(pedido.articulos[indice], { estado: ESTADOS_ARTICULO.NO_GRADEABLE, motivo });
     return conCliente(pedido);
   }),
   productos: responder((codigo) => {
@@ -190,8 +210,8 @@ const ia = {
   leerEtiqueta: responder((foto) => {
     exigir(ROLES_INTERNOS);
     if (!foto) throw new ErrorApi(400, 'Sube primero la foto de la etiqueta.');
-    const { nombre, nota, marca, anio, expansion, clase, numeroTarjeta, categoria, variedad, idioma } = DEMO_PRODUCTOS[0];
-    return { nombre, nota, marca, anio, expansion, clase, numeroTarjeta, categoria, variedad, idioma };
+    const { nombre, marca, anio, expansion, clase, numeroTarjeta, categoria, variedad, idioma } = DEMO_PRODUCTOS[0];
+    return { nombre, marca, anio, expansion, clase, numeroTarjeta, categoria, variedad, idioma };
   }),
 };
 
