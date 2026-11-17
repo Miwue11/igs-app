@@ -6,8 +6,10 @@ const NOMBRE_LARGO = 26;
 
 /**
  * Etiqueta oficial del slab de IGS: logo, año, expansión, nombre, nº de certificado y grado.
- * El distintivo del grado cambia de color:
- *   rojo metálico → 10 PRISTINE · dorado → 10 GEM MINT y 9,5 · plateado → del 9 hacia abajo.
+ * Colores según el grado:
+ *   10 PRISTINE → etiqueta entera en granate con letras crema y oro.
+ *   10 GEM MINT y 9,5 → etiqueta crema con distintivo enmarcado en oro.
+ *   Del 9 hacia abajo → etiqueta crema con distintivo enmarcado en plata.
  * Recibe un producto (o los valores del formulario para la vista previa).
  */
 export function EtiquetaIGS({ producto, className }) {
@@ -33,10 +35,7 @@ export function EtiquetaIGS({ producto, className }) {
       </div>
 
       <div className="etiqueta-datos" aria-hidden="true">
-        <div className="etiqueta-fila">
-          <div><small>Año</small><span>{anio || '—'}</span></div>
-          <div><small>Expansión</small><span>{expansion || '—'}</span></div>
-        </div>
+        <p className="etiqueta-linea">{[anio, expansion].filter(Boolean).join(' · ') || '—'}</p>
         <p className={clases('etiqueta-nombre', titulo.length > NOMBRE_LARGO && 'largo')}>{titulo}</p>
         <small className="etiqueta-cert">Nº cert. {certificado}</small>
       </div>

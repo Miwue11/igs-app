@@ -11,6 +11,7 @@ import { SelectorFoto } from '../../componentes/panel/SelectorFoto.jsx';
 import { FormularioProducto } from '../../componentes/panel/FormularioProducto.jsx';
 import { PRODUCTO_VACIO, subnotasDe, prepararProducto, valoresDesdeIA } from '../../componentes/panel/opcionesProducto.js';
 import { EtiquetaIGS } from '../../componentes/producto/EtiquetaIGS.jsx';
+import { EtiquetaTraseraIGS } from '../../componentes/producto/EtiquetaTraseraIGS.jsx';
 import { Boton } from '../../componentes/ui/Boton.jsx';
 import { Icono } from '../../componentes/ui/Icono.jsx';
 import { Mensaje } from '../../componentes/ui/Mensaje.jsx';
@@ -133,9 +134,12 @@ export function SeccionSubir() {
       {guardado && (
         <Tarjeta como="div" className="etiqueta-guardada zona-impresion">
           <h2 className="no-imprimir">Etiqueta de {guardado.idCertificado}</h2>
-          <EtiquetaIGS producto={guardado} />
+          <div className="etiquetas-par">
+            <EtiquetaIGS producto={guardado} />
+            <EtiquetaTraseraIGS producto={guardado} />
+          </div>
           <div className="acciones no-imprimir">
-            <Boton variante="oscuro" onClick={() => window.print()}>Imprimir etiqueta</Boton>
+            <Boton variante="oscuro" onClick={() => window.print()}>Imprimir frontal y trasera</Boton>
             <Enlace href={rutaConsulta(guardado.idCertificado)}>Ver la ficha pública</Enlace>
           </div>
         </Tarjeta>

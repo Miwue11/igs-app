@@ -4,6 +4,7 @@ import { formatoFecha } from '../../utilidades/formato.js';
 import { Tarjeta } from '../ui/Tarjeta.jsx';
 import { FotosProducto } from './FotosProducto.jsx';
 import { EtiquetaIGS } from './EtiquetaIGS.jsx';
+import { EtiquetaTraseraIGS } from './EtiquetaTraseraIGS.jsx';
 import { InsigniaNota } from './InsigniaNota.jsx';
 import { DatosProducto } from './DatosProducto.jsx';
 import { Subnotas } from './Subnotas.jsx';
@@ -14,7 +15,10 @@ export function FichaProducto({ producto }) {
   return (
     <div className="producto">
       <div className="producto-visual">
-        <EtiquetaIGS producto={producto} />
+        <div className="etiquetas-par">
+          <EtiquetaIGS producto={producto} />
+          <EtiquetaTraseraIGS producto={producto} />
+        </div>
         <FotosProducto imagenes={producto.imagenes} imagenReferencia={producto.imagenReferencia} />
       </div>
 

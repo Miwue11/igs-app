@@ -6,17 +6,17 @@ const PERFECTAS = { centrado: 10, esquinas: 10, bordes: 10, superficie: 10 };
 const NIVELES = [
   {
     producto: { ...EJEMPLO, nota: 10, subnotas: PERFECTAS },
-    titulo: '10 · PRISTINE (rojo metálico)',
-    texto: 'Solo cuando el centrado, las esquinas, los bordes y la superficie obtienen un 10. Es la máxima distinción de IGS.',
+    titulo: '10 · PRISTINE (granate y oro)',
+    texto: 'Solo cuando el centrado, las esquinas, los bordes y la superficie obtienen un 10. La etiqueta entera cambia a granate: la máxima distinción de IGS.',
   },
   {
     producto: { ...EJEMPLO, nota: 10, idCertificado: 'IGS-2026-000002' },
-    titulo: '10 y 9,5 · GEM MINT (dorado)',
+    titulo: '10 y 9,5 · GEM MINT (marco de oro)',
     texto: 'Producto en estado de gema: cualquier defecto solo se aprecia con aumento.',
   },
   {
     producto: { ...EJEMPLO, nota: 9, idCertificado: 'IGS-2026-000003' },
-    titulo: 'Del 9 hacia abajo (plateado)',
+    titulo: 'Del 9 hacia abajo (marco de plata)',
     texto: 'De 9 · MINT a 1 · POOR. El nombre del grado aparece siempre bajo la nota.',
   },
 ];
@@ -30,7 +30,7 @@ export function EscalaEtiquetas() {
           <h2 id="t-etiquetas" className="seccion-titulo">Nuestra etiqueta</h2>
           <p className="aclaracion">
             Cada producto gradeado lleva una etiqueta con el año, la expansión, el nombre, el número de certificado y el grado.
-            El color del distintivo indica el nivel de la nota.
+            El color indica el nivel de la nota.
           </p>
         </div>
         <div className="escala-etiquetas">

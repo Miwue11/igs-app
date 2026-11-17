@@ -71,9 +71,9 @@
   display: flex; flex-direction: column; align-items: center; justify-content: center; flex: none;
 }
 .insignia-nota strong { font-size: 46px; line-height: 1; }
-.insignia-pristine { background: linear-gradient(135deg, #7E1016, #B3202A 45%, #8E141C); color: #FBF3E4; }
-.insignia-oro { background: linear-gradient(135deg, #B8862C, #F2D27A 45%, #C8922F); }
-.insignia-plata { background: linear-gradient(135deg, #9EA6B1, #E9ECF0 45%, #A3ABB6); }
+.insignia-pristine { background: var(--granate); color: var(--crema-etiqueta); box-shadow: inset 0 0 0 2px #D4A646; }
+.insignia-oro { background: #FBF6EC; box-shadow: inset 0 0 0 3px #D9AE4F; }
+.insignia-plata { background: #F4F5F7; box-shadow: inset 0 0 0 3px #BCC3CC; }
 .insignia-nota span { font-size: 12px; font-weight: 800; letter-spacing: 1px; text-align: center; }
 .lista-datos {
   display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));

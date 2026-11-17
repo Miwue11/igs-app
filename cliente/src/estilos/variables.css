@@ -2,8 +2,13 @@
 :root {
   --azul: #13233A;
   --azul-claro: #23395A;
-  --rojo: #B3261E;
-  --rojo-oscuro: #9A1F18;
+  /* Granate en lugar de rojo puro: con el azul y el crema evita recordar a la bandera francesa */
+  --rojo: #7A1E2C;
+  --rojo-oscuro: #5E1220;
+  --granate: #5E1220;
+  --granate-oscuro: #3E0B15;
+  --crema-etiqueta: #F7EBDD;
+  --oro-etiqueta: #E9C46A;
   --dorado: #D9A441;
   --dorado-oscuro: #C8922F;
   --fondo: #F6F7F9;

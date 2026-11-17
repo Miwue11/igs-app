@@ -27,7 +27,7 @@
 .etiqueta-marca strong { font-size: 8.4cqw; font-weight: 800; line-height: .9; letter-spacing: -.1cqw; }
 .etiqueta-rayas { display: flex; gap: .9cqw; }
 .etiqueta-rayas i { display: block; width: 3.6cqw; height: .5cqw; background: var(--etiqueta-amarillo); }
-.etiqueta-rayas i + i { background: var(--rojo); }
+.etiqueta-rayas i + i { background: var(--rojo); } /* granate */
 .etiqueta-marca small { font-size: 1.35cqw; font-weight: 600; letter-spacing: .25cqw; line-height: 1.45; }
 
 /* Datos del producto */
@@ -35,12 +35,8 @@
   min-width: 0; padding: 2.6cqw 3.4cqw 2.6cqw 3.6cqw;
   display: flex; flex-direction: column; justify-content: space-between;
 }
-.etiqueta-fila { display: flex; gap: 4.2cqw; min-width: 0; }
-.etiqueta-fila > div { min-width: 0; }
-.etiqueta-fila > div:last-child { flex: 1; }
-.etiqueta-fila small { font-size: 1.2cqw; font-weight: 600; letter-spacing: .3cqw; color: var(--gris-texto); }
-.etiqueta-fila span {
-  display: block; font-family: var(--fuente-mono); font-size: 2.5cqw; font-weight: 600; text-transform: uppercase;
+.etiqueta-linea {
+  font-family: var(--fuente-mono); font-size: 2.5cqw; font-weight: 600; letter-spacing: .15cqw; text-transform: uppercase;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .etiqueta-nombre {
@@ -63,25 +59,27 @@
 .etiqueta-grado strong.decimal { font-size: 9cqw; letter-spacing: -.4cqw; }
 .etiqueta-grado span { font-size: 1.6cqw; font-weight: 800; letter-spacing: .25cqw; min-height: 1.6cqw; }
 
-.etiqueta-pristine .etiqueta-grado {
-  color: #FBF3E4;
-  background: linear-gradient(135deg, #7E1016 0%, #B3202A 35%, #8E141C 55%, #C33A3F 75%, #85121A 100%);
-}
-.etiqueta-pristine .etiqueta-grado > div { border-color: rgba(227, 180, 58, .75); }
-.etiqueta-oro .etiqueta-grado {
-  color: var(--azul);
-  background: linear-gradient(135deg, #B8862C 0%, #F2D27A 30%, #D4A646 52%, #F6DD8C 72%, #B98A2E 100%);
-}
-.etiqueta-oro .etiqueta-grado > div { border-color: rgba(19, 35, 58, .55); }
-.etiqueta-plata .etiqueta-grado {
-  color: var(--azul);
-  background: linear-gradient(135deg, #9EA6B1 0%, #E9ECF0 30%, #BCC3CC 52%, #F3F5F7 72%, #A3ABB6 100%);
-}
-.etiqueta-plata .etiqueta-grado > div { border-color: rgba(19, 35, 58, .5); }
+/* 10 PRISTINE: etiqueta entera en granate, letras crema y oro */
+.etiqueta-pristine { background: var(--granate); color: var(--crema-etiqueta); }
+.etiqueta-pristine .etiqueta-marca { background: var(--granate-oscuro); }
+.etiqueta-pristine .etiqueta-rayas i + i { background: var(--crema-etiqueta); }
+.etiqueta-pristine .etiqueta-linea { color: var(--oro-etiqueta); }
+.etiqueta-pristine .etiqueta-cert { color: rgba(247, 235, 221, .7); }
+.etiqueta-pristine .etiqueta-grado > div { background: var(--granate-oscuro); color: var(--oro-etiqueta); border-color: #D4A646; }
+
+/* 10 GEM MINT y 9,5: crema con marco de oro */
+.etiqueta-oro .etiqueta-grado > div { border: .7cqw solid #D9AE4F; background: #FBF6EC; }
+/* Del 9 hacia abajo: crema con marco de plata */
+.etiqueta-plata .etiqueta-grado > div { border: .7cqw solid #BCC3CC; }
+.etiqueta-oro .etiqueta-grado span { color: #8A6418; }
+
 .etiqueta-vacio .etiqueta-grado { color: var(--gris-texto); background: var(--gris-hueco); }
 
 /* Foto del slab de ejemplo en la portada (PNG/WebP con fondo transparente) */
 .losa-foto { width: 340px; max-width: 100%; height: auto; filter: drop-shadow(0 20px 36px rgba(0, 0, 0, .45)); }
+.losa-par { gap: 18px; align-items: flex-start; }
+.losa-par .losa-foto { width: 230px; min-width: 0; flex: 0 1 230px; }
+.losa-par .losa-foto-trasera { margin-top: 36px; }
 
 /* Slab (funda) con la etiqueta arriba y el producto debajo */
 .losa {
@@ -169,12 +167,37 @@
 /* Panel: nota calculada */
 .nota-calculada { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: var(--radio-sm); background: var(--fondo); }
 .nota-calculada strong { font-size: 26px; line-height: 1; }
-.nota-calculada.etiqueta-pristine { background: linear-gradient(135deg, #7E1016, #B3202A 45%, #8E141C); color: #FBF3E4; }
-.nota-calculada.etiqueta-oro { background: linear-gradient(135deg, #B8862C, #F2D27A 45%, #C8922F); color: var(--azul); }
-.nota-calculada.etiqueta-plata { background: linear-gradient(135deg, #9EA6B1, #E9ECF0 45%, #A3ABB6); color: var(--azul); }
+.nota-calculada.etiqueta-pristine { background: var(--granate); color: var(--crema-etiqueta); box-shadow: inset 0 0 0 2px #D4A646; }
+.nota-calculada.etiqueta-pristine strong { color: var(--oro-etiqueta); }
+.nota-calculada.etiqueta-oro { background: #FBF6EC; color: var(--azul); box-shadow: inset 0 0 0 3px #D9AE4F; }
+.nota-calculada.etiqueta-plata { background: var(--fondo); color: var(--azul); box-shadow: inset 0 0 0 3px #BCC3CC; }
 .no-gradeable { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px; border-top: 1px dashed var(--gris-borde); padding-top: 14px; }
 .no-gradeable .campo { flex: 1 1 220px; }
 
 .referencia-articulo { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--gris-texto); }
 .referencia-articulo img { border-radius: 4px; object-fit: cover; }
 .foto-referencia { object-fit: contain; background: var(--fondo); }
+
+/* Parte trasera de la etiqueta: marca, sello y QR de verificación, con franja de código de barras */
+.etiqueta-trasera { grid-template-columns: 1fr; grid-template-rows: 1fr 21%; background: var(--azul); color: var(--blanco); }
+.etiqueta-trasera.etiqueta-pristine { background: var(--granate); }
+.trasera-cuerpo { display: grid; grid-template-columns: 1fr 26% 1fr; align-items: center; padding: 0 3.4cqw; min-height: 0; }
+.trasera-marca { display: flex; flex-direction: column; gap: .8cqw; }
+.trasera-marca strong { font-size: 9cqw; font-weight: 800; line-height: .85; color: rgba(255, 255, 255, .14); letter-spacing: -.2cqw; }
+.trasera-marca small { font-size: 1.3cqw; font-weight: 600; letter-spacing: .3cqw; text-transform: uppercase; color: rgba(255, 255, 255, .7); }
+.trasera-sello { justify-self: center; display: flex; }
+.trasera-sello span {
+  display: grid; place-items: center; width: 17cqw; height: 15cqw; font-size: 6cqw; font-weight: 800; color: var(--azul);
+  background: linear-gradient(135deg, #B98A2E, #F2D27A 40%, #D4A646 60%, #F6DD8C 80%, #B98A2E);
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 50% 100%, 0 70%);
+}
+.etiqueta-pristine .trasera-sello span { color: var(--granate-oscuro); }
+.trasera-qr { justify-self: end; width: 15.5cqw; aspect-ratio: 1; background: #fff; border-radius: 1cqw; padding: .6cqw; }
+.trasera-qr svg { display: block; width: 100%; height: 100%; }
+.trasera-qr > span { display: grid; place-items: center; height: 100%; color: var(--gris-texto); font-size: 2cqw; }
+.trasera-pie { background: #EEF1F4; color: #222; display: flex; align-items: center; justify-content: space-between; gap: 3cqw; padding: 0 3.4cqw; }
+.trasera-barras { height: 55%; width: 30%; fill: #222; }
+.trasera-pie span { font-family: var(--fuente-mono); font-size: 3cqw; letter-spacing: .2cqw; }
+
+/* Frontal y trasera juntas */
+.etiquetas-par { display: grid; gap: 12px; }

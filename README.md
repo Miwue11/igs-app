@@ -64,15 +64,17 @@ El plan gratuito se duerme tras 15 minutos sin visitas y tarda alrededor de un m
 
 ## Etiqueta IGS
 
-Cada producto gradeado lleva la etiqueta del slab con **año, expansión, nombre, nº de certificado y grado**
-(componente `cliente/src/componentes/producto/EtiquetaIGS.jsx`). Se ve en la portada, en la ficha pública,
-como vista previa al subir un producto y se puede imprimir desde el panel tras guardarlo.
+Cada producto gradeado lleva la etiqueta del slab con **año, expansión, nombre, nº de certificado y grado**.
+La frontal está en `cliente/src/componentes/producto/EtiquetaIGS.jsx`. La **parte trasera** (`EtiquetaTraseraIGS.jsx`)
+lleva el logo, un sello y un **código QR** que abre la ficha pública del certificado; el QR se genera sin librerías
+externas en `compartido/utilidades/qr.js`. Se ven en la portada (fotos del slab por delante y por detrás) y en la ficha pública,
+la frontal sale como vista previa al gradear, y las dos se imprimen desde el panel tras publicar el certificado.
 
 | Nota | Nombre | Distintivo |
 |---|---|---|
-| 10 con las cuatro subnotas a 10 | PRISTINE | Rojo metálico |
-| 10 (resto) y 9,5 | GEM MINT | Dorado |
-| 9 hacia abajo | MINT, NM-MT… POOR | Plateado |
+| 10 con las cuatro subnotas a 10 | PRISTINE | Etiqueta entera granate, letras crema y oro |
+| 10 (resto) y 9,5 | GEM MINT | Crema con distintivo enmarcado en oro |
+| 9 hacia abajo | MINT, NM-MT… POOR | Crema con distintivo enmarcado en plata |
 
 **La nota final no se elige: se calcula con las subnotas** (centrado, esquinas, bordes y superficie), como en BGS:
 media redondeada al 0,5 más cercano y nunca más de 1 punto por encima de la subnota más baja.

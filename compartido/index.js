@@ -15,5 +15,6 @@ export * from './utilidades/grados.js';
 export * from './utilidades/plazos.js';
 export * from './utilidades/pedidos.js';
 export * from './utilidades/cola.js';
+export * from './utilidades/qr.js';
 export * from './validadores/reglas.js';
 export * from './validadores/esquemas.js';
