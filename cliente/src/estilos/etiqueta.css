@@ -80,6 +80,9 @@
 .etiqueta-plata .etiqueta-grado > div { border-color: rgba(19, 35, 58, .5); }
 .etiqueta-vacio .etiqueta-grado { color: var(--gris-texto); background: var(--gris-hueco); }
 
+/* Foto del slab de ejemplo en la portada (PNG/WebP con fondo transparente) */
+.losa-foto { width: 340px; max-width: 100%; height: auto; filter: drop-shadow(0 20px 36px rgba(0, 0, 0, .45)); }
+
 /* Slab (funda) con la etiqueta arriba y el producto debajo */
 .losa {
   width: 340px; max-width: 100%; padding: 12px; border-radius: 14px;

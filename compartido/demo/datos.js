@@ -125,7 +125,7 @@ export const DEMO_PRODUCTOS = [
     marca: 'Pokémon', anio: 2019, expansion: 'Double Blaze', clase: 'Tag Team GX', numeroTarjeta: '101/095',
     categoria: 'tcg', variedad: 'Secret Rare (SR)', idioma: 'Japonés', gradeado: 32,
     comentario: 'Centrado perfecto, esquinas y bordes sin desgaste y superficie sin marcas. Gradeo PRISTINE.',
-    imagenes: { anverso: '/ejemplos/marshadow-machamp-gx.jpg', reverso: null, etiqueta: null },
+    imagenes: { anverso: '/ejemplos/slab-marshadow-machamp-gx.webp', reverso: null, etiqueta: null },
   },
   {
     idCertificado: 'IGS-2026-000002', pedido: 'PED-0006', articulo: 1, nombre: 'Delantero centro', nota: 8,

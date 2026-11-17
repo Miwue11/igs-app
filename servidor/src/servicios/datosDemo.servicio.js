@@ -82,11 +82,15 @@ export const cargarDatosDemo = async () => {
   return CONTRASENA_DEMO;
 };
 
-/** El certificado de ejemplo lleva la foto de la carta de la etiqueta de muestra (si aún no tiene ninguna). */
+/** El certificado de ejemplo lleva la foto del slab de muestra (si no tiene ninguna o tiene la antigua). */
 const ponerFotoEjemplo = () => {
   const ejemplo = DEMO_PRODUCTOS[0];
   return Producto.updateOne(
-    { idCertificado: ejemplo.idCertificado, nombre: ejemplo.nombre, 'imagenes.anverso': null },
+    {
+      idCertificado: ejemplo.idCertificado,
+      nombre: ejemplo.nombre,
+      'imagenes.anverso': { $in: [null, '/ejemplos/marshadow-machamp-gx.jpg'] },
+    },
     { $set: { 'imagenes.anverso': ejemplo.imagenes.anverso } },
   );
 };
