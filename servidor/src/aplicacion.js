@@ -41,6 +41,8 @@ export const crearAplicacion = () => {
 
   aplicacion.get('/fotos/:id', servirFotoDeMongo);
   aplicacion.use('/fotos', express.static(resolve(ENTORNO.CARPETA_FOTOS), { maxAge: '7d' }));
+  // Las respuestas de la API dependen de la sesión de cada usuario: que ningún proxy ni caché compartida las guarde.
+  aplicacion.use('/api', (_req, res, next) => { res.set('Cache-Control', 'no-store, private'); next(); });
   aplicacion.use('/api', rutasApi);
   servirWeb(aplicacion);
 

@@ -52,6 +52,10 @@ jobs:
           curl -fs $B/api/productos/IGS-2026-000001 | grep -q '/ejemplos/slab-trasera.webp'
           curl -fs -o /dev/null -w '%{content_type}\n' $B/ejemplos/slab-frontal.webp | grep -q 'image/webp'
 
+          echo "→ Sin cookie no hay sesión: un visitante nuevo nunca entra con la cuenta de otro"
+          pedir 401 $B/api/acceso/yo
+          curl -s -D - -o /dev/null $B/api/servicios | grep -qi 'cache-control: no-store'
+
           echo "→ El cliente crea un envío declarando sus cartas"
           pedir 200 -c cliente.txt -H "$JSON" -d '{"email":"cliente@igs.demo","contrasena":"Igs-demo-2026"}' $B/api/acceso/entrar
           pedir 400 -b cliente.txt -H "$JSON" -d '{"servicio":"STD","articulos":[{"nombre":"Lugia","valorDeclarado":900}]}' $B/api/pedidos
