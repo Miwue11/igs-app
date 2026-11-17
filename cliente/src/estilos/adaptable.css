@@ -9,12 +9,15 @@
   .barra-lateral-pie { margin-top: 0; flex-direction: row; gap: 16px; }
 }
 
-/* Móvil (hasta 600px) */
-@media (max-width: 600px) {
-  /* Móvil: la trasera del slab va debajo de la frontal */
+/* Móviles grandes (hasta 700px): la trasera del slab va debajo de la frontal */
+@media (max-width: 700px) {
   .losa-par { flex-direction: column; align-items: center; }
   .losa-par .losa-foto { flex: none; width: 75%; max-width: 280px; }
   .losa-par .losa-foto-trasera { margin-top: 0; }
+}
+
+/* Móvil (hasta 600px) */
+@media (max-width: 600px) {
   .buscador-cartas-filtros { grid-template-columns: 1fr; }
   body { font-size: 15px; }
   .contenedor { padding: 0 16px; }
