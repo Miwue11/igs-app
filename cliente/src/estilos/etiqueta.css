@@ -77,9 +77,10 @@
 
 /* Foto del slab de ejemplo en la portada (PNG/WebP con fondo transparente) */
 .losa-foto { width: 340px; max-width: 100%; height: auto; filter: drop-shadow(0 20px 36px rgba(0, 0, 0, .45)); }
-.losa-par { gap: 18px; align-items: flex-start; }
-.losa-par .losa-foto { width: 230px; min-width: 0; flex: 0 1 230px; }
-.losa-par .losa-foto-trasera { margin-top: 36px; }
+.portada-visual.losa-par { flex: 0 1 auto; gap: 20px; align-items: flex-start; margin: 0 auto; }
+/* Crecen con la pantalla: 210 px en portátiles pequeños, hasta 290 px en pantalla completa */
+.losa-par .losa-foto { width: clamp(210px, 21vw, 290px); min-width: 0; flex: 0 1 auto; }
+.losa-par .losa-foto-trasera { margin-top: 40px; }
 
 /* Slab (funda) con la etiqueta arriba y el producto debajo */
 .losa {

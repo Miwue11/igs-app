@@ -3,7 +3,7 @@
 /* Inicio */
 .portada { background: var(--azul); color: var(--blanco); padding: 56px 0 72px; }
 .portada .contenedor { display: flex; flex-wrap: wrap; gap: 48px; align-items: center; }
-.portada-contenido { flex: 999 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 20px; }
+.portada-contenido { flex: 1 1 440px; min-width: 0; display: flex; flex-direction: column; gap: 20px; }
 .antetitulo { font-family: var(--fuente-mono); font-size: 13px; letter-spacing: 2px; color: var(--dorado); }
 .portada h1 { font-size: clamp(34px, 7vw, 52px); line-height: 1.05; font-weight: 800; overflow-wrap: break-word; }
 .portada-texto { font-size: 18px; line-height: 1.55; color: var(--gris-claro); max-width: 560px; }
