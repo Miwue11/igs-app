@@ -2,6 +2,7 @@ import { PRIORIDADES } from '../constantes/plazos.js';
 import { ESTADOS_PEDIDO, SIGUIENTE_ESTADO } from '../constantes/estados.js';
 import { ENVIO_VUELTA_EUR, ESTADOS_ARTICULO } from '../constantes/negocio.js';
 import { LIMITES } from '../constantes/formatos.js';
+import { ORIGENES_IMAGENES_CARTAS } from '../constantes/apisCartas.js';
 import { calcularFechaLimite } from './plazos.js';
 
 /**
@@ -15,6 +16,10 @@ export const copiaServicio = ({
 const texto = (v) => (v == null ? '' : String(v).trim());
 const numero = (v) => (v === '' || v == null ? null : Number(v));
 
+/** Solo se guarda la imagen oficial si viene de una de las APIs de cartas (evita enlaces arbitrarios). */
+export const imagenOficialValida = (url) =>
+  typeof url === 'string' && ORIGENES_IMAGENES_CARTAS.some((origen) => url.startsWith(`${origen}/`)) ? url : null;
+
 /** Limpia la lista de artículos que declara el cliente y los deja pendientes de gradeo. */
 export const prepararArticulos = (articulos = []) =>
   articulos.map((a) => ({
@@ -25,6 +30,7 @@ export const prepararArticulos = (articulos = []) =>
     numero: texto(a.numero),
     idioma: texto(a.idioma),
     rareza: texto(a.rareza),
+    imagen: imagenOficialValida(a.imagen),
     valorDeclarado: Number(a.valorDeclarado),
     estado: ESTADOS_ARTICULO.PENDIENTE,
     idCertificado: null,

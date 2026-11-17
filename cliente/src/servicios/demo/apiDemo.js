@@ -103,6 +103,7 @@ const productos = {
       const { pedido: _p, articulo: _a, ...campos } = datos;
       const producto = {
         ...campos, nota, id: nuevoId(), idCertificado, pedidoCodigo: pedido.codigo, articulo: indice,
+        imagenReferencia: pedido.articulos[indice]?.imagen ?? null,
         etiquetaGrado: etiquetaGrado(nota, datos.subnotas), imagenes, fechaGradeo: ahora(),
       };
       Object.assign(pedido.articulos[indice], { estado: ESTADOS_ARTICULO.GRADEADO, idCertificado });

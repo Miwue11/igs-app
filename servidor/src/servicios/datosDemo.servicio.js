@@ -82,6 +82,15 @@ export const cargarDatosDemo = async () => {
   return CONTRASENA_DEMO;
 };
 
+/** El certificado de ejemplo lleva la foto de la carta de la etiqueta de muestra (si aún no tiene ninguna). */
+const ponerFotoEjemplo = () => {
+  const ejemplo = DEMO_PRODUCTOS[0];
+  return Producto.updateOne(
+    { idCertificado: ejemplo.idCertificado, nombre: ejemplo.nombre, 'imagenes.anverso': null },
+    { $set: { 'imagenes.anverso': ejemplo.imagenes.anverso } },
+  );
+};
+
 /**
  * Carga la demo si la base de datos está vacía (primer arranque) o si es una demo con un formato antiguo.
  * Una base de datos con datos reales (sin marca de versión de demo y con usuarios) no se toca.
@@ -90,7 +99,10 @@ export const cargarDatosDemoSiVacia = async () => {
   const vacia = (await Usuario.estimatedDocumentCount()) === 0;
   const version = (await Contador.findById(CONTADOR_VERSION).lean())?.secuencia ?? 0;
   const demoAntigua = !vacia && version < VERSION_DATOS_DEMO && (await Usuario.exists({ email: 'admin@igs.demo' }));
-  if (!vacia && !demoAntigua) return false;
+  if (!vacia && !demoAntigua) {
+    await ponerFotoEjemplo();
+    return false;
+  }
 
   const contrasena = await cargarDatosDemo();
   const motivo = vacia ? 'Base de datos vacía' : `Datos de demo antiguos (versión ${version})`;

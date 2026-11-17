@@ -1,3 +1,5 @@
+import { LIMITES } from '../../../compartido/constantes/formatos.js';
+
 export const HTTP = Object.freeze({
   OK: 200,
   CREADO: 201,
@@ -15,6 +17,6 @@ export const HTTP = Object.freeze({
 export const COOKIE_SESION = 'igs_sesion';
 export const SESION_HORAS = 8;
 
-export const LIMITE_FOTO_MB = 5;
+export const LIMITE_FOTO_MB = LIMITES.FOTO_MB;
 
 export const CAMPOS_FOTO = Object.freeze(['anverso', 'reverso', 'etiqueta']);

@@ -15,7 +15,7 @@ export function FichaProducto({ producto }) {
     <div className="producto">
       <div className="producto-visual">
         <EtiquetaIGS producto={producto} />
-        <FotosProducto imagenes={producto.imagenes} />
+        <FotosProducto imagenes={producto.imagenes} imagenReferencia={producto.imagenReferencia} />
       </div>
 
       <section className="producto-datos" aria-label="Datos del producto">

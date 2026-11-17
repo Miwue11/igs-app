@@ -24,6 +24,8 @@ const esquemaArticulo = new mongoose.Schema(
     numero: { type: String, default: '' },
     idioma: { type: String, default: '' },
     rareza: { type: String, default: '' },
+    // Imagen oficial de la carta (TCGdex o Scryfall) que eligió el cliente en el buscador.
+    imagen: { type: String, default: null },
     valorDeclarado: { type: Number, required: true, min: 0 },
     estado: { type: String, enum: Object.values(ESTADOS_ARTICULO), default: ESTADOS_ARTICULO.PENDIENTE },
     idCertificado: { type: String, default: null },

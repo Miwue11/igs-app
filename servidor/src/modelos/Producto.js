@@ -37,6 +37,8 @@ const esquemaProducto = new mongoose.Schema(
       reverso: { type: String, default: null },
       etiqueta: { type: String, default: null },
     },
+    // Imagen oficial de la carta declarada; se muestra solo si todavía no hay fotos de IGS.
+    imagenReferencia: { type: String, default: null },
     gradeadoPor: { type: ObjectId, ref: 'Usuario' },
     fechaGradeo: { type: Date, default: Date.now },
   },

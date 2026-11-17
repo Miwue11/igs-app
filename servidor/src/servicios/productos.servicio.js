@@ -62,6 +62,7 @@ export const crearProducto = async (datos, archivos, usuarioId) => {
       pedido: pedido._id,
       pedidoCodigo: pedido.codigo,
       articulo: indice,
+      imagenReferencia: pedido.articulos[indice]?.imagen ?? null,
       etiquetaGrado: etiquetaGrado(nota, campos.subnotas),
       imagenes: await rutasDeFotos(archivos),
       gradeadoPor: usuarioId,

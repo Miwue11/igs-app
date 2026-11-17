@@ -56,6 +56,12 @@ export function FormularioProducto({ formulario, pedidos, extra }) {
         {...campo('pedido')} onChange={elegirPedido} />
       <CampoSelect id="p-articulo" etiqueta="Artículo declarado" vacio={pedido ? 'Elige el artículo' : 'Primero elige el pedido'}
         opciones={opcionesArticulo} disabled={!pedido} {...campo('articulo')} onChange={elegirArticulo} />
+      {pedido && valores.articulo !== '' && pedido.articulos[Number(valores.articulo)]?.imagen && (
+        <figure className="completo referencia-articulo">
+          <img src={pedido.articulos[Number(valores.articulo)].imagen} alt="" width="90" height="125" />
+          <figcaption>Imagen oficial de la carta que declaró el cliente. Compruébala con la carta física.</figcaption>
+        </figure>
+      )}
       <CampoTexto id="p-nombre" etiqueta="Nombre del producto" {...campo('nombre')} />
       <CampoTexto id="p-marca" etiqueta="Marca / juego" {...campo('marca')} />
       <CampoTexto id="p-anio" etiqueta="Año" inputMode="numeric" {...campo('anio')} />

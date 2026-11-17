@@ -171,3 +171,7 @@
 .nota-calculada.etiqueta-plata { background: linear-gradient(135deg, #9EA6B1, #E9ECF0 45%, #A3ABB6); color: var(--azul); }
 .no-gradeable { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px; border-top: 1px dashed var(--gris-borde); padding-top: 14px; }
 .no-gradeable .campo { flex: 1 1 220px; }
+
+.referencia-articulo { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--gris-texto); }
+.referencia-articulo img { border-radius: 4px; object-fit: cover; }
+.foto-referencia { object-fit: contain; background: var(--fondo); }

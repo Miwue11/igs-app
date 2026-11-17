@@ -19,11 +19,11 @@ const opcion = (s) => ({
 /** Categorías de servicio en las que hay base de datos oficial de cartas. */
 const CON_BUSCADOR = ['tcg', 'empresas'];
 
-/** Lo que se envía a la API: sin la miniatura de la carta. */
+/** Lo que se envía a la API. La imagen oficial de la carta se guarda como referencia para el gradeador y la ficha. */
 const preparar = (valores) => ({
   servicio: valores.servicio,
   notas: valores.notas,
-  articulos: valores.articulos.map(({ imagen, ...a }) => a),
+  articulos: valores.articulos,
 });
 
 /** Resumen del envío: unidades, importe y avisos del servicio. */

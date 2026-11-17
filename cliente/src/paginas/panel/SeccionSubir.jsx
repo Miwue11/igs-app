@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ESTADOS_PEDIDO, MOTIVOS_NO_GRADEABLE, calcularNotaFinal } from '@compartido';
+import { ESTADOS_PEDIDO, LIMITES, MOTIVOS_NO_GRADEABLE, calcularNotaFinal } from '@compartido';
 import { api } from '../../servicios/index.js';
 import { useCarga } from '../../hooks/useCarga.js';
 import { useFormulario } from '../../hooks/useFormulario.js';
@@ -84,6 +84,8 @@ export function SeccionSubir() {
     esquema: 'producto',
     preparar: prepararProducto,
     alEnviar: async (datos) => {
+      const grande = Object.values(fotos).find((f) => f && f.size > LIMITES.FOTO_MB * 1024 * 1024);
+      if (grande) throw new Error(`«${grande.name}» pesa más de ${LIMITES.FOTO_MB} MB. Hazla más pequeña y vuelve a elegirla.`);
       const producto = await api.productos.crear(datos, fotos);
       setGuardado(producto);
       setFotos(SIN_FOTOS);

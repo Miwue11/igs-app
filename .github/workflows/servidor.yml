@@ -49,14 +49,18 @@ jobs:
           echo "→ Web y certificado de demo"
           curl -fs $B/ | grep -q '<div id="root">'
           curl -fs $B/api/productos/IGS-2026-000001 | grep -q 'PRISTINE'
+          curl -fs $B/api/productos/IGS-2026-000001 | grep -q '/ejemplos/marshadow-machamp-gx.jpg'
+          curl -fs -o /dev/null -w '%{content_type}\n' $B/ejemplos/marshadow-machamp-gx.jpg | grep -q 'image/jpeg'
 
           echo "→ El cliente crea un envío declarando sus cartas"
           pedir 200 -c cliente.txt -H "$JSON" -d '{"email":"cliente@igs.demo","contrasena":"Igs-demo-2026"}' $B/api/acceso/entrar
           pedir 400 -b cliente.txt -H "$JSON" -d '{"servicio":"STD","articulos":[{"nombre":"Lugia","valorDeclarado":900}]}' $B/api/pedidos
           pedir 400 -b cliente.txt -H "$JSON" -d '{"servicio":"BLQ","articulos":[{"nombre":"Pikachu","valorDeclarado":20}]}' $B/api/pedidos
           pedir 201 -b cliente.txt -H "$JSON" \
-            -d '{"servicio":"STD","articulos":[{"nombre":"Pikachu","expansion":"Base Set","anio":1999,"numero":"58/102","valorDeclarado":40},{"nombre":"Mew","valorDeclarado":25}]}' $B/api/pedidos
+            -d '{"servicio":"STD","articulos":[{"nombre":"Pikachu","expansion":"Base Set","anio":1999,"numero":"58/102","valorDeclarado":40,"imagen":"https://assets.tcgdex.net/en/base/base1/58/low.webp"},{"nombre":"Mew","valorDeclarado":25,"imagen":"https://malicioso.example/x.png"}]}' $B/api/pedidos
           NUEVO=$(campo d.codigo)
+          [ "$(campo d.articulos[0].imagen)" = "https://assets.tcgdex.net/en/base/base1/58/low.webp" ] || { echo "✗ no se guardó la imagen oficial"; exit 1; }
+          [ "$(campo d.articulos[1].imagen)" = "null" ] || { echo "✗ se guardó una imagen de un origen no permitido"; exit 1; }
           [ "$(campo d.fechaLimite)" = "null" ] || { echo "✗ el plazo no debería empezar todavía"; exit 1; }
           [ "$(campo d.importe.total)" = "45" ] || { echo "✗ importe incorrecto"; exit 1; }
 

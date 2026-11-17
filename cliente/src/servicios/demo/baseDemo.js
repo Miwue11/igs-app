@@ -19,7 +19,7 @@ export const crearBaseDemo = () => {
 
   const productos = DEMO_PRODUCTOS.map(({ gradeado, pedido, ...p }, i) => ({
     id: `r${i + 1}`, ...p, pedidoCodigo: pedido, etiquetaGrado: etiquetaGrado(p.nota, p.subnotas),
-    imagenes: { anverso: null, reverso: null, etiqueta: null }, fechaGradeo: haceDias(gradeado),
+    imagenes: { anverso: null, reverso: null, etiqueta: null, ...p.imagenes }, fechaGradeo: haceDias(gradeado),
   }));
 
   const tickets = DEMO_TICKETS.map(({ cliente, creado, ...t }, i) => {
