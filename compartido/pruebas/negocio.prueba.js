@@ -32,7 +32,7 @@ test('PRISTINE (rojo) solo con las cuatro a 10; GEM MINT (dorado) con 10 o 9,5',
 });
 
 const STD = { codigo: 'STD', nombre: 'Estándar', precio: 15, plazoDias: 14, prioridad: 0, valorMax: 500, minimoUnidades: 1 };
-const BLQ = { ...STD, codigo: 'BLQ', precio: 10, valorMax: 200, minimoUnidades: 20 };
+const LOTE = { ...STD, codigo: 'LOTE', precio: 10, valorMax: 200, minimoUnidades: 20 };
 const articulos = prepararArticulos([
   { nombre: 'Pikachu', valorDeclarado: '40' },
   { nombre: 'Charizard', valorDeclarado: 450 },
@@ -41,7 +41,7 @@ const articulos = prepararArticulos([
 test('valor declarado y mínimo de artículos según el servicio', () => {
   assert.equal(errorArticulosServicio(STD, articulos), null);
   assert.match(errorArticulosServicio(STD, prepararArticulos([{ nombre: 'Lugia', valorDeclarado: 900 }])), /Lugia.*servicio superior/);
-  assert.match(errorArticulosServicio(BLQ, articulos), /al menos 20/);
+  assert.match(errorArticulosServicio(LOTE, articulos), /al menos 20/);
   assert.equal(errorArticulosServicio({ ...STD, valorMax: null }, prepararArticulos([{ nombre: 'X', valorDeclarado: 9e5 }])), null);
 });
 

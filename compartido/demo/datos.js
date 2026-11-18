@@ -23,7 +23,6 @@ export const DEMO_SERVICIOS = [
   { codigo: 'PRE', nombre: 'Gradeo Premium', categoria: 'cartas', descripcion: 'Para piezas de alto valor: el plazo más corto y revisión por dos gradeadores.', plazoDias: 3, prioridad: 2, extras: ['Doble revisión', 'Sin límite de valor declarado'], valorMax: null, minimoUnidades: 1, precio: 80, destacado: false, orden: 3 },
   { codigo: 'COM', nombre: 'Gradeo de Cómics', categoria: 'comics', descripcion: 'Evaluación de portada, lomo y páginas interiores, en slab de gran formato.', plazoDias: 14, prioridad: 0, extras: [], valorMax: 1000, minimoUnidades: 1, precio: 25, destacado: false, orden: 4 },
   { codigo: 'REG', nombre: 'Segunda Opinión', categoria: 'cartas', descripcion: 'Regradeo de una carta ya encapsulada por IGS u otra empresa, por si crees que merece más nota.', plazoDias: 14, prioridad: 0, extras: [], valorMax: 500, minimoUnidades: 1, precio: 12, destacado: false, orden: 5 },
-  { codigo: 'BLQ', nombre: 'Lote Pro', categoria: 'empresas', descripcion: 'Para tiendas y grandes colecciones: precio reducido por artículo a partir de 20 artículos de hasta 200 € cada uno.', plazoDias: 14, prioridad: 0, extras: ['Seguimiento por lote', 'Mínimo 20 artículos'], valorMax: 200, minimoUnidades: 20, precio: 10, destacado: false, orden: 6 },
 ];
 
 export const DEMO_USUARIOS = [
@@ -73,8 +72,8 @@ export const DEMO_PEDIDOS = [
     ],
   },
   {
-    codigo: 'PED-0003', cliente: 'tienda@igs.demo', servicio: 'BLQ', estado: 'recibido', creado: 9, llegada: 2, publicado: null,
-    articulos: loteTienda(150),
+    codigo: 'PED-0003', cliente: 'tienda@igs.demo', servicio: 'STD', estado: 'recibido', creado: 9, llegada: 2, publicado: null,
+    articulos: loteTienda(40),
   },
   {
     codigo: 'PED-0004', cliente: 'cliente@igs.demo', servicio: 'PRE', estado: 'pendiente_envio', creado: 1, llegada: null, publicado: null,

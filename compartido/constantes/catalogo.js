@@ -17,7 +17,6 @@ export const nombreCategoria = (id) =>
 export const CATEGORIAS_SERVICIO = Object.freeze([
   { id: 'cartas', nombre: 'Cartas TCG y deportivas' },
   { id: 'comics', nombre: 'Cómics' },
-  { id: 'empresas', nombre: 'Tiendas y grandes colecciones' },
 ]);
 
 export const IDS_CATEGORIA_SERVICIO = Object.freeze(CATEGORIAS_SERVICIO.map((c) => c.id));

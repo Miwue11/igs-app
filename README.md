@@ -28,7 +28,7 @@ El cliente ve en «Mi cuenta» el resultado de cada artículo: enlace a su certi
 
 | Servicio | Publicado como máximo en | Prioridad en la cola |
 |---|---|---|
-| Estándar, Cómics, Segunda Opinión y Lote Pro | **14 días** | Estándar |
+| Estándar, Cómics y Segunda Opinión | **14 días** | Estándar |
 | Express | 7 días | Preferente |
 | Premium | 3 días (más doble revisión) | Máxima |
 

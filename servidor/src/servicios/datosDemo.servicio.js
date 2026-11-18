@@ -65,8 +65,9 @@ const ajustarContadores = () => {
  * Versión del formato de los datos de demo. Súbela cuando cambie su estructura:
  * al arrancar con SEMBRAR_DEMO_SI_VACIA, una base de datos de demo con una versión anterior se recarga.
  *   2 → pedidos con artículos declarados, importe y plazo desde la llegada.
+ *   3 → catálogo sin el Lote Pro (Estándar, Express, Premium, Cómics y Segunda Opinión).
  */
-export const VERSION_DATOS_DEMO = 2;
+export const VERSION_DATOS_DEMO = 3;
 const CONTADOR_VERSION = 'version-datos-demo';
 
 /** Borra la base de datos y carga los datos de demo. Necesita la conexión ya abierta. */

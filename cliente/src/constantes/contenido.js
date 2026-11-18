@@ -16,4 +16,4 @@ export const DATOS_CONTACTO = Object.freeze([
 export const TEXTO_PIE = '© 2026 IGS · Iberian Grading Services — empresa ficticia, proyecto académico';
 
 /** Servicios que se resumen en la página de inicio. */
-export const SERVICIOS_PORTADA = Object.freeze(['STD', 'EXP', 'BLQ']);
+export const SERVICIOS_PORTADA = Object.freeze(['STD', 'EXP', 'PRE']);
