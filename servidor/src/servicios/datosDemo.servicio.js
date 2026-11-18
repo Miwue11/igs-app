@@ -96,6 +96,17 @@ const ponerFotoEjemplo = () => {
 };
 
 /**
+ * Mantiene al día el catálogo de una base de datos de demo (nombres, descripciones y categorías)
+ * sin borrar pedidos ni certificados. Los pedidos guardan una copia del nombre del servicio: también se actualiza.
+ */
+const sincronizarServiciosDemo = async () => {
+  await Promise.all(DEMO_SERVICIOS.map(async (s) => {
+    await Servicio.updateOne({ codigo: s.codigo }, { $set: s });
+    await Pedido.updateMany({ 'servicio.codigo': s.codigo }, { $set: { 'servicio.nombre': s.nombre } });
+  }));
+};
+
+/**
  * Carga la demo si la base de datos está vacía (primer arranque) o si es una demo con un formato antiguo.
  * Una base de datos con datos reales (sin marca de versión de demo y con usuarios) no se toca.
  */
@@ -104,6 +115,7 @@ export const cargarDatosDemoSiVacia = async () => {
   const version = (await Contador.findById(CONTADOR_VERSION).lean())?.secuencia ?? 0;
   const demoAntigua = !vacia && version < VERSION_DATOS_DEMO && (await Usuario.exists({ email: 'admin@igs.demo' }));
   if (!vacia && !demoAntigua) {
+    if (version >= VERSION_DATOS_DEMO) await sincronizarServiciosDemo();
     await ponerFotoEjemplo();
     return false;
   }

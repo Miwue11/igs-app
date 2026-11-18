@@ -19,7 +19,7 @@ const porUrgenciaYPrioridad = (ahora) => (a, b) => {
  * Orden de la cola de trabajo:
  *   1. Primero los pedidos cuyo paquete ya ha llegado.
  *   2. Los urgentes (vencen en 3 días o menos, o ya están fuera de plazo), por fecha límite.
- *      Así se cumplen los 14 días del gradeo básico aunque haya pedidos con más prioridad.
+ *      Así se cumplen los 14 días del Gradeo Estándar aunque haya pedidos con más prioridad.
  *   3. El resto, por prioridad del servicio (Premium > Express > Estándar).
  *   4. Después, fecha límite más cercana, orden de llegada (FIFO) y fecha de creación.
  */
@@ -37,6 +37,6 @@ export const siguienteEstado = (estado) => SIGUIENTE_ESTADO[estado] ?? null;
 export const ACCION_ESTADO = Object.freeze({
   [ESTADOS_PEDIDO.PENDIENTE_ENVIO]: 'Marcar recibido',
   [ESTADOS_PEDIDO.RECIBIDO]: 'Empezar gradeo',
-  [ESTADOS_PEDIDO.EN_GRADEO]: 'Publicar (completado)',
-  [ESTADOS_PEDIDO.COMPLETADO]: 'Marcar enviado',
+  [ESTADOS_PEDIDO.EN_GRADEO]: 'Publicar gradeo',
+  [ESTADOS_PEDIDO.COMPLETADO]: 'Marcar enviado de vuelta',
 });

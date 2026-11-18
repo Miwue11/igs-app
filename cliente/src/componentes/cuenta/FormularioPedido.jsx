@@ -17,7 +17,7 @@ const opcion = (s) => ({
 });
 
 /** Categorías de servicio en las que hay base de datos oficial de cartas. */
-const CON_BUSCADOR = ['tcg', 'empresas'];
+const CON_BUSCADOR = ['cartas', 'empresas'];
 
 /** Lo que se envía a la API. La imagen oficial de la carta se guarda como referencia para el gradeador y la ficha. */
 const preparar = (valores) => ({

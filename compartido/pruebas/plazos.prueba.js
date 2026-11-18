@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  PLAZO_BASICO_DIAS, ESTADOS_PLAZO, calcularFechaLimite, diasRestantes, estadoPlazo, ordenarCola, ventajasServicio,
+  PLAZO_ESTANDAR_DIAS, ESTADOS_PLAZO, calcularFechaLimite, diasRestantes, estadoPlazo, ordenarCola, ventajasServicio,
 } from '../index.js';
 import { DEMO_SERVICIOS } from '../demo/datos.js';
 
@@ -9,9 +9,9 @@ const DIA = 24 * 60 * 60 * 1000;
 const ahora = new Date('2026-10-26T10:00:00Z');
 const enDias = (n) => new Date(ahora.getTime() + n * DIA).toISOString();
 
-test('el gradeo básico tiene 14 días y los superiores menos', () => {
+test('el Gradeo Estándar tiene 14 días y los superiores menos', () => {
   const estandar = DEMO_SERVICIOS.find((s) => s.codigo === 'STD');
-  assert.equal(PLAZO_BASICO_DIAS, 14);
+  assert.equal(PLAZO_ESTANDAR_DIAS, 14);
   assert.equal(estandar.plazoDias, 14);
   DEMO_SERVICIOS.filter((s) => s.prioridad > 0).forEach((s) => assert.ok(s.plazoDias < 14, s.codigo));
 });
@@ -30,7 +30,7 @@ test('estado del plazo', () => {
   assert.equal(estadoPlazo({ fechaLimite: enDias(-3), fechaPublicacion: enDias(-1) }, ahora), ESTADOS_PLAZO.CUMPLIDO_TARDE);
 });
 
-test('la cola da prioridad a los servicios superiores sin incumplir el plazo básico', () => {
+test('la cola da prioridad a los servicios superiores sin incumplir el plazo Estándar', () => {
   const pedido = (codigo, prioridad, limite, llegada = -1) =>
     ({ codigo, servicio: { prioridad }, fechaLimite: enDias(limite), fechaLlegada: llegada === null ? null : enDias(llegada) });
   const cola = ordenarCola([

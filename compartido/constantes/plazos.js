@@ -2,7 +2,7 @@
  * Plazos de gradeo. Como en PSA y BGS, se cuentan desde que el paquete llega a IGS
  * (pedido «Recibido») hasta que el gradeo se publica (pedido «Completado»).
  */
-export const PLAZO_BASICO_DIAS = 14;
+export const PLAZO_ESTANDAR_DIAS = 14;
 
 /** A partir de cuántos días antes de la fecha límite el pedido se considera urgente. */
 export const DIAS_AVISO_PLAZO = 3;
@@ -11,8 +11,8 @@ export const DIAS_AVISO_PLAZO = 3;
 export const PRIORIDADES = Object.freeze({ NORMAL: 0, ALTA: 1, MAXIMA: 2 });
 
 export const ETIQUETAS_PRIORIDAD = Object.freeze({
-  [PRIORIDADES.NORMAL]: 'Normal',
-  [PRIORIDADES.ALTA]: 'Alta',
+  [PRIORIDADES.NORMAL]: 'Estándar',
+  [PRIORIDADES.ALTA]: 'Preferente',
   [PRIORIDADES.MAXIMA]: 'Máxima',
 });
 

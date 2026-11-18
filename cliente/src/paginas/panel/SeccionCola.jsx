@@ -58,7 +58,7 @@ export function SeccionCola() {
       <div className="seccion-cabecera">
         <div>
           <h1 id="t-cola">Cola de pedidos</h1>
-          <p className="apagado">Orden: primero los que vencen en 3 días o menos, después por prioridad del servicio y por orden de llegada. El plazo empieza al recibir el paquete (14 días en el gradeo básico) y el pedido solo se publica cuando todos sus artículos están gradeados o marcados como no gradeables.</p>
+          <p className="apagado">Orden: primero los que vencen en 3 días o menos, después por prioridad del servicio y por orden de llegada. El plazo empieza al recibir el paquete (14 días en el Gradeo Estándar) y el pedido solo se publica cuando todos sus artículos están gradeados o marcados como no gradeables.</p>
         </div>
         <BarraCola filtro={filtro} alFiltrar={setFiltro} alExportar={exportar} />
       </div>

@@ -28,8 +28,8 @@ El cliente ve en «Mi cuenta» el resultado de cada artículo: enlace a su certi
 
 | Servicio | Publicado como máximo en | Prioridad en la cola |
 |---|---|---|
-| Estándar, Cómics, Regradeo y Pedido en bloque | **14 días** (gradeo básico) | Normal |
-| Express | 7 días | Alta |
+| Estándar, Cómics, Segunda Opinión y Lote Pro | **14 días** | Estándar |
+| Express | 7 días | Preferente |
 | Premium | 3 días (más doble revisión) | Máxima |
 
 - El plazo cuenta **desde que IGS recibe el paquete hasta que se publica el gradeo** (pedido «Completado»), como en PSA y BGS. Así el tiempo que el cliente tarda en enviarlo no cuenta en contra de IGS. Cada pedido guarda `fechaLlegada`, `fechaLimite` y `fechaPublicacion`.
@@ -38,7 +38,7 @@ El cliente ve en «Mi cuenta» el resultado de cada artículo: enlace a su certi
   2. Después los urgentes (vencen en 3 días o menos o están fuera de plazo), por fecha límite.
   3. El resto, por prioridad del servicio y orden de llegada.
 
-  Así los servicios caros pasan antes, pero un gradeo básico nunca se queda sin publicar en sus 14 días.
+  Así los servicios caros pasan antes, pero un Gradeo Estándar nunca se queda sin publicar en sus 14 días.
 - El panel muestra para cada pedido «Quedan N días», «Vence pronto» o «Fuera de plazo». Antes de llegar el paquete se muestra «Empieza al recibir el paquete»; después, la fecha máxima en «Mi cuenta».
 - Los días y prioridades se cambian en `compartido/demo/datos.js` (catálogo de ejemplo) y en `compartido/constantes/plazos.js`.
 

@@ -8,11 +8,11 @@ export const ESTADOS_PEDIDO = Object.freeze({
 });
 
 export const ETIQUETAS_ESTADO_PEDIDO = Object.freeze({
-  [ESTADOS_PEDIDO.PENDIENTE_ENVIO]: 'Pendiente de envío',
-  [ESTADOS_PEDIDO.RECIBIDO]: 'Recibido',
+  [ESTADOS_PEDIDO.PENDIENTE_ENVIO]: 'Esperando tu paquete',
+  [ESTADOS_PEDIDO.RECIBIDO]: 'Recibido en IGS',
   [ESTADOS_PEDIDO.EN_GRADEO]: 'En gradeo',
-  [ESTADOS_PEDIDO.COMPLETADO]: 'Completado',
-  [ESTADOS_PEDIDO.ENVIADO]: 'Enviado al cliente',
+  [ESTADOS_PEDIDO.COMPLETADO]: 'Publicado',
+  [ESTADOS_PEDIDO.ENVIADO]: 'Enviado de vuelta',
 });
 
 /** Estados que aparecen en la cola de trabajo. */

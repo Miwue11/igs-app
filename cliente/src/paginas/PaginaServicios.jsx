@@ -33,7 +33,7 @@ export function PaginaServicios() {
         <nav className="miga" aria-label="Ruta"><Enlace href={RUTAS.INICIO}>Inicio</Enlace> / Servicios</nav>
         <div className="pagina-cabecera">
           <h1>Servicios de gradeo</h1>
-          <p>El gradeo básico se publica en 14 días como máximo desde que haces el pedido. Los servicios superiores reducen el plazo y pasan antes en la cola. Todos incluyen ficha pública verificable por ID.</p>
+          <p>El Gradeo Estándar se publica en 14 días como máximo desde que recibimos tu paquete. Express y Premium reducen el plazo y pasan antes en la cola. Todos incluyen ficha pública verificable por ID, etiqueta con QR y código UV anti-réplica.</p>
         </div>
         <FiltroCategorias activa={categoria} alCambiar={setCategoria} />
         {cargando && <Cargando />}

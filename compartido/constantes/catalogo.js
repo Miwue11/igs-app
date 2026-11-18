@@ -1,15 +1,29 @@
-/** Categorías de producto y de servicio. */
+/** Categorías de producto (lo que se gradea). */
 export const CATEGORIAS = Object.freeze([
   { id: 'tcg', nombre: 'Cartas TCG' },
-  { id: 'deportivas', nombre: 'Deportivas' },
+  { id: 'deportivas', nombre: 'Cartas deportivas' },
   { id: 'comics', nombre: 'Cómics' },
-  { id: 'empresas', nombre: 'Empresas' },
 ]);
 
 export const IDS_CATEGORIA = Object.freeze(CATEGORIAS.map((c) => c.id));
 
 export const nombreCategoria = (id) =>
   CATEGORIAS.find((c) => c.id === id)?.nombre ?? id;
+
+/**
+ * Categorías de servicio (para quién es). Los niveles Estándar, Express y Premium valen para
+ * cualquier carta, TCG o deportiva: lo que cambia entre ellos es el valor declarado y el plazo.
+ */
+export const CATEGORIAS_SERVICIO = Object.freeze([
+  { id: 'cartas', nombre: 'Cartas TCG y deportivas' },
+  { id: 'comics', nombre: 'Cómics' },
+  { id: 'empresas', nombre: 'Tiendas y grandes colecciones' },
+]);
+
+export const IDS_CATEGORIA_SERVICIO = Object.freeze(CATEGORIAS_SERVICIO.map((c) => c.id));
+
+export const nombreCategoriaServicio = (id) =>
+  CATEGORIAS_SERVICIO.find((c) => c.id === id)?.nombre ?? id;
 
 /** Aspectos que se puntúan en cada gradeo. */
 export const SUBNOTAS = Object.freeze([

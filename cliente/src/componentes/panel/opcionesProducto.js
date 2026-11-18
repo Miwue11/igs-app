@@ -5,7 +5,7 @@ const pasos = (LIMITES.NOTA_MAX - LIMITES.NOTA_MIN) / LIMITES.NOTA_PASO + 1;
 const NOTAS = Array.from({ length: pasos }, (_, i) => LIMITES.NOTA_MAX - i * LIMITES.NOTA_PASO);
 
 export const OPCIONES_SUBNOTA = NOTAS.map((n) => ({ valor: String(n), texto: String(n).replace('.', ',') }));
-export const OPCIONES_CATEGORIA = CATEGORIAS.filter((c) => c.id !== 'empresas').map((c) => ({ valor: c.id, texto: c.nombre }));
+export const OPCIONES_CATEGORIA = CATEGORIAS.map((c) => ({ valor: c.id, texto: c.nombre }));
 export const OPCIONES_IDIOMA = IDIOMAS.map((i) => ({ valor: i, texto: i }));
 
 export const CAMPO_SUBNOTA = (id) => `subnotas.${id}`;

@@ -18,12 +18,12 @@ export const CONTRASENA_DEMO = 'Igs-demo-2026';
  * El plazo cuenta desde que llega el paquete. El envío de vuelta asegurado se suma aparte.
  */
 export const DEMO_SERVICIOS = [
-  { codigo: 'STD', nombre: 'Gradeo Estándar', categoria: 'tcg', descripcion: 'Evaluación completa, encapsulado y ficha pública con fotos y subnotas.', plazoDias: 14, prioridad: 0, extras: [], valorMax: 500, minimoUnidades: 1, precio: 15, destacado: false, orden: 1 },
-  { codigo: 'EXP', nombre: 'Gradeo Express', categoria: 'tcg', descripcion: 'La mitad de plazo y preferencia en la cola de gradeo.', plazoDias: 7, prioridad: 1, extras: [], valorMax: 1500, minimoUnidades: 1, precio: 35, destacado: true, orden: 2 },
-  { codigo: 'PRE', nombre: 'Gradeo Premium', categoria: 'deportivas', descripcion: 'Para piezas de alto valor: el plazo más corto y revisión por dos gradeadores.', plazoDias: 3, prioridad: 2, extras: ['Doble revisión'], valorMax: null, minimoUnidades: 1, precio: 80, destacado: false, orden: 3 },
-  { codigo: 'COM', nombre: 'Gradeo de cómics', categoria: 'comics', descripcion: 'Evaluación de portada, lomo y páginas interiores.', plazoDias: 14, prioridad: 0, extras: [], valorMax: 1000, minimoUnidades: 1, precio: 25, destacado: false, orden: 4 },
-  { codigo: 'REG', nombre: 'Regradeo', categoria: 'tcg', descripcion: 'Nueva evaluación de un producto ya encapsulado por IGS u otra empresa.', plazoDias: 14, prioridad: 0, extras: [], valorMax: 500, minimoUnidades: 1, precio: 12, destacado: false, orden: 5 },
-  { codigo: 'BLQ', nombre: 'Pedido en bloque', categoria: 'empresas', descripcion: 'Para tiendas y grandes colecciones: mínimo 20 artículos de hasta 200 € cada uno, a precio reducido.', plazoDias: 14, prioridad: 0, extras: ['Seguimiento por lote', 'Mínimo 20 artículos'], valorMax: 200, minimoUnidades: 20, precio: 10, destacado: false, orden: 6 },
+  { codigo: 'STD', nombre: 'Gradeo Estándar', categoria: 'cartas', descripcion: 'Evaluación completa, slab sellado con etiqueta, QR y código UV, y ficha pública con fotos y subnotas.', plazoDias: 14, prioridad: 0, extras: [], valorMax: 500, minimoUnidades: 1, precio: 15, destacado: false, orden: 1 },
+  { codigo: 'EXP', nombre: 'Gradeo Express', categoria: 'cartas', descripcion: 'La mitad de plazo y preferencia en la cola, para cartas de hasta 1.500 €.', plazoDias: 7, prioridad: 1, extras: [], valorMax: 1500, minimoUnidades: 1, precio: 35, destacado: true, orden: 2 },
+  { codigo: 'PRE', nombre: 'Gradeo Premium', categoria: 'cartas', descripcion: 'Para piezas de alto valor: el plazo más corto y revisión por dos gradeadores.', plazoDias: 3, prioridad: 2, extras: ['Doble revisión', 'Sin límite de valor declarado'], valorMax: null, minimoUnidades: 1, precio: 80, destacado: false, orden: 3 },
+  { codigo: 'COM', nombre: 'Gradeo de Cómics', categoria: 'comics', descripcion: 'Evaluación de portada, lomo y páginas interiores, en slab de gran formato.', plazoDias: 14, prioridad: 0, extras: [], valorMax: 1000, minimoUnidades: 1, precio: 25, destacado: false, orden: 4 },
+  { codigo: 'REG', nombre: 'Segunda Opinión', categoria: 'cartas', descripcion: 'Regradeo de una carta ya encapsulada por IGS u otra empresa, por si crees que merece más nota.', plazoDias: 14, prioridad: 0, extras: [], valorMax: 500, minimoUnidades: 1, precio: 12, destacado: false, orden: 5 },
+  { codigo: 'BLQ', nombre: 'Lote Pro', categoria: 'empresas', descripcion: 'Para tiendas y grandes colecciones: precio reducido por artículo a partir de 20 artículos de hasta 200 € cada uno.', plazoDias: 14, prioridad: 0, extras: ['Seguimiento por lote', 'Mínimo 20 artículos'], valorMax: 200, minimoUnidades: 20, precio: 10, destacado: false, orden: 6 },
 ];
 
 export const DEMO_USUARIOS = [
