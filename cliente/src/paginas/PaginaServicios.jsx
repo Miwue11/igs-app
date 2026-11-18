@@ -39,7 +39,7 @@ export function PaginaServicios() {
         {cargando && <Cargando />}
         {error && <Aviso tipo="error">{error.message}</Aviso>}
         {servicios && <RejillaServicios servicios={filtrar(servicios, categoria)} alSolicitar={solicitar} />}
-        <p className="aclaracion">Para solicitar un servicio necesitas una cuenta. Si no has iniciado sesión, te llevaremos a <Enlace href={RUTAS.ACCEDER}>Acceder</Enlace>.</p>
+        <p className="aclaracion">Para hacer un pedido necesitas una cuenta. Si no has iniciado sesión, te llevaremos a <Enlace href={RUTAS.ACCEDER}>Acceder</Enlace>.</p>
       </div>
     </div>
   );

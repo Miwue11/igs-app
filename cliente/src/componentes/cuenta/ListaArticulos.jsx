@@ -11,7 +11,7 @@ const COLUMNAS = [
   { campo: 'numero', titulo: 'Número', corto: true },
 ];
 
-/** Tabla editable con los artículos que el cliente declara en su envío. */
+/** Tabla editable con los artículos que el cliente declara en su pedido. */
 export function ListaArticulos({ articulos, alCambiar, valorMax }) {
   const cambiar = (indice, campo, valor) =>
     alCambiar(articulos.map((a, i) => (i === indice ? { ...a, [campo]: valor } : a)));

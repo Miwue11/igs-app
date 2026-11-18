@@ -48,7 +48,7 @@ function ResumenPedido({ servicio, articulos }) {
   );
 }
 
-/** Formulario de envío: el cliente elige el servicio y declara cada artículo que nos manda. */
+/** Formulario de pedido: el cliente elige el servicio y declara cada artículo que nos manda. */
 export function FormularioPedido({ servicios, servicioInicial = '', alCrear }) {
   const inicial = { servicio: servicioInicial, articulos: [], notas: '' };
   const { valores, errores, mensaje, enviando, cambiar, asignar, enviar, reiniciar } = useFormulario({
@@ -67,7 +67,7 @@ export function FormularioPedido({ servicios, servicioInicial = '', alCrear }) {
 
   return (
     <Tarjeta como="form" className="tarjeta-formulario formulario-envio" onSubmit={enviar} noValidate aria-labelledby="t-pedido">
-      <h2 id="t-pedido">Nuevo envío</h2>
+      <h2 id="t-pedido">Nuevo pedido</h2>
       <CampoSelect id="p-servicio" name="servicio" etiqueta="1. Servicio" vacio="Elige un servicio"
         opciones={servicios.map(opcion)} value={valores.servicio} onChange={cambiar} error={errores.servicio} />
 
@@ -87,7 +87,7 @@ export function FormularioPedido({ servicios, servicioInicial = '', alCrear }) {
 
           <CampoArea id="p-notas" name="notas" etiqueta="Notas para el gradeador (opcional)" rows={3}
             value={valores.notas} onChange={cambiar} error={errores.notas} />
-          <Boton type="submit" grande disabled={enviando}>{enviando ? 'Creando…' : 'Confirmar envío'}</Boton>
+          <Boton type="submit" grande disabled={enviando}>{enviando ? 'Creando…' : 'Confirmar pedido'}</Boton>
         </>
       )}
       <Mensaje mensaje={mensaje} />

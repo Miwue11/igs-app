@@ -27,7 +27,7 @@ export function PaginaMiCuenta() {
       <div className="contenedor">
         <div className="pagina-cabecera">
           <h1>Hola, {usuario.nombre}</h1>
-          <p>Aquí puedes ver el estado de tus pedidos, el resultado de cada artículo y preparar un envío nuevo.</p>
+          <p>Aquí puedes ver el estado de tus pedidos, el resultado de cada artículo y hacer un pedido nuevo.</p>
         </div>
         <div className="pila">
           <section className="pila" aria-labelledby="t-mis-pedidos">
