@@ -116,7 +116,7 @@ jobs:
 
           echo "→ Desactivar una cuenta impide entrar; el admin no puede desactivarse"
           pedir 200 -c admin.txt -H "$JSON" -d '{"email":"admin@igs.demo","contrasena":"Igs-demo-2026"}' $B/api/acceso/entrar
-          ADMIN=$(campo d.id)
+          ADMIN=$(campo d.usuario.id)
           pedir 200 -b admin.txt $B/api/usuarios
           TIENDA=$(node -e "console.log(require('./r.json').find((u)=>u.email==='tienda@igs.demo').id)")
           pedir 400 -b admin.txt -X PATCH -H "$JSON" -d '{"activo":"no"}' $B/api/usuarios/$TIENDA/activo

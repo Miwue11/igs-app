@@ -14,6 +14,6 @@ export const MENSAJES = Object.freeze({
   SIN_ARTICULOS: 'Añade al menos un artículo al pedido.',
   ARTICULO_INCOMPLETO: 'Cada artículo necesita nombre y un valor declarado mayor que 0 €',
   SUBNOTAS: 'Pon las cuatro subnotas para calcular la nota final.',
-  CODIGO_UV: 'El código UV tiene 8 caracteres (por ejemplo, 7QK2-M9XD).',
+  CODIGO_UV: 'El código UV tiene 8 caracteres, en dos grupos de 4 (XXXX-XXXX).',
   DEMASIADO_LARGO: 'El texto es demasiado largo.',
 });
