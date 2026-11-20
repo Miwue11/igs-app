@@ -31,6 +31,12 @@ img { max-width: 100%; display: block; }
 .saltar-contenido:focus { top: 8px; }
 .cargando { color: var(--gris-texto); padding: 24px 0; }
 .barra-demo {
-  background: var(--dorado); color: var(--azul); text-align: center;
-  font-size: 13px; font-weight: 600; padding: 6px 12px;
+  background: var(--dorado); color: var(--azul); font-size: 13px; font-weight: 600; padding: 4px 44px;
+  position: relative; text-align: center; line-height: 1.6;
 }
+.barra-demo-cerrar {
+  position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+  width: 28px; height: 28px; border: 0; border-radius: 50%; background: transparent; color: var(--azul);
+  font-size: 18px; line-height: 1; cursor: pointer;
+}
+.barra-demo-cerrar:hover { background: rgba(19, 35, 58, .12); }

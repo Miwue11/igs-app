@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ESTADOS_PEDIDO, LIMITES, MOTIVOS_NO_GRADEABLE, calcularNotaFinal } from '@compartido';
+import { ESTADOS_ARTICULO, ESTADOS_PEDIDO, LIMITES, MOTIVOS_NO_GRADEABLE, calcularNotaFinal } from '@compartido';
 import { api } from '../../servicios/index.js';
 import { useCarga } from '../../hooks/useCarga.js';
 import { useFormulario } from '../../hooks/useFormulario.js';
@@ -9,7 +9,7 @@ import { Enlace } from '../../enrutador/Enlace.jsx';
 import { rutaConsulta } from '../../constantes/rutas.js';
 import { SelectorFoto } from '../../componentes/panel/SelectorFoto.jsx';
 import { FormularioProducto } from '../../componentes/panel/FormularioProducto.jsx';
-import { PRODUCTO_VACIO, subnotasDe, prepararProducto, valoresDesdeIA } from '../../componentes/panel/opcionesProducto.js';
+import { PRODUCTO_VACIO, subnotasDe, prepararProducto, valoresDesdeIA, valoresDesdeArticulo } from '../../componentes/panel/opcionesProducto.js';
 import { EtiquetaIGS } from '../../componentes/producto/EtiquetaIGS.jsx';
 import { VisorEtiquetaTrasera } from '../../componentes/producto/VisorEtiquetaTrasera.jsx';
 import { Boton } from '../../componentes/ui/Boton.jsx';
@@ -23,6 +23,12 @@ const FOTOS = [
   { campo: 'reverso', texto: 'Foto del reverso' },
 ];
 const SIN_FOTOS = { etiqueta: null, anverso: null, reverso: null };
+
+/** Siguiente artículo pendiente del pedido (sin contar el que se acaba de publicar), para seguir sin volver a elegirlo. */
+const siguienteArticulo = (pedido, actual) => {
+  const indice = (pedido?.articulos ?? []).findIndex((a, i) => i !== actual && a.estado === ESTADOS_ARTICULO.PENDIENTE);
+  return indice === -1 ? null : indice;
+};
 
 /** Lo que se ve en la vista previa de la etiqueta mientras se rellena el formulario. */
 const vistaPrevia = (valores) => {
@@ -97,7 +103,11 @@ export function SeccionSubir() {
       const producto = await api.productos.crear(datos, fotos);
       setGuardado(producto);
       setFotos(SIN_FOTOS);
-      formulario.reiniciar({ ...PRODUCTO_VACIO, pedido: datos.pedido });
+      const pedido = (pedidos ?? []).find((p) => p.codigo === datos.pedido);
+      const siguiente = siguienteArticulo(pedido, datos.articulo);
+      formulario.reiniciar(siguiente == null
+        ? { ...PRODUCTO_VACIO, pedido: datos.pedido }
+        : { ...PRODUCTO_VACIO, pedido: datos.pedido, articulo: String(siguiente), ...valoresDesdeArticulo(pedido.articulos[siguiente]) });
       await recargar();
       return `Certificado ${producto.idCertificado} publicado.`;
     },
@@ -119,24 +129,30 @@ export function SeccionSubir() {
   return (
     <section aria-labelledby="t-subir">
       <h1 id="t-subir">Gradear artículos</h1>
+      <p className="apagado">Elige el artículo, revisa sus datos, pon las subnotas y sube las fotos. La etiqueta de la derecha se actualiza mientras rellenas.</p>
       <Tarjeta como="div" className="subida">
-        <div className="subida-fotos">
-          {FOTOS.map((f) => <SelectorFoto key={f.campo} campo={f.campo} etiqueta={f.texto} archivo={fotos[f.campo]} alCambiar={cambiarFoto} />)}
-          <Boton variante="dorado" grande onClick={leerConIA} disabled={!fotos.etiqueta}>
-            <Icono nombre="chispa" tamano={18} /> Leer etiqueta y autorrellenar
-          </Boton>
-          <p className="pequeno">{fotos.etiqueta ? 'Se leen los datos de la etiqueta y se rellena el formulario.' : 'Sube la foto de la etiqueta para leerla automáticamente.'}</p>
-          <Mensaje mensaje={estadoIA} />
-        </div>
         <div className="subida-ficha">
+          <FormularioProducto formulario={formulario} pedidos={pedidos ?? []} fotos={(
+            <div className="subida-fotos">
+              {FOTOS.map((f) => <SelectorFoto key={f.campo} campo={f.campo} etiqueta={f.texto} archivo={fotos[f.campo]} alCambiar={cambiarFoto} />)}
+              <div className="subida-ia">
+                <Boton variante="contorno" onClick={leerConIA} disabled={!fotos.etiqueta}>
+                  <Icono nombre="chispa" tamano={18} /> Leer etiqueta y autorrellenar
+                </Boton>
+                <p className="pequeno">{fotos.etiqueta ? 'Se leen los datos de la etiqueta y se rellena el formulario.' : 'Opcional: con la foto de la etiqueta se pueden leer los datos automáticamente.'}</p>
+                <Mensaje mensaje={estadoIA} />
+              </div>
+            </div>
+          )} />
+        </div>
+        <aside className="subida-lateral" aria-label="Vista previa y artículos no gradeables">
           <div className="vista-etiqueta">
             <h2>Vista previa de la etiqueta</h2>
             <EtiquetaIGS producto={vistaPrevia(formulario.valores)} />
           </div>
-          <FormularioProducto formulario={formulario} pedidos={pedidos ?? []} />
           <NoGradeable pedido={formulario.valores.pedido} articulo={formulario.valores.articulo}
             alMarcar={() => { formulario.rellenar({ articulo: '' }); recargar(); }} />
-        </div>
+        </aside>
       </Tarjeta>
       {guardado && (
         <Tarjeta como="div" className={`etiqueta-guardada zona-impresion capa-${capa}`}>

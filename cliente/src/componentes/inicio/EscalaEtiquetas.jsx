@@ -24,7 +24,7 @@ const NIVELES = [
 /** Explica los tres colores del distintivo de la etiqueta IGS. */
 export function EscalaEtiquetas() {
   return (
-    <section className="seccion" aria-labelledby="t-etiquetas">
+    <section className="seccion-ajustada" aria-labelledby="t-etiquetas">
       <div className="contenedor">
         <div className="escala-intro">
           <h2 id="t-etiquetas" className="seccion-titulo">Nuestra etiqueta</h2>

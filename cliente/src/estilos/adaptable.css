@@ -4,15 +4,21 @@
 @media (max-width: 900px) {
   .portada .contenedor { gap: 32px; }
   .servicios { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+  .franja-confianza ul { grid-template-columns: 1fr; gap: 16px; }
+  .preguntas-lista { grid-template-columns: 1fr; }
+  .calculadora { grid-template-columns: 1fr; }
+  .calculadora-resultado { grid-column: auto; grid-row: auto; }
   .barra-lateral { flex-basis: 100%; gap: 14px; }
   .menu-lateral { flex-direction: row; flex-wrap: wrap; }
   .barra-lateral-pie { margin-top: 0; flex-direction: row; gap: 16px; }
+  .pie-columnas { grid-template-columns: 1fr 1fr 1fr; }
+  .pie-marca { grid-column: 1 / -1; max-width: none; }
 }
 
 /* Móviles grandes (hasta 700px): la trasera del slab va debajo de la frontal */
 @media (max-width: 700px) {
   .portada-visual.losa-par { flex: 1 1 100%; width: 100%; flex-direction: column; align-items: center; margin: 0; }
-  .portada-visual.losa-par .losa-foto { flex: none; width: 75%; max-width: 280px; margin: 0 auto; }
+  .portada-visual.losa-par .losa-foto { flex: none; width: 58%; max-width: 220px; margin: 0 auto; }
   .portada-visual.losa-par .losa-foto-trasera { margin-top: 0; }
 }
 
@@ -54,13 +60,13 @@
   .filtros { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; }
   .filtro { flex: 0 0 auto; }
   .servicio-pie { flex-direction: column; align-items: stretch; }
+  .calculadora-campos { grid-template-columns: 1fr; }
+  .calculadora .boton { justify-self: stretch; }
   .servicio-datos { grid-template-columns: 1fr 1fr; }
 
   .producto { gap: 24px; }
   .producto-titulo { gap: 14px; }
   .producto-titulo h1 { font-size: 24px; }
-  .insignia-nota { width: 96px; height: 96px; }
-  .insignia-nota strong { font-size: 36px; }
   .lista-datos { grid-template-columns: 1fr; }
   .subnota > span { width: 84px; font-size: 14px; }
   .acciones .boton { width: 100%; }
@@ -78,7 +84,26 @@
   .barra-herramientas { width: 100%; }
   .barra-herramientas > * { flex: 1 1 auto; }
   .subida { padding: 16px; }
-  .grupo-subnotas { grid-template-columns: 1fr 1fr; }
 
-  .pie .contenedor { flex-direction: column; }
+  .pie-columnas { grid-template-columns: 1fr 1fr; gap: 24px; }
+  .pie-marca { grid-column: 1 / -1; }
+  .pie-legal { flex-direction: column; }
+  .barra-demo-extra { display: none; }
+}
+
+/* Tablas que pasan a tarjetas en el móvil: cada celda muestra su título con data-etiqueta */
+@media (max-width: 700px) {
+  .tabla-adaptable { min-width: 0; font-size: 15px; }
+  .tabla-adaptable thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .tabla-adaptable, .tabla-adaptable tbody, .tabla-adaptable tr, .tabla-adaptable td { display: block; width: 100%; }
+  .tabla-adaptable tr { padding: 12px 0; border-top: 1px solid var(--gris-borde); }
+  .tabla-adaptable tbody tr:first-child { border-top: 0; }
+  .tabla-adaptable tr.fila-detalle { padding-top: 0; border-top: 0; }
+  .tabla-adaptable td { border-top: 0; padding: 5px 16px; }
+  .tabla-adaptable td[data-etiqueta] { display: grid; grid-template-columns: 40% minmax(0, 1fr); gap: 10px; align-items: start; }
+  .tabla-adaptable td[data-etiqueta]::before { content: attr(data-etiqueta); font-size: 13px; font-weight: 600; color: var(--gris-texto); padding-top: 2px; }
+  .tabla-adaptable td.celda-titulo { font-size: 17px; font-weight: 700; padding-bottom: 8px; }
+  .tabla-adaptable td.celda-acciones { padding-top: 10px; }
+  .tabla-adaptable .celda-texto { max-width: none; }
+  .tabla-adaptable .plazo { white-space: normal; }
 }

@@ -36,6 +36,7 @@ export const TIPOS_TICKET = Object.freeze([
   { id: 'pedido', nombre: 'Estado de mi pedido' },
   { id: 'certificacion', nombre: 'Error en una certificación' },
   { id: 'pagos', nombre: 'Pagos y facturas' },
+  { id: 'cuenta', nombre: 'Acceso a mi cuenta' },
   { id: 'otro', nombre: 'Otro' },
 ]);
 

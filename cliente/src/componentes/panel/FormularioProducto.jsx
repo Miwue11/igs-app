@@ -7,8 +7,9 @@ import { CampoSelect } from '../ui/CampoSelect.jsx';
 import { CampoArea } from '../ui/CampoArea.jsx';
 import { Boton } from '../ui/Boton.jsx';
 import { Mensaje } from '../ui/Mensaje.jsx';
+import { CampoSubnota } from './CampoSubnota.jsx';
 import {
-  OPCIONES_SUBNOTA, OPCIONES_CATEGORIA, OPCIONES_IDIOMA, CAMPO_SUBNOTA, subnotasDe, valoresDesdeArticulo,
+  OPCIONES_CATEGORIA, OPCIONES_IDIOMA, CAMPO_SUBNOTA, subnotasDe, valoresDesdeArticulo,
 } from './opcionesProducto.js';
 
 const pendientes = (pedido) =>
@@ -30,7 +31,7 @@ function NotaCalculada({ subnotas }) {
 }
 
 /** Ficha del producto gradeado: sale de un artículo declarado por el cliente. El estado lo gestiona useFormulario. */
-export function FormularioProducto({ formulario, pedidos, extra }) {
+export function FormularioProducto({ formulario, pedidos, fotos, extra }) {
   const { valores, errores, mensaje, enviando, cambiar, rellenar, enviar } = formulario;
   const campo = (name) => ({ name, value: valores[name], onChange: cambiar, error: errores[name] });
 
@@ -45,6 +46,8 @@ export function FormularioProducto({ formulario, pedidos, extra }) {
   }));
 
   const elegirPedido = (e) => rellenar({ pedido: e.target.value, articulo: '' });
+  const quedan = pendientes(pedido);
+  const posicion = pedido && valores.articulo !== '' ? Number(valores.articulo) + 1 : null;
   const elegirArticulo = (e) => {
     const indice = e.target.value;
     rellenar({ articulo: indice, ...(indice === '' ? {} : valoresDesdeArticulo(pedido.articulos[Number(indice)])) });
@@ -52,16 +55,24 @@ export function FormularioProducto({ formulario, pedidos, extra }) {
 
   return (
     <form className="rejilla-formulario formulario-producto" onSubmit={enviar} noValidate aria-label="Datos del producto gradeado">
+      <h3 className="completo paso-formulario">1. Pedido y artículo</h3>
       <CampoSelect id="p-pedido" etiqueta="Pedido" vacio="Elige un pedido en gradeo" opciones={opcionesPedido}
         {...campo('pedido')} onChange={elegirPedido} />
       <CampoSelect id="p-articulo" etiqueta="Artículo declarado" vacio={pedido ? 'Elige el artículo' : 'Primero elige el pedido'}
-        opciones={opcionesArticulo} disabled={!pedido} {...campo('articulo')} onChange={elegirArticulo} />
+        opciones={opcionesArticulo} disabled={!pedido} {...campo('articulo')} onChange={elegirArticulo} className="campo-doble" />
       {pedido && valores.articulo !== '' && pedido.articulos[Number(valores.articulo)]?.imagen && (
         <figure className="completo referencia-articulo">
           <img src={pedido.articulos[Number(valores.articulo)].imagen} alt="" width="90" height="125" />
           <figcaption>Imagen oficial de la carta que declaró el cliente. Compruébala con la carta física.</figcaption>
         </figure>
       )}
+      {pedido && (
+        <p className="completo progreso-pedido" aria-live="polite">
+          {posicion ? <>Artículo <strong>{posicion} de {pedido.unidades}</strong> · </> : null}
+          {quedan.length === 0 ? 'Todos los artículos de este pedido están resueltos.' : `${quedan.length} pendientes en ${pedido.codigo}`}
+        </p>
+      )}
+      <h3 className="completo paso-formulario">2. Datos del producto <span className="pequeno">(vienen de lo que declaró el cliente: revísalos)</span></h3>
       <CampoTexto id="p-nombre" etiqueta="Nombre del producto" {...campo('nombre')} />
       <CampoTexto id="p-marca" etiqueta="Marca / juego" {...campo('marca')} />
       <CampoTexto id="p-anio" etiqueta="Año" inputMode="numeric" {...campo('anio')} />
@@ -72,18 +83,23 @@ export function FormularioProducto({ formulario, pedidos, extra }) {
       <CampoTexto id="p-var" etiqueta="Variedad" {...campo('variedad')} />
       <CampoSelect id="p-idioma" etiqueta="Idioma" opciones={OPCIONES_IDIOMA} {...campo('idioma')} />
 
-      <fieldset className="completo grupo-subnotas">
-        <legend>Subnotas</legend>
+      <h3 className="completo paso-formulario">3. Subnotas</h3>
+      <div className="completo grupo-subnotas">
         {SUBNOTAS.map((s) => (
-          <CampoSelect key={s.id} id={`p-${s.id}`} etiqueta={s.nombre} vacio="—" opciones={OPCIONES_SUBNOTA} {...campo(CAMPO_SUBNOTA(s.id))} />
+          <CampoSubnota key={s.id} id={`p-${s.id}`} etiqueta={s.nombre} valor={valores[CAMPO_SUBNOTA(s.id)]}
+            alCambiar={(v) => rellenar({ [CAMPO_SUBNOTA(s.id)]: v })} error={errores[CAMPO_SUBNOTA(s.id)]} />
         ))}
-      </fieldset>
+      </div>
       <div className="completo"><NotaCalculada subnotas={subnotasDe(valores)} /></div>
 
       <CampoArea id="p-comentario" etiqueta="Comentario sobre la nota" rows={3} className="completo" {...campo('comentario')} />
 
+      {fotos && <><h3 className="completo paso-formulario">4. Fotos del slab</h3><div className="completo">{fotos}</div></>}
+
       <div className="acciones completo">
-        <Boton type="submit" grande disabled={enviando}>{enviando ? 'Guardando…' : 'Publicar certificado'}</Boton>
+        <Boton type="submit" grande disabled={enviando}>
+          {enviando ? 'Guardando…' : quedan.length > 1 ? 'Publicar y pasar al siguiente' : 'Publicar certificado'}
+        </Boton>
         {extra}
       </div>
       <div className="completo"><Mensaje mensaje={mensaje} /></div>

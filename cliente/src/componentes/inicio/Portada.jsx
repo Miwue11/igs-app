@@ -7,7 +7,7 @@ export function Portada({ alBuscar }) {
     <section className="portada">
       <div className="contenedor">
         <div className="portada-contenido">
-          <span className="antetitulo">PLAZO GARANTIZADO · 14 DÍAS DESDE LA RECEPCIÓN</span>
+          <span className="antetitulo">PLAZO GARANTIZADO DE 14 DÍAS</span>
           <h1>Certificamos el estado real de tus coleccionables</h1>
           <p className="portada-texto">
             Envíanos tus cartas y productos, los evaluamos, los encapsulamos y publicamos su ficha.

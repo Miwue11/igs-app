@@ -27,7 +27,7 @@ const responder = (funcion) => async (...args) => {
 };
 
 const publico = ({ contrasena, ...usuario }) => usuario;
-const usuarioActual = () => db.usuarios.find((u) => u.id === leerSesion()) ?? null;
+const usuarioActual = () => db.usuarios.find((u) => u.id === leerSesion() && u.activo) ?? null;
 
 const exigir = (roles) => {
   const usuario = usuarioActual();
@@ -59,7 +59,7 @@ const acceso = {
   entrar: responder((datos) => {
     comprobar('entrar', datos);
     const usuario = db.usuarios.find((u) => u.email === datos.email.trim().toLowerCase());
-    if (!usuario || usuario.contrasena !== datos.contrasena) throw new ErrorApi(401, 'Email o contraseña incorrectos.');
+    if (!usuario || !usuario.activo || usuario.contrasena !== datos.contrasena) throw new ErrorApi(401, 'Email o contraseña incorrectos.');
     guardarSesion(usuario.id);
     return publico(usuario);
   }),
@@ -192,7 +192,7 @@ const tickets = {
     const ticket = {
       id: nuevoId(), codigo: formatearTicket(db.contadores.ticket), usuario: usuarioActual()?.id ?? null,
       nombre: datos.nombre, email: datos.email, tipo: datos.tipo, referencia: datos.referencia ?? '',
-      mensaje: datos.mensaje, estado: 'abierto', creadoEn: ahora(),
+      mensaje: datos.mensaje, estado: 'abierto', respuestas: [], creadoEn: ahora(),
     };
     db.tickets.push(ticket);
     return ticket;
@@ -209,6 +209,15 @@ const tickets = {
     ticket.estado = estado;
     return ticket;
   }),
+  responder: responder((codigo, mensaje) => {
+    const autor = exigir(ROLES_INTERNOS);
+    comprobar('respuestaTicket', { mensaje });
+    const ticket = db.tickets.find((t) => t.codigo === codigo);
+    if (!ticket) throw new ErrorApi(404, 'No existe ese ticket.');
+    ticket.respuestas = [...(ticket.respuestas ?? []), { autorNombre: autor.nombre, mensaje: mensaje.trim(), fecha: ahora() }];
+    if (ticket.estado === 'abierto') ticket.estado = 'en_proceso';
+    return ticket;
+  }),
 };
 
 const usuarios = {
@@ -223,6 +232,15 @@ const usuarios = {
     const usuario = db.usuarios.find((u) => u.id === id);
     if (!usuario) throw new ErrorApi(404, 'No existe ese usuario.');
     usuario.rol = rol;
+    return publico(usuario);
+  }),
+  cambiarActivo: responder((id, activo) => {
+    const admin = exigir([ROLES.ADMIN]);
+    comprobar('activoUsuario', { activo });
+    if (id === admin.id) throw new ErrorApi(403, 'No puedes desactivar tu propia cuenta.');
+    const usuario = db.usuarios.find((u) => u.id === id);
+    if (!usuario) throw new ErrorApi(404, 'No existe ese usuario.');
+    usuario.activo = activo;
     return publico(usuario);
   }),
 };

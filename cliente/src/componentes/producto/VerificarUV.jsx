@@ -42,7 +42,7 @@ export function VerificarUV({ idCertificado }) {
         que solo IGS puede generar para este certificado.
       </p>
       <div className="verificar-uv-fila">
-        <CampoTexto id="codigo-uv" etiqueta="Código UV" mono placeholder="7QK2-M9XD" autoComplete="off" maxLength={12}
+        <CampoTexto id="codigo-uv" etiqueta="Código UV" mono placeholder="XXXX-XXXX" autoComplete="off" maxLength={12}
           value={codigo} onChange={(e) => { setCodigo(e.target.value); setError(null); }} error={error} />
         <Boton type="submit" variante="oscuro" disabled={enviando}>{enviando ? 'Comprobando…' : 'Comprobar'}</Boton>
       </div>

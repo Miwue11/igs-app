@@ -6,7 +6,8 @@ import { FotosProducto } from './FotosProducto.jsx';
 import { EtiquetaIGS } from './EtiquetaIGS.jsx';
 import { VisorEtiquetaTrasera } from './VisorEtiquetaTrasera.jsx';
 import { VerificarUV } from './VerificarUV.jsx';
-import { InsigniaNota } from './InsigniaNota.jsx';
+import { nivelGrado } from '@compartido';
+import { formatoNota } from '../../utilidades/formato.js';
 import { DatosProducto } from './DatosProducto.jsx';
 import { Subnotas } from './Subnotas.jsx';
 import { BotonCopiarEnlace } from './BotonCopiarEnlace.jsx';
@@ -25,10 +26,12 @@ export function FichaProducto({ producto }) {
 
       <section className="producto-datos" aria-label="Datos del producto">
         <div className="producto-titulo">
-          <InsigniaNota nota={producto.nota} etiqueta={producto.etiquetaGrado} />
-          <div>
-            <span className="mono apagado">{producto.idCertificado}</span>
-            <h1>{producto.nombre}</h1>
+          <span className="mono apagado">{producto.idCertificado}</span>
+          <h1>{producto.nombre}</h1>
+          <div className="producto-resumen">
+            <span className={`nota-linea nota-${nivelGrado(producto.nota, producto.etiquetaGrado)}`}>
+              Grado {formatoNota(producto.nota)} · {producto.etiquetaGrado}
+            </span>
             <span className="apagado">Gradeado el {formatoFecha(producto.fechaGradeo)}</span>
           </div>
         </div>

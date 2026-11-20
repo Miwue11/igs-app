@@ -1,10 +1,7 @@
 import { nombreCategoria } from '@compartido';
-import { formatoNota } from '../../utilidades/formato.js';
 
 /** Campos de la ficha, en el orden en que se muestran. */
 const CAMPOS = [
-  ['ID', (p) => p.idCertificado],
-  ['Grado', (p) => `${formatoNota(p.nota)} · ${p.etiquetaGrado}`],
   ['Marca / juego', (p) => p.marca],
   ['Año', (p) => p.anio],
   ['Expansión', (p) => p.expansion],

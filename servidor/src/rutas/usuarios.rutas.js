@@ -8,4 +8,5 @@ import { manejadorAsync as a } from '../utilidades/manejadorAsync.js';
 export const rutasUsuarios = Router()
   .use(autenticar, permitir(ROLES.ADMIN))
   .get('/', a(usuarios.listar))
-  .patch('/:id/rol', validarCuerpo('rol'), a(usuarios.actualizarRol));
+  .patch('/:id/rol', validarCuerpo('rol'), a(usuarios.actualizarRol))
+  .patch('/:id/activo', validarCuerpo('activoUsuario'), a(usuarios.actualizarActivo));

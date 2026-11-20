@@ -8,6 +8,7 @@ const { ObjectId } = mongoose.Schema.Types;
 const esquemaRespuesta = new mongoose.Schema(
   {
     autor: { type: ObjectId, ref: 'Usuario' },
+    autorNombre: { type: String, trim: true },
     mensaje: { type: String, required: true, maxlength: LIMITES.MENSAJE_MAX },
     fecha: { type: Date, default: Date.now },
   },

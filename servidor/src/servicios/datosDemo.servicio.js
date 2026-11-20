@@ -5,9 +5,9 @@
 import mongoose from 'mongoose';
 import { cifrarContrasena } from './acceso.servicio.js';
 import { Usuario, Servicio, Pedido, Producto, Ticket, Contador, Foto } from '../modelos/index.js';
-import { etiquetaGrado, contadorCertificado, ESTADOS_PEDIDO } from '../../../compartido/index.js';
+import { etiquetaGrado, contadorCertificado } from '../../../compartido/index.js';
 import {
-  CONTRASENA_DEMO, DEMO_SERVICIOS, DEMO_USUARIOS, DEMO_PEDIDOS, DEMO_PRODUCTOS, DEMO_TICKETS, haceDias, construirPedidoDemo,
+  CONTRASENA_DEMO, DEMO_SERVICIOS, DEMO_USUARIOS, DEMO_PEDIDOS, DEMO_PRODUCTOS, DEMO_TICKETS, haceDias, construirPedidoDemo, historialDemo,
 } from '../../../compartido/demo/datos.js';
 
 /** Borra la base de datos (también las colecciones antiguas) y recrea los índices. */
@@ -29,7 +29,7 @@ const crearPedidos = (usuarios, servicios) =>
     return {
       ...construirPedidoDemo(p, servicio),
       cliente: cliente._id,
-      historial: [{ estado: ESTADOS_PEDIDO.PENDIENTE_ENVIO, usuario: cliente._id, fecha: haceDias(p.creado) }],
+      historial: historialDemo(p).map((h, i) => (i === 0 ? { ...h, usuario: cliente._id } : h)),
     };
   }));
 
@@ -66,8 +66,9 @@ const ajustarContadores = () => {
  * al arrancar con SEMBRAR_DEMO_SI_VACIA, una base de datos de demo con una versión anterior se recarga.
  *   2 → pedidos con artículos declarados, importe y plazo desde la llegada.
  *   3 → catálogo sin el Lote Pro (Estándar, Express, Premium, Cómics y Segunda Opinión).
+ *   4 → historial de estados completo en los pedidos de ejemplo.
  */
-export const VERSION_DATOS_DEMO = 3;
+export const VERSION_DATOS_DEMO = 4;
 const CONTADOR_VERSION = 'version-datos-demo';
 
 /** Borra la base de datos y carga los datos de demo. Necesita la conexión ya abierta. */

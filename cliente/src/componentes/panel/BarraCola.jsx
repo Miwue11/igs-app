@@ -10,7 +10,7 @@ export function BarraCola({ filtro, alFiltrar, alExportar }) {
       <select id="f-estado" className="selector" value={filtro} onChange={(e) => alFiltrar(e.target.value)}>
         {OPCIONES.map((o) => <option key={o.valor} value={o.valor}>{o.texto}</option>)}
       </select>
-      <Boton variante="contorno" onClick={alExportar}>Exportar copia</Boton>
+      <Boton variante="contorno" onClick={alExportar}>Exportar CSV</Boton>
     </div>
   );
 }

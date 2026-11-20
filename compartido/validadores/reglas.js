@@ -23,6 +23,9 @@ export const igualA = (campo, mensaje) => (v, datos) => (v === datos[campo] ? nu
 
 export const aceptado = (v) => (v === true || v === 'on' ? null : MENSAJES.CONDICIONES);
 
+/** Para casillas que llegan como JSON: tiene que ser true o false. */
+export const booleano = (v) => (typeof v === 'boolean' ? null : MENSAJES.OPCION);
+
 export const enLista = (lista) => (v) => (vacio(v) || lista.includes(v) ? null : MENSAJES.OPCION);
 
 export const entero = (min, max, mensaje) => (v) => {

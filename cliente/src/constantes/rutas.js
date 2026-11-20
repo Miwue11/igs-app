@@ -9,6 +9,7 @@ export const RUTAS = Object.freeze({
   CONTACTO: '/contacto',
   MI_CUENTA: '/mi-cuenta',
   PANEL: '/panel',
+  LEGAL: '/legal',
 });
 
 export const rutaConsulta = (idCertificado) => `${RUTAS.CONSULTA}?id=${encodeURIComponent(idCertificado)}`;

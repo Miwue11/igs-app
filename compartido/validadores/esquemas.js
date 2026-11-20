@@ -5,7 +5,7 @@ import { ROLES } from '../constantes/roles.js';
 import { ESTADOS_PEDIDO, ESTADOS_TICKET } from '../constantes/estados.js';
 import { MOTIVOS_NO_GRADEABLE } from '../constantes/negocio.js';
 import {
-  requerido, email, minimo, maximo, igualA, aceptado, enLista, entero, nota, anio, idCertificado, articulosDeclarados, codigoUV, validar,
+  requerido, email, minimo, maximo, igualA, aceptado, enLista, booleano, entero, nota, anio, idCertificado, articulosDeclarados, codigoUV, validar,
 } from './reglas.js';
 
 /** Esquemas de validación: los usan el formulario (cliente) y la API (servidor). */
@@ -63,6 +63,12 @@ export const ESQUEMAS = Object.freeze({
   },
   rol: {
     rol: [requerido, enLista(Object.values(ROLES))],
+  },
+  respuestaTicket: {
+    mensaje: [requerido, maximo(LIMITES.MENSAJE_MAX)],
+  },
+  activoUsuario: {
+    activo: [booleano],
   },
 });
 

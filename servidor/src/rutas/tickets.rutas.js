@@ -10,4 +10,5 @@ const interno = [autenticar, permitir(...ROLES_INTERNOS)];
 export const rutasTickets = Router()
   .post('/', autenticacionOpcional, validarCuerpo('ticket'), a(tickets.crear))
   .get('/', ...interno, a(tickets.listar))
-  .patch('/:codigo/estado', ...interno, validarCuerpo('estadoTicket'), a(tickets.cambiarEstado));
+  .patch('/:codigo/estado', ...interno, validarCuerpo('estadoTicket'), a(tickets.cambiarEstado))
+  .post('/:codigo/respuestas', ...interno, validarCuerpo('respuestaTicket'), a(tickets.responder));

@@ -19,11 +19,24 @@
 .cabecera .boton-enlace { color: var(--gris-claro); }
 .cabecera .boton-enlace:hover { color: var(--blanco); }
 
-.pie { background: var(--azul); color: var(--gris-claro); padding: 32px 0; font-size: 14px; }
-.pie .contenedor { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; }
-.pie nav { display: flex; flex-wrap: wrap; gap: 20px; }
-.pie a { color: var(--gris-claro); }
-.pie a:hover { color: var(--blanco); }
+.pie { background: var(--azul); color: var(--gris-claro); padding: 48px 0 28px; font-size: 14px; }
+.pie a { color: var(--gris-claro); text-decoration: none; }
+.pie a:hover { color: var(--blanco); text-decoration: underline; }
+.pie-columnas { display: grid; grid-template-columns: 1.6fr repeat(3, 1fr); gap: 32px; padding-bottom: 32px; }
+.pie-marca { display: flex; flex-direction: column; gap: 14px; max-width: 320px; line-height: 1.55; }
+.pie-columna h2 { font-size: 13px; letter-spacing: 1px; text-transform: uppercase; color: var(--dorado); margin-bottom: 12px; }
+.pie-columna ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+.pie-legal {
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 20px;
+  padding-top: 20px; border-top: 1px solid rgba(201, 210, 222, .2); font-size: 13px;
+}
+.pie-legal nav { display: flex; flex-wrap: wrap; gap: 20px; }
+
+/* Página legal */
+.indice-legal { display: flex; flex-wrap: wrap; gap: 10px 24px; font-weight: 600; }
+.texto-legal { gap: 10px; scroll-margin-top: 24px; }
+.texto-legal h2 { font-size: 22px; }
+.texto-legal p { color: var(--gris-texto); line-height: 1.6; }
 
 .pagina { padding: 48px 0 72px; }
 .pagina > .contenedor { display: flex; flex-direction: column; gap: 28px; }

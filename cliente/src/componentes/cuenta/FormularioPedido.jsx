@@ -4,17 +4,33 @@ import {
 import { useFormulario } from '../../hooks/useFormulario.js';
 import { formatoPlazo, formatoPrecio, formatoValorMax } from '../../utilidades/formato.js';
 import { Tarjeta } from '../ui/Tarjeta.jsx';
-import { CampoSelect } from '../ui/CampoSelect.jsx';
 import { CampoArea } from '../ui/CampoArea.jsx';
 import { Boton } from '../ui/Boton.jsx';
 import { Mensaje } from '../ui/Mensaje.jsx';
 import { BuscadorCartas } from './BuscadorCartas.jsx';
 import { ListaArticulos, ARTICULO_VACIO } from './ListaArticulos.jsx';
 
-const opcion = (s) => ({
-  valor: s.codigo,
-  texto: `${s.nombre} · ${formatoPrecio(s.precio)}/art. · hasta ${formatoValorMax(s.valorMax)} · ${formatoPlazo(s.plazoDias)}`,
-});
+/** Servicios como tarjetas seleccionables (radios): se comparan de un vistazo sin abrir un desplegable. */
+function SelectorServicio({ servicios, valor, alCambiar, error }) {
+  return (
+    <fieldset className="selector-servicio" aria-describedby={error ? 'p-servicio-error' : undefined}>
+      <legend>1. Elige el servicio</legend>
+      <div className="selector-servicio-opciones">
+        {servicios.map((s) => (
+          <label key={s.codigo} className="opcion-servicio">
+            <input type="radio" name="servicio" value={s.codigo} checked={valor === s.codigo} onChange={alCambiar} />
+            <span className="opcion-servicio-cuerpo">
+              <strong>{s.nombre}</strong>
+              <span className="opcion-servicio-precio">{formatoPrecio(s.precio)}<small> / artículo</small></span>
+              <span className="pequeno">{formatoPlazo(s.plazoDias)} · {s.valorMax == null ? 'sin límite de valor' : `hasta ${formatoValorMax(s.valorMax)}`}</span>
+            </span>
+          </label>
+        ))}
+      </div>
+      {error && <p className="campo-error" id="p-servicio-error">{error}</p>}
+    </fieldset>
+  );
+}
 
 /** Categorías de servicio en las que hay base de datos oficial de cartas. */
 const CON_BUSCADOR = ['cartas'];
@@ -66,10 +82,9 @@ export function FormularioPedido({ servicios, servicioInicial = '', alCrear }) {
   const anadir = (articulo) => asignar('articulos', [...valores.articulos, articulo]);
 
   return (
-    <Tarjeta como="form" className="tarjeta-formulario formulario-envio" onSubmit={enviar} noValidate aria-labelledby="t-pedido">
+    <Tarjeta como="form" id="nuevo-pedido" className="tarjeta-formulario formulario-envio" onSubmit={enviar} noValidate aria-labelledby="t-pedido">
       <h2 id="t-pedido">Nuevo pedido</h2>
-      <CampoSelect id="p-servicio" name="servicio" etiqueta="1. Servicio" vacio="Elige un servicio"
-        opciones={servicios.map(opcion)} value={valores.servicio} onChange={cambiar} error={errores.servicio} />
+      <SelectorServicio servicios={servicios} valor={valores.servicio} alCambiar={cambiar} error={errores.servicio} />
 
       {servicio && (
         <>

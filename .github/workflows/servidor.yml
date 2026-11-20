@@ -59,7 +59,7 @@ jobs:
           echo "→ El cliente crea un envío declarando sus cartas"
           pedir 200 -c cliente.txt -H "$JSON" -d '{"email":"cliente@igs.demo","contrasena":"Igs-demo-2026"}' $B/api/acceso/entrar
           pedir 400 -b cliente.txt -H "$JSON" -d '{"servicio":"STD","articulos":[{"nombre":"Lugia","valorDeclarado":900}]}' $B/api/pedidos
-          pedir 400 -b cliente.txt -H "$JSON" -d '{"servicio":"BLQ","articulos":[{"nombre":"Pikachu","valorDeclarado":20}]}' $B/api/pedidos
+          pedir 400 -b cliente.txt -H "$JSON" -d '{"servicio":"NOEXISTE","articulos":[{"nombre":"Pikachu","valorDeclarado":20}]}' $B/api/pedidos
           pedir 201 -b cliente.txt -H "$JSON" \
             -d '{"servicio":"STD","articulos":[{"nombre":"Pikachu","expansion":"Base Set","anio":1999,"numero":"58/102","valorDeclarado":40,"imagen":"https://assets.tcgdex.net/en/base/base1/58/low.webp"},{"nombre":"Mew","valorDeclarado":25,"imagen":"https://malicioso.example/x.png"}]}' $B/api/pedidos
           NUEVO=$(campo d.codigo)
@@ -108,6 +108,22 @@ jobs:
 
           echo "→ Artículo no gradeable"
           pedir 200 -b trabajador.txt -H "$JSON" -d '{"motivo":"Posible falsificación"}' $B/api/pedidos/PED-0001/articulos/2/no-gradeable
+          echo "→ Responder un ticket: queda en el hilo y pasa a «en proceso»"
+          pedir 400 -b trabajador.txt -H "$JSON" -d '{"mensaje":""}' $B/api/tickets/TCK-0001/respuestas
+          pedir 201 -b trabajador.txt -H "$JSON" -d '{"mensaje":"Empezamos mañana."}' $B/api/tickets/TCK-0001/respuestas
+          [ "$(campo d.estado)" = "en_proceso" ] && [ "$(campo d.respuestas[0].autorNombre)" = "Equipo de gradeo" ]
+          pedir 403 -b cliente.txt -H "$JSON" -d '{"mensaje":"hola"}' $B/api/tickets/TCK-0001/respuestas
+
+          echo "→ Desactivar una cuenta impide entrar; el admin no puede desactivarse"
+          pedir 200 -c admin.txt -H "$JSON" -d '{"email":"admin@igs.demo","contrasena":"Igs-demo-2026"}' $B/api/acceso/entrar
+          ADMIN=$(campo d.id)
+          pedir 200 -b admin.txt $B/api/usuarios
+          TIENDA=$(node -e "console.log(require('./r.json').find((u)=>u.email==='tienda@igs.demo').id)")
+          pedir 400 -b admin.txt -X PATCH -H "$JSON" -d '{"activo":"no"}' $B/api/usuarios/$TIENDA/activo
+          pedir 200 -b admin.txt -X PATCH -H "$JSON" -d '{"activo":false}' $B/api/usuarios/$TIENDA/activo
+          pedir 401 -H "$JSON" -d '{"email":"tienda@igs.demo","contrasena":"Igs-demo-2026"}' $B/api/acceso/entrar
+          pedir 403 -b admin.txt -X PATCH -H "$JSON" -d '{"activo":false}' $B/api/usuarios/$ADMIN/activo
+          pedir 200 -b admin.txt -X PATCH -H "$JSON" -d '{"activo":true}' $B/api/usuarios/$TIENDA/activo
           echo "Todo correcto"
 
       - name: Registro del servidor

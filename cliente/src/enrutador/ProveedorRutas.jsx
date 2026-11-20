@@ -23,11 +23,15 @@ const urlActual = () => sinBase(window.location.pathname) + window.location.sear
 export function ProveedorRutas({ children }) {
   const url = useSyncExternalStore(suscribir, urlActual);
 
+  /** Navega sin recargar. Con «#ancla» baja hasta ese elemento cuando la página nueva ya está pintada. */
   const navegar = useCallback((destino, { reemplazar = false } = {}) => {
-    if (destino === urlActual()) return;
-    window.history[reemplazar ? 'replaceState' : 'pushState'](null, '', conBase(destino));
-    window.dispatchEvent(new Event(EVENTO_NAVEGAR));
-    window.scrollTo(0, 0);
+    const [url, ancla] = destino.split('#');
+    if (url !== urlActual()) {
+      window.history[reemplazar ? 'replaceState' : 'pushState'](null, '', conBase(destino));
+      window.dispatchEvent(new Event(EVENTO_NAVEGAR));
+    }
+    if (!ancla) { window.scrollTo(0, 0); return; }
+    window.setTimeout(() => document.getElementById(ancla)?.scrollIntoView({ block: 'start' }), 60);
   }, []);
 
   const valor = useMemo(() => {

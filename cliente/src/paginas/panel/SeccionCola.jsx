@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import {
-  ETIQUETAS_ESTADO_PEDIDO, ETIQUETAS_ESTADO_PLAZO, ETIQUETAS_PRIORIDAD, estadoPlazo, siguienteEstado, resumenArticulos,
+  ESTADOS_PEDIDO, ESTADOS_PLAZO, ETIQUETAS_ESTADO_PEDIDO, ETIQUETAS_ESTADO_PLAZO, ETIQUETAS_PRIORIDAD, estadoPlazo, siguienteEstado, resumenArticulos,
 } from '@compartido';
 import { api } from '../../servicios/index.js';
 import { useCarga } from '../../hooks/useCarga.js';
@@ -26,6 +26,24 @@ const COLUMNAS_CSV = [
   { titulo: 'Plazo', valor: (p) => ETIQUETAS_ESTADO_PLAZO[estadoPlazo(p)] },
   { titulo: 'Estado', valor: (p) => ETIQUETAS_ESTADO_PEDIDO[p.estado] },
 ];
+
+/** Cifras de la cola visible: lo urgente primero. */
+function ContadoresCola({ pedidos }) {
+  const contar = (filtro) => pedidos.filter(filtro).length;
+  const cifras = [
+    { texto: 'Fuera de plazo', valor: contar((p) => estadoPlazo(p) === ESTADOS_PLAZO.VENCIDO), clase: 'contador--alerta' },
+    { texto: 'Vencen en 3 días o menos', valor: contar((p) => estadoPlazo(p) === ESTADOS_PLAZO.PROXIMO), clase: 'contador--aviso' },
+    { texto: 'En gradeo', valor: contar((p) => p.estado === ESTADOS_PEDIDO.EN_GRADEO) },
+    { texto: 'Esperando paquete', valor: contar((p) => p.estado === ESTADOS_PEDIDO.PENDIENTE_ENVIO) },
+  ];
+  return (
+    <dl className="contadores-cola">
+      {cifras.map((c) => (
+        <div key={c.texto} className={c.valor > 0 ? c.clase : undefined}><dt>{c.texto}</dt><dd>{c.valor}</dd></div>
+      ))}
+    </dl>
+  );
+}
 
 const nombreCsv = () => `cola-pedidos-igs-${new Date().toISOString().slice(0, 10)}.csv`;
 
@@ -58,10 +76,11 @@ export function SeccionCola() {
       <div className="seccion-cabecera">
         <div>
           <h1 id="t-cola">Cola de pedidos</h1>
-          <p className="apagado">Orden: primero los que vencen en 3 días o menos, después por prioridad del servicio y por orden de llegada. El plazo empieza al recibir el paquete (14 días en el Gradeo Estándar) y el pedido solo se publica cuando todos sus artículos están gradeados o marcados como no gradeables.</p>
+          <p className="apagado">Primero los que vencen en 3 días o menos; después, por prioridad del servicio y orden de llegada. Pulsa un código para ver sus artículos e historial.</p>
         </div>
         <BarraCola filtro={filtro} alFiltrar={setFiltro} alExportar={exportar} />
       </div>
+      {pedidos && <ContadoresCola pedidos={pedidos} />}
       {aviso && <Aviso tipo={aviso.tipo}>{aviso.texto}</Aviso>}
       {cargando && !pedidos && <Cargando />}
       {error && <Aviso tipo="error">{error.message}</Aviso>}

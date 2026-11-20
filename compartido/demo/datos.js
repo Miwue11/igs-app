@@ -6,6 +6,7 @@
 import { calcularFechaLimite } from '../utilidades/plazos.js';
 import { pedidoNuevo, prepararArticulos } from '../utilidades/pedidos.js';
 import { ESTADOS_ARTICULO } from '../constantes/negocio.js';
+import { ESTADOS_PEDIDO } from '../constantes/estados.js';
 
 const DIA = 24 * 60 * 60 * 1000;
 export const haceDias = (dias) => (dias === null ? null : new Date(Date.now() - dias * DIA).toISOString());
@@ -103,6 +104,19 @@ const articuloDemo = ({ idCertificado = null, motivo = '', ...a }) => ({
 });
 
 /** Campos comunes de un pedido de demo (los usan el script de carga y el modo demo). */
+/** Historial coherente con el estado del pedido de ejemplo: un cambio por cada paso ya alcanzado. */
+const ORDEN_DEMO = [ESTADOS_PEDIDO.PENDIENTE_ENVIO, ESTADOS_PEDIDO.RECIBIDO, ESTADOS_PEDIDO.EN_GRADEO, ESTADOS_PEDIDO.COMPLETADO, ESTADOS_PEDIDO.ENVIADO];
+export const historialDemo = (p) => {
+  const fechas = {
+    [ESTADOS_PEDIDO.PENDIENTE_ENVIO]: haceDias(p.creado),
+    [ESTADOS_PEDIDO.RECIBIDO]: haceDias(p.llegada),
+    [ESTADOS_PEDIDO.EN_GRADEO]: haceDias(p.llegada == null ? null : Math.max(p.llegada - 1, p.publicado ?? 0)),
+    [ESTADOS_PEDIDO.COMPLETADO]: haceDias(p.publicado),
+    [ESTADOS_PEDIDO.ENVIADO]: haceDias(p.publicado == null ? null : Math.max(p.publicado - 1, 0)),
+  };
+  return ORDEN_DEMO.slice(0, ORDEN_DEMO.indexOf(p.estado) + 1).map((estado) => ({ estado, fecha: fechas[estado] }));
+};
+
 export const construirPedidoDemo = (p, servicio) => {
   const articulos = p.articulos.map(articuloDemo);
   const llegada = haceDias(p.llegada);
@@ -114,6 +128,7 @@ export const construirPedidoDemo = (p, servicio) => {
     fechaLlegada: llegada,
     fechaLimite: llegada ? calcularFechaLimite(llegada, servicio.plazoDias) : null,
     fechaPublicacion: haceDias(p.publicado),
+    historial: historialDemo(p),
   };
 };
 
