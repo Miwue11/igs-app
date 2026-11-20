@@ -10,10 +10,10 @@ TFG (proyecto intermodular de DAW): Miguel López Rodríguez.
 
 El flujo está inspirado en PSA y BGS. Las reglas están en `compartido/utilidades/pedidos.js` y las usan igual el servidor y el modo demo.
 
-1. **El cliente prepara el envío** en «Mi cuenta»: elige el servicio y declara **cada artículo** con su valor.
+1. **El cliente hace el pedido** en «Mi cuenta»: elige el servicio (tarjetas con precio, plazo y valor máximo) y declara **cada artículo** con su valor.
    En cartas TCG busca la carta en una API gratuita (ver abajo) y se rellenan expansión, año, número y rareza.
 2. **Valor declarado**: cada servicio tiene un valor máximo por artículo (Estándar 500 €, Express 1.500 €, Premium sin límite).
-   Si una carta lo supera, hay que elegir un servicio superior. El pedido en bloque exige **mínimo 20 artículos** de hasta 200 €.
+   Si una carta lo supera, hay que elegir un servicio superior. Un servicio puede exigir un mínimo de artículos (`minimoUnidades`).
 3. **Importe** = precio del servicio × artículos + **envío de vuelta asegurado** (15 €).
 4. **IGS recibe el paquete** → empieza a contar el plazo del servicio.
 5. **En gradeo**: cada certificado sale de un artículo declarado. El gradeador pone las cuatro subnotas y la nota final
@@ -22,7 +22,26 @@ El flujo está inspirado en PSA y BGS. Las reglas están en `compartido/utilidad
 6. **Completado** (publicado) solo cuando todos los artículos están resueltos. Después, **Enviado** al cliente.
    Los estados avanzan de uno en uno; el servidor rechaza saltos.
 
-El cliente ve en «Mi cuenta» el resultado de cada artículo: enlace a su certificado o el motivo por el que no se gradeó.
+El cliente ve en «Mi cuenta» el **seguimiento** de cada pedido en cinco pasos (con la fecha de cada cambio), el desglose del importe,
+una **hoja de envío** imprimible mientras el paquete no ha llegado y el resultado de cada artículo: enlace a su certificado o el motivo por el que no se gradeó.
+
+## Páginas de la web
+
+| Página | Qué hay |
+|---|---|
+| Inicio | Buscador de certificados, garantías, cómo funciona, escala de etiquetas, servicios y preguntas frecuentes |
+| Servicios | Tarjetas con filtro por categoría, comparativa de Estándar/Express/Premium y calculadora de total y fecha |
+| Consultar ID | Guía para verificar un slab; ficha con etiquetas, fotos ampliables, subnotas y comprobación del código UV |
+| Contacto | Preguntas frecuentes, ticket de ayuda (sugiere tus pedidos si has entrado) y datos de contacto de ejemplo |
+| Acceder | Inicio de sesión y registro (mostrar contraseña); en la demo, botones para entrar como cada perfil |
+| Mi cuenta | Resumen, pedidos con seguimiento y nuevo pedido |
+| Información legal | Aviso legal, privacidad y cookies (`/legal?seccion=…`) |
+| Panel · Cola | Contadores de urgencia, cola ordenada con una acción por pedido y detalle de artículos e historial |
+| Panel · Gradear | Por pasos: pedido y artículo, datos (ya rellenos), subnotas con botones, fotos; publica y pasa al siguiente artículo |
+| Panel · Tickets | Filtro por estado, hilo de cada ticket y respuestas |
+| Panel · Usuarios | Buscador, filtro por rol, cambio de rol y activar o desactivar cuentas (solo administradores) |
+
+En el móvil, las tablas de pedidos, cola, tickets y usuarios se muestran como tarjetas.
 
 ## Plazos de gradeo
 
@@ -39,7 +58,8 @@ El cliente ve en «Mi cuenta» el resultado de cada artículo: enlace a su certi
   3. El resto, por prioridad del servicio y orden de llegada.
 
   Así los servicios caros pasan antes, pero un Gradeo Estándar nunca se queda sin publicar en sus 14 días.
-- El panel muestra para cada pedido «Quedan N días», «Vence pronto» o «Fuera de plazo». Antes de llegar el paquete se muestra «Empieza al recibir el paquete»; después, la fecha máxima en «Mi cuenta».
+- El panel muestra para cada pedido «Quedan N días», «Vence pronto» o «Fuera de plazo», con colores (verde, ámbar, rojo) y una leyenda. Antes de llegar el paquete se muestra «Empieza al recibir el paquete»; después, la fecha máxima en «Mi cuenta».
+- Si un pedido se publica fuera de plazo, se devuelve el importe del gradeo (está en las preguntas frecuentes).
 - Los días y prioridades se cambian en `compartido/demo/datos.js` (catálogo de ejemplo) y en `compartido/constantes/plazos.js`.
 
 ## Demo publicada en GitHub Pages
@@ -131,7 +151,7 @@ igs-app/
 │   ├── src/
 │   │   ├── configuracion/  variables de entorno y conexión a MongoDB
 │   │   ├── constantes/     códigos HTTP, sesión, colecciones, límites de subida
-│   │   ├── modelos/        Usuario, Servicio, Pedido, Producto, Ticket, Contador
+│   │   ├── modelos/        Usuario, Servicio, Pedido, Producto, Ticket, Contador, Foto
 │   │   ├── servicios/      lógica de negocio (el «motor»)
 │   │   ├── controladores/  traducen petición HTTP ↔ servicio
 │   │   ├── rutas/          rutas + middlewares de cada recurso
@@ -219,7 +239,9 @@ npm run restaurar -- copias/igs_2026-10-26-12-20.json.gz   # restaura una (reemp
 | POST | /api/pedidos/:codigo/articulos/:indice/no-gradeable | trabajador, admin |
 | POST | /api/tickets | público |
 | GET · PATCH | /api/tickets · /api/tickets/:codigo/estado | trabajador, admin |
+| POST | /api/tickets/:codigo/respuestas | trabajador, admin |
 | GET · PATCH | /api/usuarios · /api/usuarios/:id/rol | admin |
+| PATCH | /api/usuarios/:id/activo (`{ "activo": true \| false }`) | admin |
 | POST | /api/ia/etiqueta (foto) | trabajador, admin |
 
 La sesión es un JWT en una cookie `httpOnly` y las contraseñas se guardan cifradas con bcrypt.
