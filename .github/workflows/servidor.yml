@@ -124,6 +124,13 @@ jobs:
           pedir 401 -H "$JSON" -d '{"email":"tienda@igs.demo","contrasena":"Igs-demo-2026"}' $B/api/acceso/entrar
           pedir 403 -b admin.txt -X PATCH -H "$JSON" -d '{"activo":false}' $B/api/usuarios/$ADMIN/activo
           pedir 200 -b admin.txt -X PATCH -H "$JSON" -d '{"activo":true}' $B/api/usuarios/$TIENDA/activo
+          echo "→ Buscador de cartas: juegos disponibles y validación (sin llamar a APIs externas)"
+          pedir 200 $B/api/catalogo/juegos
+          [ "$(campo "d.filter((j)=>['pokemon','magic','yugioh','onepiece','lorcana','digimon'].includes(j.id)).length")" = "6" ] || { echo "✗ faltan juegos base"; exit 1; }
+          pedir 400 "$B/api/catalogo/cartas?juego=onepiece&q=zo"
+          pedir 400 "$B/api/catalogo/cartas?juego=inventado&q=charizard"
+          pedir 200 "$B/api/catalogo/cartas?juego=ct-999999&q=charizard"
+          [ "$(campo d.length)" = "0" ]
           echo "Todo correcto"
 
       - name: Registro del servidor

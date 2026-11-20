@@ -24,6 +24,10 @@ export const ENTORNO = Object.freeze({
   COPIA_NUBE: leer('COPIA_NUBE', ''),
   RUTA_HERRAMIENTAS_MONGO: leer('RUTA_HERRAMIENTAS_MONGO', ''),
   ANTHROPIC_API_KEY: leer('ANTHROPIC_API_KEY', ''),
+  // Token de la API de CardTrader (Ajustes → API de tu perfil). Sin él solo están los juegos con API gratuita.
+  CARDTRADER_TOKEN: leer('CARDTRADER_TOKEN', ''),
+  // Ids de juego de CardTrader que se sincronizan, separados por comas. Vacío = todos los que no tienen API gratuita.
+  CARDTRADER_JUEGOS: leer('CARDTRADER_JUEGOS', ''),
   MODELO_IA: leer('MODELO_IA', 'claude-haiku-4-5'),
 });
 

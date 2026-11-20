@@ -12,6 +12,7 @@
     "copia": "node scripts/copiaSeguridad.js",
     "restaurar": "node scripts/restaurarCopia.js",
     "comprobar": "node scripts/comprobar.js",
+    "catalogo": "node scripts/sincronizarCatalogo.js",
     "test": "node --test pruebas/*.prueba.js"
   },
   "dependencies": {

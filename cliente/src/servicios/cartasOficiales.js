@@ -1,19 +1,15 @@
-import { APIS_CARTAS } from '@compartido';
+import { APIS_CARTAS, JUEGOS_BASE } from '@compartido';
+import { api } from './index.js';
 
 /**
  * Búsqueda de cartas oficiales para que el cliente declare lo que envía en su pedido.
- * Usa APIs públicas y gratuitas, sin clave ni registro:
- *   - Pokémon: TCGdex (https://tcgdex.dev), multilingüe (español, inglés, japonés…)
- *   - Magic: The Gathering: Scryfall (https://scryfall.com/docs/api)
- *   - Yu-Gi-Oh!: YGOPRODeck (https://ygoprodeck.com/api-guide/)
- * Se llama directamente desde el navegador, así que funciona igual con servidor y en el modo demo.
+ *   - Pokémon (TCGdex), Magic (Scryfall) y Yu-Gi-Oh! (YGOPRODeck): APIs gratuitas que se consultan desde el navegador.
+ *   - Lorcana (Lorcast), One Piece (OPTCG API) y Digimon (digimoncard.io): a través del servidor (/api/catalogo),
+ *     que guarda las respuestas en caché; en la demo, directamente.
+ *   - El resto de juegos: catálogo de CardTrader sincronizado en el servidor (los juegos llegan de /api/catalogo/juegos).
  */
 
-export const JUEGOS = Object.freeze([
-  { id: 'pokemon', nombre: 'Pokémon', marca: 'Pokémon', fuente: 'TCGdex' },
-  { id: 'magic', nombre: 'Magic: The Gathering', marca: 'Magic: The Gathering', fuente: 'Scryfall' },
-  { id: 'yugioh', nombre: 'Yu-Gi-Oh!', marca: 'Yu-Gi-Oh!', fuente: 'YGOPRODeck' },
-]);
+export const JUEGOS = JUEGOS_BASE;
 
 const MAXIMO = 8;
 const MINIMO_LETRAS = 3;
@@ -26,6 +22,9 @@ export const juegoDeMarca = (marca = '') => {
   const texto = marca.toLowerCase();
   if (/magic|mtg/.test(texto)) return 'magic';
   if (/yu-?gi-?oh|ygo/.test(texto)) return 'yugioh';
+  if (/one ?piece/.test(texto)) return 'onepiece';
+  if (/lorcana/.test(texto)) return 'lorcana';
+  if (/digimon/.test(texto)) return 'digimon';
   return 'pokemon';
 };
 
@@ -142,13 +141,25 @@ const buscarYugioh = async (nombre, _idioma, senal) => {
     .slice(0, MAXIMO);
 };
 
+/** Juegos que el navegador consulta directamente; el resto pasa por el servidor (api.catalogo). */
 const BUSCADORES = { pokemon: buscarPokemon, magic: buscarMagic, yugioh: buscarYugioh };
 
 /** Busca cartas oficiales que coincidan con el nombre. Devuelve una lista (vacía si no hay coincidencias). */
 export const buscarCartasOficiales = async ({ nombre, juego = 'pokemon', idioma, senal }) => {
   if (!hayNombreSuficiente(nombre)) return [];
-  const buscar = BUSCADORES[juego] ?? buscarPokemon;
-  return buscar(nombre.trim(), idioma, senal);
+  const buscar = BUSCADORES[juego];
+  if (buscar) return buscar(nombre.trim(), idioma, senal);
+  return api.catalogo.cartas(juego, nombre.trim());
+};
+
+/** Juegos del buscador: los fijos y, con servidor, los del catálogo de CardTrader. Si falla, quedan los fijos. */
+export const cargarJuegos = async () => {
+  try {
+    const juegos = await api.catalogo.juegos();
+    return Array.isArray(juegos) && juegos.length > 0 ? juegos : JUEGOS;
+  } catch {
+    return JUEGOS;
+  }
 };
 
 /** Pasa una carta encontrada a un artículo del pedido (el cliente solo tiene que poner el valor declarado). */
@@ -156,7 +167,7 @@ export const articuloDesdeCarta = (carta, idioma = '') => {
   const juego = JUEGOS.find((j) => j.id === carta.juego);
   return {
     nombre: carta.nombre,
-    marca: juego?.marca ?? '',
+    marca: carta.marca ?? juego?.marca ?? '',
     expansion: carta.expansion,
     anio: carta.anio ? String(carta.anio) : '',
     numero: carta.numero,

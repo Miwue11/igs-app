@@ -5,3 +5,4 @@ export { Producto } from './Producto.js';
 export { Ticket } from './Ticket.js';
 export { Contador } from './Contador.js';
 export { Foto } from './Foto.js';
+export { CartaCatalogo } from './CartaCatalogo.js';

@@ -6,6 +6,7 @@ import { rutasProductos } from './productos.rutas.js';
 import { rutasTickets } from './tickets.rutas.js';
 import { rutasUsuarios } from './usuarios.rutas.js';
 import { rutasIA } from './ia.rutas.js';
+import { rutasCartasCatalogo } from './cartasCatalogo.rutas.js';
 
 /** Todas las rutas de la API cuelgan de /api. */
 export const rutasApi = Router()
@@ -16,4 +17,5 @@ export const rutasApi = Router()
   .use('/productos', rutasProductos)
   .use('/tickets', rutasTickets)
   .use('/usuarios', rutasUsuarios)
-  .use('/ia', rutasIA);
+  .use('/ia', rutasIA)
+  .use('/catalogo', rutasCartasCatalogo);

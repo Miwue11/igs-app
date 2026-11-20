@@ -7,6 +7,7 @@ export const COLECCIONES = Object.freeze({
   TICKETS: 'tickets',
   CONTADORES: 'contadores',
   FOTOS: 'fotos',
+  CATALOGO_CARTAS: 'catalogo_cartas',
 });
 
 /** Fechas automáticas de cada documento con nombres en español. */

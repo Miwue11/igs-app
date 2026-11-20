@@ -17,5 +17,6 @@ export * from './utilidades/pedidos.js';
 export * from './utilidades/cola.js';
 export * from './utilidades/qr.js';
 export * from './utilidades/codigoUV.js';
+export * from './utilidades/fuentesCartas.js';
 export * from './validadores/reglas.js';
 export * from './validadores/esquemas.js';

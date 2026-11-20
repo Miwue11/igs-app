@@ -24,3 +24,6 @@ services:
         value: "true"
       - key: SEMBRAR_DEMO_SI_VACIA
         value: "true"
+      # Token de la API de CardTrader (Ajustes → API de tu perfil). Opcional: añade todos los juegos de CardTrader al buscador.
+      - key: CARDTRADER_TOKEN
+        sync: false

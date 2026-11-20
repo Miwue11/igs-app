@@ -2,7 +2,6 @@
  * Datos de demostración (los mismos que usa el modo demo de la web).
  * Los usa el script «npm run datos» y el arranque en Render cuando la base de datos está vacía.
  */
-import mongoose from 'mongoose';
 import { cifrarContrasena } from './acceso.servicio.js';
 import { Usuario, Servicio, Pedido, Producto, Ticket, Contador, Foto } from '../modelos/index.js';
 import { etiquetaGrado, contadorCertificado } from '../../../compartido/index.js';
@@ -11,9 +10,11 @@ import {
 } from '../../../compartido/demo/datos.js';
 
 /** Borra la base de datos (también las colecciones antiguas) y recrea los índices. */
+/** Borra solo los datos de la demo: el catálogo de cartas sincronizado de CardTrader se conserva. */
+const MODELOS_DEMO = [Usuario, Servicio, Pedido, Producto, Ticket, Contador, Foto];
 const vaciar = async () => {
-  await mongoose.connection.dropDatabase();
-  await Promise.all([Usuario, Servicio, Pedido, Producto, Ticket, Contador, Foto].map((m) => m.syncIndexes()));
+  await Promise.all(MODELOS_DEMO.map((m) => m.deleteMany({})));
+  await Promise.all(MODELOS_DEMO.map((m) => m.syncIndexes()));
 };
 
 const crearUsuarios = async () => {

@@ -3,7 +3,7 @@ import {
   validarCon, sinErrores, esIdCertificado, normalizarIdCertificado, ordenarCola,
   etiquetaGrado, formatearIdCertificado, formatearPedido, formatearTicket,
   ESTADOS_ARTICULO, calcularNotaFinal, codigoUVDesdeBytes, mensajeCodigoUV, normalizarCodigoUV, prepararArticulos, errorArticulosServicio, pedidoNuevo,
-  errorCambioEstado, aplicarCambioEstado, errorResolverArticulo,
+  errorCambioEstado, aplicarCambioEstado, errorResolverArticulo, BUSCADORES_LIBRES, JUEGOS_BASE,
 } from '@compartido';
 import { DEMO_PRODUCTOS } from '@compartido/demo/datos.js';
 import { CONFIGURACION } from '../../constantes/configuracion.js';
@@ -245,6 +245,19 @@ const usuarios = {
   }),
 };
 
+/**
+ * Sin servidor, la demo consulta directamente las APIs gratuitas de Lorcana, One Piece y Digimon.
+ * El catálogo de CardTrader necesita el servidor (y su token), así que aquí no aparece.
+ */
+const catalogo = {
+  juegos: async () => JUEGOS_BASE,
+  cartas: async (juego, nombre) => {
+    const buscar = BUSCADORES_LIBRES[juego];
+    if (!buscar) throw new ErrorApi(400, 'Ese juego no está disponible en la demo.');
+    return buscar(nombre.trim());
+  },
+};
+
 /** En el modo demo la lectura de la etiqueta devuelve siempre los datos de un ejemplo. */
 const ia = {
   leerEtiqueta: responder((foto) => {
@@ -255,4 +268,4 @@ const ia = {
   }),
 };
 
-export const apiDemo = { acceso, servicios, productos, pedidos, tickets, usuarios, ia };
+export const apiDemo = { acceso, servicios, productos, pedidos, tickets, usuarios, ia, catalogo };

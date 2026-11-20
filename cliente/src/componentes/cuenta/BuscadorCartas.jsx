@@ -1,15 +1,29 @@
 import { useEffect, useState } from 'react';
 import { IDIOMAS } from '@compartido';
 import {
-  JUEGOS, buscarCartasOficiales, hayNombreSuficiente, articuloDesdeCarta,
+  JUEGOS, buscarCartasOficiales, cargarJuegos, hayNombreSuficiente, articuloDesdeCarta,
 } from '../../servicios/cartasOficiales.js';
+import { useCarga } from '../../hooks/useCarga.js';
 import { Boton } from '../ui/Boton.jsx';
 import { Mensaje } from '../ui/Mensaje.jsx';
 
 const ESPERA_MS = 600;
 
+/** Juegos con fuente propia primero; después, por orden alfabético, los del catálogo de CardTrader. */
+const GRUPOS = [
+  { titulo: 'Con base de datos oficial', filtro: (j) => j.fuente !== 'CardTrader' },
+  { titulo: 'Catálogo de CardTrader', filtro: (j) => j.fuente === 'CardTrader' },
+];
+
+/** Si una miniatura no carga, se cambia por la inicial (como cuando la fuente no tiene imagen). */
+function Miniatura({ carta }) {
+  const [rota, setRota] = useState(false);
+  if (!carta.imagen || rota) return <span className="recomendacion-sin-foto" aria-hidden="true">{carta.nombre.slice(0, 1)}</span>;
+  return <img src={carta.imagen} alt="" loading="lazy" width="54" height="75" onError={() => setRota(true)} />;
+}
+
 /**
- * Buscador de cartas oficiales (APIs gratuitas TCGdex, Scryfall y YGOPRODeck).
+ * Buscador de cartas oficiales (TCGdex, Scryfall, YGOPRODeck, Lorcast, OPTCG API, digimoncard.io y CardTrader).
  * El cliente escribe el nombre, elige la versión exacta y se añade a su pedido con
  * expansión, año, número y rareza ya rellenos.
  */
@@ -20,8 +34,10 @@ export function BuscadorCartas({ alAnadir }) {
   const [estado, setEstado] = useState({ cargando: false, cartas: [], error: null });
   const [anadidas, setAnadidas] = useState([]);
 
+  const { datos: juegos } = useCarga(cargarJuegos);
+  const lista = juegos ?? JUEGOS;
   const buscable = hayNombreSuficiente(nombre);
-  const fuente = JUEGOS.find((j) => j.id === juego)?.fuente;
+  const fuente = lista.find((j) => j.id === juego)?.fuente ?? 'la base de datos';
 
   useEffect(() => {
     if (!buscable) {
@@ -33,9 +49,10 @@ export function BuscadorCartas({ alAnadir }) {
     const temporizador = setTimeout(async () => {
       try {
         const cartas = await buscarCartasOficiales({ nombre, juego, idioma, senal: control.signal });
+        if (control.signal.aborted) return;
         setEstado({ cargando: false, cartas, error: null });
       } catch (e) {
-        if (e.name === 'AbortError') return;
+        if (e.name === 'AbortError' || control.signal.aborted) return;
         setEstado({ cargando: false, cartas: [], error: 'No se ha podido consultar la base de datos de cartas. Añade la carta a mano.' });
       }
     }, ESPERA_MS);
@@ -62,7 +79,14 @@ export function BuscadorCartas({ alAnadir }) {
         <label className="campo">
           <span>Juego</span>
           <select className="selector" value={juego} onChange={(e) => setJuego(e.target.value)}>
-            {JUEGOS.map((j) => <option key={j.id} value={j.id}>{j.nombre}</option>)}
+            {GRUPOS.map((g) => {
+              const suyos = lista.filter(g.filtro);
+              return suyos.length === 0 ? null : (
+                <optgroup key={g.titulo} label={g.titulo}>
+                  {suyos.map((j) => <option key={j.id} value={j.id}>{j.nombre}</option>)}
+                </optgroup>
+              );
+            })}
           </select>
         </label>
         <label className="campo">
@@ -86,9 +110,7 @@ export function BuscadorCartas({ alAnadir }) {
             const veces = anadidas.filter((id) => id === c.id).length;
             return (
               <li key={c.id} className={veces ? 'recomendacion elegida' : 'recomendacion'}>
-                {c.imagen
-                  ? <img src={c.imagen} alt="" loading="lazy" width="54" height="75" />
-                  : <span className="recomendacion-sin-foto" aria-hidden="true">{c.nombre.slice(0, 1)}</span>}
+                <Miniatura carta={c} />
                 <div className="recomendacion-datos">
                   <strong>{c.nombre}</strong>
                   <span>{[c.expansion, c.anio].filter(Boolean).join(' · ')}</span>
@@ -103,7 +125,7 @@ export function BuscadorCartas({ alAnadir }) {
           })}
         </ul>
       )}
-      {buscable && <p className="fuente-datos">Datos oficiales: {fuente} (API gratuita).</p>}
+      {buscable && <p className="fuente-datos">Datos: {fuente}.</p>}
     </section>
   );
 }
