@@ -119,23 +119,29 @@ Se calcula con `HMAC-SHA256(clave secreta, nº de certificado)` en `servidor/src
 La clave es `CLAVE_UV` (si no existe se deriva de `SECRETO_JWT`). En producción, fíjala antes de imprimir slabs reales y **no la cambies**:
 cambiarla invalidaría todos los códigos ya impresos. En el modo demo (GitHub Pages) se usa una clave de ejemplo en el navegador.
 
-## Buscador de cartas oficiales (APIs gratuitas)
+## Buscador de cartas oficiales
 
-Al preparar un envío de cartas, el cliente escribe el nombre y elige la versión exacta que va a mandar.
-Al pulsar **Añadir** se rellenan año, expansión, número, rareza y juego; solo tiene que poner el valor declarado.
-Después el gradeador parte de esos datos y los comprueba con la carta física.
+Al hacer un pedido, el cliente busca cada carta por su nombre y elige la impresión exacta: se rellenan solos la expansión, el año, el número, la rareza y la imagen oficial.
 
-| Juego | API | Clave |
-|---|---|---|
-| Pokémon | [TCGdex](https://tcgdex.dev) (español, inglés, japonés…) | No |
-| Magic: The Gathering | [Scryfall](https://scryfall.com/docs/api) | No |
-| Yu-Gi-Oh! | [YGOPRODeck](https://ygoprodeck.com/api-guide/) | No |
+| Juego | Fuente | Clave | Cómo se consulta |
+|---|---|---|---|
+| Pokémon | [TCGdex](https://tcgdex.dev) (español, inglés, japonés…) | No | Desde el navegador |
+| Magic: The Gathering | [Scryfall](https://scryfall.com/docs/api) | No | Desde el navegador |
+| Yu-Gi-Oh! | [YGOPRODeck](https://ygoprodeck.com/api-guide/) | No | Desde el navegador |
+| One Piece Card Game | [OPTCG API](https://optcgapi.com) | No | Servidor (`/api/catalogo`), con caché de 24 h del catálogo |
+| Disney Lorcana | [Lorcast](https://lorcast.com/docs/api) | No | Servidor, con caché de 1 h por búsqueda |
+| Digimon Card Game | [digimoncard.io](https://digimoncard.io) | No | Servidor, con caché de 1 h por búsqueda |
+| El resto de juegos de CardTrader | [CardTrader API](https://www.cardtrader.com/docs/api/full) | Sí (`CARDTRADER_TOKEN`) | Catálogo sincronizado en MongoDB (`catalogo_cartas`) |
 
-Las consulta el navegador directamente (`cliente/src/servicios/cartasOficiales.js`), por eso funcionan también en el modo demo
-y en una web estática. El servidor las permite en su política de seguridad (CSP) en `servidor/src/aplicacion.js`.
+**CardTrader** no permite buscar por nombre, así que su catálogo se descarga entero (solo cartas sueltas de los juegos que no tienen API gratuita):
 
-La **lectura automática de la etiqueta con IA** (`POST /api/ia/etiqueta`) es opcional: necesita `ANTHROPIC_API_KEY`, que es de pago.
-Sin ella el botón avisa y se usan los datos que declaró el cliente.
+1. En CardTrader: Ajustes → API de tu perfil → crear token.
+2. En Render (o en `servidor/.env`): `CARDTRADER_TOKEN=<token>`. Con el catálogo vacío, se descarga solo al arrancar, en segundo plano.
+3. Para actualizarlo (nuevas expansiones): `npm run catalogo -w servidor`. No duplica cartas.
+4. `CARDTRADER_JUEGOS=1,5,…` limita la descarga a esos ids de juego.
+
+Cardmarket no se usa: su API no admite solicitudes nuevas y está reservada a vendedores profesionales.
+En la demo de GitHub Pages no hay servidor: Lorcana, One Piece y Digimon se consultan desde el navegador y el catálogo de CardTrader no está disponible.
 
 ## Estructura
 
@@ -173,7 +179,7 @@ igs-app/
 └── docker-compose.yml      (opcional) MongoDB con Docker en vez de instalarlo
 ```
 
-Colecciones de MongoDB: `usuarios`, `servicios`, `pedidos`, `productos`, `tickets`, `contadores` y `fotos` (solo con `FOTOS_EN_MONGO=true`).
+Colecciones de MongoDB: `usuarios`, `servicios`, `pedidos`, `productos`, `tickets`, `contadores`, `fotos` (solo con `FOTOS_EN_MONGO=true`) y `catalogo_cartas` (solo con `CARDTRADER_TOKEN`).
 
 Los nombres en inglés que quedan son obligatorios: los de las librerías (`useState`, `Router`, `mongoose.Schema`…), el prefijo `use` de los hooks de React y los archivos que buscan las herramientas (`package.json`, `vite.config.js`, `index.html`, `index.js`).
 
@@ -243,5 +249,6 @@ npm run restaurar -- copias/igs_2026-10-26-12-20.json.gz   # restaura una (reemp
 | GET · PATCH | /api/usuarios · /api/usuarios/:id/rol | admin |
 | PATCH | /api/usuarios/:id/activo (`{ "activo": true \| false }`) | admin |
 | POST | /api/ia/etiqueta (foto) | trabajador, admin |
+| GET | /api/catalogo/juegos · /api/catalogo/cartas?juego=&q= | público (limitado) |
 
 La sesión es un JWT en una cookie `httpOnly` y las contraseñas se guardan cifradas con bcrypt.
