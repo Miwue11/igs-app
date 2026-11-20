@@ -15,6 +15,7 @@
     "demo": "npm run demo -w cliente",
     "datos": "npm run datos -w servidor",
     "comprobar": "npm run comprobar -w servidor",
+    "catalogo": "npm run catalogo -w servidor",
     "copia": "npm run copia -w servidor",
     "restaurar": "npm run restaurar -w servidor --",
     "build": "npm run build -w cliente",

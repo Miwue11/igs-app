@@ -133,12 +133,49 @@ Al hacer un pedido, el cliente busca cada carta por su nombre y elige la impresi
 | Digimon Card Game | [digimoncard.io](https://digimoncard.io) | No | Servidor, con caché de 1 h por búsqueda |
 | El resto de juegos de CardTrader | [CardTrader API](https://www.cardtrader.com/docs/api/full) | Sí (`CARDTRADER_TOKEN`) | Catálogo sincronizado en MongoDB (`catalogo_cartas`) |
 
-**CardTrader** no permite buscar por nombre, así que su catálogo se descarga entero (solo cartas sueltas de los juegos que no tienen API gratuita):
+### Catálogo de CardTrader
 
-1. En CardTrader: Ajustes → API de tu perfil → crear token.
-2. En Render (o en `servidor/.env`): `CARDTRADER_TOKEN=<token>`. Con el catálogo vacío, se descarga solo al arrancar, en segundo plano.
-3. Para actualizarlo (nuevas expansiones): `npm run catalogo -w servidor`. No duplica cartas.
-4. `CARDTRADER_JUEGOS=1,5,…` limita la descarga a esos ids de juego.
+La API de CardTrader no permite buscar por nombre, así que su catálogo se descarga a MongoDB (colección `catalogo_cartas`).
+Solo se guardan **cartas sueltas** de los juegos que **no tienen API gratuita**. Primera descarga (20/11/2026): **78.756 cartas de 10 juegos** en unos 4 minutos.
+
+| Juego | Cartas |
+|---|---|
+| Cardfight!! Vanguard | 27.072 |
+| Dragon Ball Super | 14.809 |
+| Flesh and Blood | 13.448 |
+| Star Wars Unlimited | 9.614 |
+| Union Arena | 6.865 |
+| Gundam | 2.228 |
+| Riftbound (League of Legends) | 1.898 |
+| Sorcery: Contested Realm | 1.774 |
+| Cyberpunk | 593 |
+| Palworld | 455 |
+
+**Activarlo**
+
+1. En cardtrader.com, con la sesión iniciada: página **Full API** → apartado **Token JWT** → «Copiar al Portapapeles».
+   Cada vez que se abre la página se genera un token nuevo y todos siguen siendo válidos.
+2. En Render → servicio `igs-app` → **Environment** → variable `CARDTRADER_TOKEN` con el token → «Save, rebuild, and deploy».
+3. Al arrancar, si el catálogo nunca se ha descargado entero, el servidor lo descarga **en segundo plano** (la web sigue funcionando).
+   En **Logs** aparece `Sincronizando el catálogo de CardTrader…`, una línea `[igs] CardTrader · <juego>: N cartas en M expansiones` por juego
+   y al final `Catálogo de CardTrader sincronizado: …`.
+
+**Actualizarlo cuando salgan expansiones nuevas** (no es automático; por ejemplo, una vez al mes)
+
+- **Opción A, desde un ordenador:** en `servidor/.env` pon `URI_MONGODB` (la de Atlas) y `CARDTRADER_TOKEN`, y ejecuta `npm run catalogo`.
+- **Opción B, sin terminal:** en Atlas → Browse Collections → `igs` → `contadores`, borra el documento `catalogo-cardtrader-sincronizado`;
+  después, en Render → Manual Deploy → Restart service. Al arrancar vuelve a descargarlo y lo indica en Logs.
+
+En los dos casos las cartas que ya existen se actualizan y las nuevas se añaden: no se duplica nada (índice único por id de CardTrader).
+
+**Detalles**
+
+- `CARDTRADER_JUEGOS=6,9,…` limita la descarga a esos ids de juego de CardTrader.
+- Si un despliegue corta la descarga a medias, se repite entera al volver a arrancar.
+- La recarga de los datos de demostración no borra el catálogo.
+- Si en Logs aparece `CardTrader ha rechazado el token`, copia un token nuevo de la página Full API y cámbialo en Render.
+- El token solo está en Render (y en tu `.env` local, que no se sube a GitHub). No se guarda en MongoDB ni en el repositorio.
+- `npm run comprobar -w servidor` muestra cuántas cartas tiene el catálogo (y oculta la contraseña de la URI).
 
 Cardmarket no se usa: su API no admite solicitudes nuevas y está reservada a vendedores profesionales.
 En la demo de GitHub Pages no hay servidor: Lorcana, One Piece y Digimon se consultan desde el navegador y el catálogo de CardTrader no está disponible.
@@ -195,7 +232,8 @@ Los nombres en inglés que quedan son obligatorios: los de las librerías (`useS
 ```bash
 npm install            # instala todo
 npm run comprobar      # ¿conecta con MongoDB? cuenta los documentos
-npm run datos          # borra la base de datos «igs» y carga los datos de prueba
+npm run datos          # borra los datos de la demo y los vuelve a cargar (el catálogo de cartas se conserva)
+npm run catalogo       # descarga o actualiza el catálogo de CardTrader (necesita CARDTRADER_TOKEN)
 npm start              # compila la web y la sirve con la API en http://localhost:4000
 npm run dev:servidor   # API con recarga automática (desarrollo)
 npm run dev:cliente    # web con recarga automática en http://localhost:5173

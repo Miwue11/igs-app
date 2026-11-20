@@ -1,6 +1,6 @@
 /**
  * Carga los datos de demostración en MongoDB.
- * ¡Borra la base de datos entera y la vuelve a crear! Úsalo solo en desarrollo.
+ * Borra los datos de la demo (no el catálogo de cartas) y los vuelve a crear. Úsalo solo en desarrollo.
  *   npm run datos
  */
 import { conectarBaseDatos, desconectarBaseDatos } from '../src/configuracion/baseDatos.js';
