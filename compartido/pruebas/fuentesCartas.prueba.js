@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { normalizarBusqueda, buscarLorcana, buscarOnePiece, buscarDigimon } from '../utilidades/fuentesCartas.js';
+import { normalizarBusqueda, formatearRareza, buscarLorcana, buscarOnePiece, buscarDigimon } from '../utilidades/fuentesCartas.js';
 import { imagenOficialValida } from '../utilidades/pedidos.js';
 
 /** Sustituye fetch por respuestas fijas con la forma real de cada API (consultadas en noviembre de 2026). */
@@ -72,4 +72,11 @@ test('Digimon: número, expansión y rareza de digimoncard.io', async () => {
 test('Solo se guardan imágenes de los orígenes de las fuentes de cartas', () => {
   assert.equal(imagenOficialValida('https://malicioso.example/x.png'), null);
   assert.ok(imagenOficialValida('https://www.cardtrader.com/uploads/blueprints/image/1/x.jpg'));
+});
+
+test('formatearRareza unifica los formatos de cada fuente', () => {
+  assert.equal(formatearRareza('Super_rare'), 'Super rare');
+  assert.equal(formatearRareza('c'), 'C');
+  assert.equal(formatearRareza('SR'), 'SR');
+  assert.equal(formatearRareza(null), '');
 });

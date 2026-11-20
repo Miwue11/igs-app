@@ -20,6 +20,13 @@ export const normalizarBusqueda = (texto = '') => String(texto)
   .normalize('NFD').replace(/\p{Diacritic}/gu, '')
   .toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 
+/** «super_rare» → «Super rare», «c» → «C»: las rarezas llegan con formatos distintos según la fuente. */
+export const formatearRareza = (rareza = '') => {
+  const texto = String(rareza ?? '').replace(/_/g, ' ').trim();
+  if (texto.length <= 3) return texto.toUpperCase();
+  return texto.charAt(0).toUpperCase() + texto.slice(1);
+};
+
 const anioDe = (fecha) => (fecha ? Number(String(fecha).slice(0, 4)) || null : null);
 
 const pedirJSON = async (url, { senal, vacioSi = [] } = {}) => {
@@ -43,7 +50,7 @@ export const buscarLorcana = async (nombre, { senal } = {}) => {
     expansion: c.set?.name ?? '',
     anio: anioDe(c.released_at),
     numero: c.set?.code && c.collector_number ? `${c.collector_number} · set ${c.set.code}` : String(c.collector_number ?? ''),
-    rareza: c.rarity ?? '',
+    rareza: formatearRareza(c.rarity),
     variedad: '',
     imagen: c.image_uris?.digital?.small ?? c.image_uris?.digital?.normal ?? null,
   }));
@@ -113,7 +120,7 @@ export const buscarDigimon = async (nombre, { senal } = {}) => {
     expansion: Array.isArray(c.set_name) ? c.set_name.join(' / ') : (c.set_name ?? ''),
     anio: null,
     numero: c.id ?? '',
-    rareza: c.rarity ?? '',
+    rareza: formatearRareza(c.rarity),
     variedad: '',
     imagen: c.image_url ?? (c.id ? `${URL_IMAGEN_DIGIMON}/${encodeURIComponent(c.id)}.jpg` : null),
   }));

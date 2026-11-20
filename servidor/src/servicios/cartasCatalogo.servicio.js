@@ -1,5 +1,5 @@
 import {
-  APIS_CARTAS, BUSCADORES_LIBRES, JUEGOS_BASE, MAXIMO_RESULTADOS, PREFIJO_CARDTRADER, normalizarBusqueda,
+  APIS_CARTAS, BUSCADORES_LIBRES, JUEGOS_BASE, MAXIMO_RESULTADOS, PREFIJO_CARDTRADER, formatearRareza, normalizarBusqueda,
 } from '../../../compartido/index.js';
 import { ENTORNO } from '../configuracion/entorno.js';
 import { CartaCatalogo, Contador } from '../modelos/index.js';
@@ -70,9 +70,9 @@ const buscarEnCardTrader = async (juegoId, nombre) => {
     expansion: c.expansion,
     anio: null,
     numero: c.numero || c.codigoExpansion,
-    rareza: c.rareza,
+    rareza: formatearRareza(c.rareza),
     variedad: '',
-    imagen: c.imagen,
+    imagen: imagenCardTrader(c.imagen),
   }));
 };
 
@@ -115,8 +115,9 @@ const pedirCardTrader = async (ruta) => {
   return Array.isArray(cuerpo) ? cuerpo : (cuerpo?.array ?? cuerpo?.data ?? []);
 };
 
+/** Las cartas sin foto en CardTrader traen una imagen genérica (assets/fallbacks): mejor ninguna. */
 const imagenCardTrader = (url) => {
-  if (!url) return null;
+  if (!url || url.includes('/assets/fallbacks/')) return null;
   return url.startsWith('/') ? `https://www.cardtrader.com${url}` : url;
 };
 
@@ -157,6 +158,7 @@ export const sincronizarCardTrader = async ({ registrar = console.log } = {}) =>
   if (!ENTORNO.CARDTRADER_TOKEN) throw new Error('Falta CARDTRADER_TOKEN: créalo en Ajustes → API de tu perfil de CardTrader.');
   const juegos = juegosASincronizar(await pedirCardTrader('/games'));
   const expansiones = await pedirCardTrader('/expansions');
+  registrar(`[igs] Sincronizando el catálogo de CardTrader: ${juegos.length} juegos (${juegos.map((j) => j.display_name || j.name).join(', ')})`);
   let total = 0;
 
   for (const juego of juegos) {
@@ -187,9 +189,12 @@ export const sincronizarCardTrader = async ({ registrar = console.log } = {}) =>
   return { juegos: juegos.length, cartas: total };
 };
 
-/** Al arrancar: si hay token y el catálogo está vacío, se descarga en segundo plano (no retrasa el arranque). */
+/**
+ * Al arrancar: si hay token y el catálogo nunca se ha completado, se descarga en segundo plano (no retrasa el arranque).
+ * Si un despliegue corta la descarga a medias, al volver a arrancar se reanuda: como no duplica, se repite entera.
+ */
 export const sincronizarCatalogoSiVacio = async () => {
   if (!ENTORNO.CARDTRADER_TOKEN) return;
-  if (await CartaCatalogo.estimatedDocumentCount() > 0) return;
+  if (await Contador.exists({ _id: CLAVE_SINCRONIZACION })) return;
   sincronizarCardTrader().catch((error) => console.error('[igs] No se pudo sincronizar CardTrader:', error.message));
 };
